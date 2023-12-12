@@ -1,0 +1,175 @@
+# Project information
+site_name: Panoramic
+site_url: https://xyxxxxx.github.io/panoramic
+site_author: xyx
+
+# Configuration
+theme:
+  name: material           # https://github.com/squidfunk/mkdocs-material
+  custom_dir: overrides    # any file in 'overrides' directory will override the origin theme
+                           # refer to https://squidfunk.github.io/mkdocs-material/customization/#extending-the-theme
+  language: zh             # language
+  features:
+    # - navigation.instant   # instant loading
+                           # refer to https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#instant-loading
+    - navigation.indexes   # refer to https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#section-index-pages
+    # - navigation.sections  # optional
+                           # refer to https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#navigation-sections
+    - navigation.tabs      # enable navigation tabs, recommended for large docs with several parts
+    - navigation.top       # add back-to-top button
+    - search.highlight     # highlight all occurences of the search keyword
+    - search.share         # allow to share current search query and result
+    - search.suggest       # enable search to display completion suggestions (only worked for English)
+  palette:                 # color scheme
+    scheme: default        # 'default' for light mode, 'slate' for dark mode (not recommended)
+    primary: blue grey     # primary color, used for header, sidebar, text links and several other components
+    accent: cyan           # accent color, used to denote elements that can be interacted with, e.g. hovered links, buttons and scrollbars
+  # favicon: assets/icon.svg # favicon showed as tab icon, can be changed to user-provided image (*.png or *.svg)
+  # logo: assets/logo.png    # logo showed at top left of page, can be changed to user-provided image (*.png or *.svg)
+
+use_directory_urls: false  # prevent generating a directory for each markdown file when building
+
+# Extensions
+markdown_extensions:
+  - admonition             # enable admonition
+                           # refer to https://squidfunk.github.io/mkdocs-material/reference/admonitions/
+  - attr_list              # enable Attribute List extension, which allows to add HTML attributes and CSS classes to Markdown elements
+                           # refer to https://squidfunk.github.io/mkdocs-material/reference/buttons/
+  - meta                   # enable metadata for md docs
+  - pymdownx.arithmatex:   # enable Arithmatex extension, which allows rendering block and inline equations
+      generic: true
+  - pymdownx.caret         # optional, enable underline with double '^^', superscript with connected '^'
+  - pymdownx.details       # make admonitions collapsible
+  - pymdownx.emoji:        # optional, enable Emoji extension, which enables *.svg icons to be integrated inline
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+      # options:             # add additional *.svg icons
+      #   custom_icons:
+      #     - overrides/.icons
+  - pymdownx.highlight     # enable Highlight extension, which enables syntax highlight for code block
+                           # refer to https://squidfunk.github.io/mkdocs-material/reference/code-blocks/#highlight
+  - pymdownx.inlinehilite  # enable InlineHilite extension, which enables syntax highlight for inline code
+                           # refer to https://squidfunk.github.io/mkdocs-material/reference/code-blocks/#inlinehilite
+  - pymdownx.keys          # optional, enable keyboard key icon with double '++'
+  - pymdownx.mark          # optional, enable mark with double '=='
+  - pymdownx.superfences   # allow for nesting of code and content blocks inside admonitions
+  - pymdownx.tabbed        # enable tabbed contents
+                           # refet to https://squidfunk.github.io/mkdocs-material/reference/content-tabs/
+  - pymdownx.tilde         # optional, enable strikethrough with double '~~', subscript with connected '~'
+  - toc:                   # Table of contents extension
+      permalink: true      # add an anchor link at the end of each headline
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower      # allow to slugify unicode title
+      toc_depth: 4         # range of levels to be included in toc
+
+# Plugins
+plugins:
+  - git-revision-date      # display date last updated at bottom of page for proofreading
+                           # refer to https://squidfunk.github.io/mkdocs-material/setup/adding-a-git-repository/?h=git+rev#revision-date
+  - search                 # enable search
+
+# Page Tree
+nav:
+  - 首页: index.html
+  # - 数学:
+  #   - math/index.md
+  #   - 代数:
+  #     - math/algebra/index.md
+  #     - 基础代数: math/algebra/elementary-algebra.md
+  #     - 线性代数: math/algebra/linear-algebra.md
+  #     - 线性代数理解: math/algebra/linear-algebra-understanding.md
+  #     - 抽象代数: math/algebra/abstract-algebra.md
+  #   - 分析:
+  #     - math/analysis/index.md
+  #     - 微积分: math/analysis/calculus.md
+  #     - 多元微积分: math/analysis/multivariate-calculus.md
+  #     - 矩阵微积分: math/analysis/matrix-calculus.md
+  #     - 微分方程: math/analysis/differential-equation.md
+  #     - 复分析: math/analysis/complex-analysis.md
+  #     - 数学物理: math/analysis/mathematical-physics.md
+  #   - 应用数学:
+  #     - math/applied-mathematics/index.md
+  #     - 数学优化:
+  #       - math/applied-mathematics/optimization/index.md
+  #       - 凸集: math/applied-mathematics/optimization/convex-set.md
+  #       - 凸函数: math/applied-mathematics/optimization/convex-function.md
+  #       - 凸优化: math/applied-mathematics/optimization/convex-optimization.md
+  #       - 对偶性: math/applied-mathematics/optimization/duality.md
+  #       - 非线性优化: math/applied-mathematics/optimization/nlp.md
+  #     - 概率论与数理统计:
+  #       - math/applied-mathematics/probability-theory-and-mathematical-statistics/index.md
+  #       - 事件的概率: math/applied-mathematics/probability-theory-and-mathematical-statistics/probability-of-event.md
+  #       - 随机变量: math/applied-mathematics/probability-theory-and-mathematical-statistics/random-variable.md
+  #       - 极限定理: math/applied-mathematics/probability-theory-and-mathematical-statistics/limit-theorems.md
+  #     - 随机过程:
+  #       - math/applied-mathematics/stochastic-process/index.md
+  #       - 随机过程基础: math/applied-mathematics/stochastic-process/stochastic-process-introduction.md
+  #       - 马尔可夫链: math/applied-mathematics/stochastic-process/markov-chain.md
+  #       - 泊松过程: math/applied-mathematics/stochastic-process/poisson-process.md
+  #   - 离散数学:
+  #     - math/discrete-mathematics/index.md
+  #     - 数学逻辑: math/discrete-mathematics/mathematical-logic.md
+  #     - 集合论: math/discrete-mathematics/set-theory.md
+  #     - 组合数学: math/discrete-mathematics/enumerative-combinatorics.md
+  #     - 多项式: math/discrete-mathematics/polynomial.md
+  #     - 图论: math/discrete-mathematics/graph-theory.md
+  #     - 数论: math/discrete-mathematics/number-theory.md
+  # - CS:
+  #   - 数据结构与算法:
+  #     - 数据结构: cs/dsa/data-structure.md
+  #     - 算法: cs/dsa/algorithm.md
+  #   - 信息论: cs/information-theory.md
+  - 机器学习:
+    - ml/index.md
+    # - 深度学习:
+      # - 前馈神经网络（FNN）: ml/dl/fnn.md
+      # - 卷积神经网络（CNN）: ml/dl/cnn.md 
+      # - 循环神经网络（RNN）: ml/dl/rnn.md
+      # - 嵌入: ml/dl/embedding.md
+      # - 序列到序列模型: ml/dl/seq2seq.md
+      # - Transformer: ml/dl/transformer.md
+      # - 自监督学习模型: ml/dl/self-supervised.md
+      # - 生成对抗网络（GAN）: ml/dl/gan.md
+    - 强化学习专题:
+      - ml/rl/index.md
+      - 理解: ml/rl/understanding.md
+    # - 常用技术:
+    #   - 优化: ml/technique/optimization.md
+    #   - 归一化: ml/technique/normalization.md
+    #   - 泛化: ml/technique/generalization.md
+    #   - 异常检测: ml/technique/anomaly-detection.md
+    #   - 对抗攻击: ml/technique/adversarial-attack.md
+    #   - 模型可解释性: ml/technique/explainable-ml.md
+    #   - 迁移学习: ml/technique/transfer-learning.md
+    #   - 模型压缩: ml/technique/model-compression.md
+    #   - 终身学习: ml/technique/life-long-learning.md
+    - LLM 专题:
+      - ml/llm/index.md
+      - 训练和推理: ml/llm/training-and-inference.md
+      - 评估: ml/llm/evaluation.md
+      - 应用: ml/llm/applications.md
+      - 理解: ml/llm/understanding.md
+    # - 分布式训练:
+    #   - ml/distributed/index.md
+
+
+# Customization
+# extra:
+#   version:
+#     provider: mike
+#   social:                  # SNS links, for future use
+#     - icon: fontawesome/brands/twitter
+#       link: https://twitter.com/tensorstack  # for example
+
+
+# CSS Customization
+extra_css:
+  - stylesheets/extra.css
+
+# JS Customization
+extra_javascript:
+  - javascripts/mathjax.js  # MathJax configuration
+  - javascripts/tex-mml-chtml.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.cs/net/npm/mathjax@3/es5/tex-mml-chtml.js
