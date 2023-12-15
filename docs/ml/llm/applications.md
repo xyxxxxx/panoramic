@@ -15,6 +15,7 @@ RAG（retrieval-augmented generation）这一概念由论文 [[2005.11401](https
 如今的知识库问答应用都是基于这一方法，但不进行训练，只进行推理。典型应用：
 
 * [quivr](https://github.com/StanGirard/quivr)
+* [DocsGPT](https://github.com/arc53/DocsGPT)
 
 ## 聊天机器人
 
