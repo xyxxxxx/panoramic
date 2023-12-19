@@ -32,5 +32,6 @@
 
 一些技术：
 
-* 量化
+* 量化（到 4-bit 量化）
+* Speculative decoding
 * 自一致性（self-consistency）[[2203.11171]](https://arxiv.org/abs/2203.11171) 方法让 LLM 采样多个回复，然后对于答案行多数决。

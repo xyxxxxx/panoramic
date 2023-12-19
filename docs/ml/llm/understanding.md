@@ -16,3 +16,15 @@
 
     1. 让 LLM 使用各种工具操作环境，再通过各种感官接收来自环境的反馈（读万卷书，行万里路）；
     1. 调动 LLM 的思维。
+
+* [2312] 继 6 月发布 phi-1，9 月发布 phi-1.5，微软再次[发布](https://www.microsoft.com/en-us/research/blog/phi-2-the-surprising-power-of-small-language-models/)了 SLM phi-2（2.7B）。依然是延续“textbooks are all you need”的思路，利用教科书级别的合成数据集训练 SLM 使其匹敌 LLM。在评估中，phi-2 的平均性能超越了 Mistral-7B。
+
+    我们编写教材以促进人类学生学习，以同样的思路，我们合成“教科书级别”的训练数据以促进模型学习（相应的知识和能力）。
+
+* [2305] 由于训练数据短缺，一些研究开始尝试使用模型生成的内容作为另一个模型的训练数据，但这一方法的正面和负面效果仍在探索和争论中。[2304.08466](https://arxiv.org/abs/2304.08466) 的实验显示 Imagen 生成的图片可以增强 ImageNet 训练集，显著提高训练在其上的模型的分类正确率；[2305.17493](https://arxiv.org/abs/2305.17493v2) 则发现在 LLM 的训练中使用另一个 LLM 生成的内容会导致最终 LLM 存在不可逆的缺陷。
+
+* [2304] 涌现能力 论文 [2304.15004]()
+
+* [2211] Epoch AI 的[一项研究](https://epochai.org/blog/will-we-run-out-of-ml-data-evidence-from-projecting-dataset)预测高质量的文本数据将在 2026 年之前枯竭，这可能延缓 LLM 的开发进展。 
+
+    既然模型和训练数据规模两方面的扩张都已经接近极限，接下来的研究重点应放到之前忽略的如何高效利用模型参数和训练数据这一问题上。另外，对于大部分的下游应用，现有的训练数据已经足以训练出一个足够好的 LLM。
