@@ -2,23 +2,6 @@
 
 LLM 应用广泛，但不同的应用类型之间并没有明显的界限。这里选取一些主题进行讨论。
 
-## RAG
-
-RAG（retrieval-augmented generation）这一概念由论文 [[2005.11401](https://arxiv.org/abs/2005.11401)] 提出，其为预训练的参数化记忆生成模型（预训练 transformer）赋予了非参数化记忆（向量索引），并将其用在知识密集型的任务上。具体方法如下：
-
-![](../../assets/ml/llm/rag.png)
-
-该方法本来是一个微调方法，对组合架构进行端到端的训练。亦即，使用成对的 QA 数据，最小化 $\sum_i -\log p(y_i|x_i)$，来同时微调生成回复的 LM（BART）和编码查询文本的 LM（BERT）（若要微调编码文档的 LM（BERT），则需要定期重新编码文档，开销较大，原论文发现其对于模型表现提升不大，于是固定其参数）。
-
-对于外挂知识库的优点，原论文提到：可以直接扩展或修改（位于向量索引的）知识；可以对被检索到的知识作进一步的检查，减少 LLM 的幻觉。
-
-如今的知识库问答应用都是基于这一方法，但不进行训练，只进行推理。典型应用：
-
-* [quivr](https://github.com/QuivrHQ/quivr)
-* [DocsGPT](https://github.com/arc53/DocsGPT)
-* [perplexity](https://www.perplexity.ai/)
-* [Search with Lepton](https://github.com/leptonai/search_with_lepton)
-
 ## 聊天机器人
 
 用结构化的模板引导 LLM 生成与用户聊天的内容。例如下面展示了传入 Llama-2-7b-chat-hf 模型的 token 序列：
@@ -83,7 +66,7 @@ tensor([[    1,   518, 25580, 29962,  3532, 14816, 29903,  6778,    13,  3492,
 * automatic prompt engineer（提供输入输出示例，LLM 生成多个 prompt，评估选出效果最好的）[[2211.01910](https://arxiv.org/abs/2211.01910)]
 * active prompt（选出 LLM 多次回复最不一致的问题，人类标注 CoT 过程）[[2302.12246](https://arxiv.org/abs/2302.12246), [2305.08291](https://arxiv.org/abs/2305.08291)]
 * Tree-of-Thought(ToT)（将思维链扩展为思维树，LLM 每一步先生成几个备选答案，再检查每个答案是否正确；可以使用深度或广度优先的搜索策略）[[2305.10601](https://arxiv.org/abs/2305.10601)]
-* Graph-of-Thought(GoT)（将思维树扩展为思维图，）[[2308.09687](https://arxiv.org/abs/2308.09687)]
+* Graph-of-Thought(GoT)（将思维树扩展为思维图，类似一个工作流）[[2308.09687](https://arxiv.org/abs/2308.09687)]
 * emotion prompt（对模型进行情绪勒索）[[2307.11760](https://arxiv.org/abs/2307.11760)]
 
 !!! note "注意"
@@ -96,21 +79,52 @@ tensor([[    1,   518, 25580, 29962,  3532, 14816, 29903,  6778,    13,  3492,
 * 对 LLM 说“我会为一个更好的答案付x元小费”是有用的。
 * 对 LLM 说“（如果你不能完成任务）你将会受到惩罚”是有用的。
 
-提示注入（或提示攻击）是提示工程的一种恶意利用，其通过巧妙的提示诱导 LLM 产生有害或不希望的输出（例如变更任务、突破限制、泄露机密或隐私信息等）。
+提示注入（或提示攻击）是提示工程的一种恶意利用，其通过巧妙的提示词诱导 LLM 产生有害或不希望的输出（例如变更任务、突破限制、泄露机密或隐私信息等）。
+
+## RAG
+
+RAG（retrieval-augmented generation）这一概念由论文 [[2005.11401](https://arxiv.org/abs/2005.11401)] 提出，其为预训练的参数化记忆生成模型（预训练 transformer）赋予了非参数化记忆（向量索引），并将其用在知识密集型的任务上。具体方法如下：
+
+![](../../assets/ml/llm/rag.png)
+
+该方法本来是一个微调方法，对组合架构进行端到端的训练。亦即，使用成对的 QA 数据，最小化 $\sum_i -\log p(y_i|x_i)$，来同时微调生成回复的 LM（BART）和编码查询文本的 LM（BERT）（若要微调编码文档的 LM（BERT），则需要定期重新编码文档，开销较大，原论文发现其对于模型表现提升不大，于是固定其参数）。
+
+对于外挂知识库的优点，原论文提到：可以直接扩展或修改（位于向量索引的）知识；可以对被检索到的知识作进一步的检查，减少 LLM 的幻觉。
+
+如今的知识库问答应用都是基于这一方法，但不进行训练，只进行推理。典型应用：
+
+* [quivr](https://github.com/QuivrHQ/quivr)
+* [DocsGPT](https://github.com/arc53/DocsGPT)
+* [perplexity](https://www.perplexity.ai/)
+* [Search with Lepton](https://github.com/leptonai/search_with_lepton)
 
 ## 智能体
 
 对于智能体（agent）的定义，就和对于通用人工智能（AGI）的定义一样莫衷一是。综合现有的观点，智能体应能够：
 
-* 独立地（不需要人为干预）完成一项任务
-* 完成多阶段的任务
-* 自主地（预判用户的需求）完成任务
+* 具有推理、规划、应变、反思等能力
+* 独立地（不需要人为干预）完成一项现实世界的任务
+* 完成多步任务
+* 主动地（预判用户的需求）完成任务
 * 使用工具
+
+LLM 凭借其推理、指令遵循、上下文学习和工具使用等多项能力，成为当前智能体开发的首选引擎。基于 LLM 的智能体是 LLM 的一项综合应用，围绕 LLM 的各种技术都会被使用到。
 
 下面是用于构建 LLM 智能体的框架：
 
 * ReAct（）[]
-* AutoGen（多智能体对话）[]
+
+### 多智能体讨论/对话
+
+下面是用于构建基于 LLM 智能体的应用的框架：
+
+* CAMEL（使用提示词引导智能体进行角色扮演，从而促进智能体之间的合作，形成一个团队）[[2303.17760](https://arxiv.org/abs/2303.17760)]
+* multi-agent debate（多智能体讨论提升数学和策略能力，减少错误信息和幻觉，并且参与的智能体越多，讨论的回合数越多（会逐渐收敛），得到的结果越好）[[2305.14325](https://arxiv.org/abs/2305.14325)]
+* multi-agent debate（多智能体讨论相比自我反省更能鼓励多样性思考）[[2305.19118](https://arxiv.org/abs/2305.19118)]
+* MetaGPT（基于多智能体对话的软件开发团队）[[2308.00352](https://arxiv.org/abs/2308.00352)]
+* AutoGen（基于多智能体对话的 LLM 应用框架）[[2308.08155](https://arxiv.org/abs/2308.08155)]
+* Dynamic LLM-Agent Network（考核智能体的表现，开除表现较差的智能体，从而优化团队）[[2310.02170](https://arxiv.org/abs/2310.02170)]
+* Exchange-of-Thought（不同任务适合不同的讨论模式）[[2312.01823](https://arxiv.org/abs/2312.01823)]
 
 ### 工具使用
 
@@ -124,6 +138,6 @@ tensor([[    1,   518, 25580, 29962,  3532, 14816, 29903,  6778,    13,  3492,
 
 下面是一些让 LLM 使用工具的实践：
 
-* WebGPT（）[[2112.09332](https://arxiv.org/abs/2112.09332)]
-* Toolformer（）[[2302.04761](https://arxiv.org/abs/2302.04761)]
-* any tool（）[[2402.04253](https://arxiv.org/abs/2402.04253)]
+* WebGPT（LLM 使用搜索引擎和浏览网页文本：环境将当前的完整状态提供给 LLM，LLM 生成一个命令以采取一项规定动作；训练方法是有监督微调和 RLHF）[[2112.09332](https://arxiv.org/abs/2112.09332)]
+* Toolformer（LLM 自主调用 API；训练方法是有监督微调，训练数据由 LLM 自己根据 few-shot 生成，且过滤掉没有帮助的调用；推理时一旦产生特殊 token →，则停止生成并调用 API，附加结果和特殊 token `</API>` 后继续生成）[[2302.04761](https://arxiv.org/abs/2302.04761)]
+* AnyTool（多个 LLM 组成具有层次结构的 API retriever，从结构化的 API 组织中检索与查询最相关的 API）[[2402.04253](https://arxiv.org/abs/2402.04253)]
