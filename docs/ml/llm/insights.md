@@ -29,7 +29,7 @@
     1. 让 LLM 使用各种工具操作环境，再通过各种感官接收来自环境的反馈（读万卷书，行万里路）；
     1. 调动 LLM 的思维。
 
-* [2312] 继 6 月发布 phi-1，9 月发布 phi-1.5，微软再次[发布](https://www.microsoft.com/en-us/research/blog/phi-2-the-surprising-power-of-small-language-models/)了 SLM phi-2（2.7B）。依然是延续“textbooks are all you need”的思路，利用教科书级别的合成数据集训练 SLM 使其匹敌 LLM。在评估中，phi-2 的平均性能超越了 Mistral-7B。
+* [2312] 继 6 月发布 phi-1，9 月发布 phi-1.5，微软再次[发布](https://www.microsoft.com/en-us/research/blog/phi-2-the-surprising-power-of-small-language-models/)了 SLM phi-2（2.7B）。依然是延续“textbooks are all you need”的思路，利用教科书级别的合成数据集训练 SLM 使其匹敌 LLM。在评估中，phi-2 的平均表现超越了 Mistral-7B。
 
     既然模型规模的扩张已经接近极限，如何高效利用模型参数自然成为接下来的一个研究重点。
 

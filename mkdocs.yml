@@ -122,7 +122,9 @@ nav:
   #   - 信息论: cs/information-theory.md
   - 机器学习:
     - ml/index.md
-    # - 深度学习:
+    - 深度学习:
+      - 硬件平台: ml/dl/hardware-platform.md
+      - 常用技术: ml/dl/common-techniques.md
       # - 前馈神经网络（FNN）: ml/dl/fnn.md
       # - 卷积神经网络（CNN）: ml/dl/cnn.md 
       # - 循环神经网络（RNN）: ml/dl/rnn.md
@@ -134,19 +136,10 @@ nav:
     - 强化学习专题:
       - ml/rl/index.md
       - 理解: ml/rl/understanding.md
-    # - 常用技术:
-    #   - 优化: ml/technique/optimization.md
-    #   - 归一化: ml/technique/normalization.md
-    #   - 泛化: ml/technique/generalization.md
-    #   - 异常检测: ml/technique/anomaly-detection.md
-    #   - 对抗攻击: ml/technique/adversarial-attack.md
-    #   - 模型可解释性: ml/technique/explainable-ml.md
-    #   - 迁移学习: ml/technique/transfer-learning.md
-    #   - 模型压缩: ml/technique/model-compression.md
-    #   - 终身学习: ml/technique/life-long-learning.md
     - LLM 专题:
       - ml/llm/index.md
-      - 训练和推理: ml/llm/training-and-inference.md
+      - 训练: ml/llm/training.md
+      - 推理: ml/llm/inference.md
       - 评估: ml/llm/evaluation.md
       - 应用: ml/llm/applications.md
       - 理解: ml/llm/understanding.md
