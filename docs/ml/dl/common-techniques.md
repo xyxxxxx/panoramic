@@ -74,6 +74,10 @@ tensor([[[-1.5933, -1.3036, -1.0139, -0.7242],
          [ 0.7242,  1.0139,  1.3036,  1.5933]]])
 ```
 
+## 权重初始化
+
+请参阅 [Weight Initialization in Neural Networks: A Journey From the Basics to Kaiming](https://towardsdatascience.com/weight-initialization-in-neural-networks-a-journey-from-the-basics-to-kaiming-954fb9b47c79)。
+
 ## 梯度裁剪
 
 ## 混合精度训练
