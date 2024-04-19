@@ -2,7 +2,9 @@
 
 ## 预训练
 
-这里以开源项目 OLMo 为例，介绍代码实现和主要参数。
+### 实现
+
+这里以开源项目 [OLMo](https://github.com/allenai/OLMo) 为例，介绍其预训练流程以及主要参数和指标。
 
 参数：
 
@@ -216,25 +218,48 @@
     * [olmo/optim.py#L622] 所有线性层的 `weight` 进行权重衰减，其余参数不进行权重衰减
     * lr 在热身阶段逐渐上升，在热身阶段之后逐渐下降直至收敛（热身以削弱首因效应，参阅 [What does learning rate warm-up mean?](https://stackoverflow.com/questions/55933867/what-does-learning-rate-warm-up-mean)）
     * 最大梯度范数（max grad norm）在热身阶段取较大值，在热身阶段之后取较小值（热身阶段容许训练不稳定）
-1. [scripts/train.py#L168] 初始化 Trainer
-    * 
-1. [scripts/train.py#L238] 开始训练
+1. [scripts/train.py#L168,238] 构建 Trainer，开始训练
+    * 记录各指标
+    * 定期评估（TODO）、保存检查点
+    * batch 分成 micro-batch，进行梯度累积
+    * 裁剪梯度
+    * 使用 PyTorch Profiler 进行 profiling
 
-一些 trick：
+一些优化措施：
 
 * 保存当前 epoch 的数据索引文件
+
+### trick
+
+
 
 ## 微调
 
 对于微调的数据，质量比数量更重要，换言之，在精不在多。
 
-### 有监督微调
+### SFT（有监督微调）
 
+人类编写问题的答案。
+
+#### 实现
 
 ### RLHF
 
-* PPO
-* DPO
+人类对问题的两个（或多个）答案进行排序。
+
+比较 SFT 和 RLHF：
+
+* 从人类产生训练数据的角度看，人类写出高质量的答案并不容易（甚至写不出来），成本也高；但人类比较答案的相对好坏则容易得多，成本也低得多。
+* 从模型学习的角度来看，在 SFT 中，模型学习的是接下一个 token，对于答案整体没有考量；在 RLHF 中，模型学习的是对于答案整体的选择（强化学习的思路）。
+
+* PPO（先训练奖励模型，再将其作为环境使用 PPO 算法训练 LLM）[[2203.02155](https://arxiv.org/abs/2203.02155)]
+    * 
+
+* DPO（）[[2305.18290](https://arxiv.org/abs/2305.18290)]
+
+![](../../assets/ml/llm/training/instruct-gpt.png)
+
+#### 实现
 
 ### RLAIF
 
@@ -243,6 +268,10 @@
 * RLAIF（）[[2309.00267](https://arxiv.org/abs/2309.00267)]
 * self-rewarding（）[[2401.10020](https://arxiv.org/abs/2401.10020)]
 
-## PEFT
+#### 实现
+
+### PEFT
 
 PEFT（Parameter-Efficient Fine-Tuning，参数高效微调）方法仅微调少量模型参数，显著降低计算和存储成本，却能够实现与全参数微调相当的模型性能。
+
+#### 实现

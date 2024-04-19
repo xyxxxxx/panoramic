@@ -125,6 +125,7 @@ nav:
     - 深度学习:
       - 硬件平台: ml/dl/hardware-platform.md
       - 常用技术: ml/dl/common-techniques.md
+      - 并行训练、计算加速与内存优化技术: ml/dl/parallel-training.md
       # - 前馈神经网络（FNN）: ml/dl/fnn.md
       # - 卷积神经网络（CNN）: ml/dl/cnn.md 
       # - 循环神经网络（RNN）: ml/dl/rnn.md
@@ -135,16 +136,15 @@ nav:
       # - 生成对抗网络（GAN）: ml/dl/gan.md
     - 强化学习专题:
       - ml/rl/index.md
-      - 理解: ml/rl/understanding.md
+      - 算法: ml/rl/algorithm.md
     - LLM 专题:
       - ml/llm/index.md
+      - 架构: ml/llm/architecture.md
       - 训练: ml/llm/training.md
       - 推理: ml/llm/inference.md
       - 评估: ml/llm/evaluation.md
       - 应用: ml/llm/applications.md
-      - 理解: ml/llm/understanding.md
-    # - 分布式训练:
-    #   - ml/distributed/index.md
+      - 洞见: ml/llm/insights.md
 
 
 # Customization
