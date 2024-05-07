@@ -83,7 +83,7 @@ tensor([[    1,   518, 25580, 29962,  3532, 14816, 29903,  6778,    13,  3492,
 
 ## RAG
 
-RAG（retrieval-augmented generation）这一概念由 [[2005.11401](https://arxiv.org/abs/2005.11401)] 提出，其为预训练的参数化记忆生成模型（预训练 transformer）赋予了非参数化记忆（向量索引），并将其用在知识密集型的任务上。具体方法如下：
+RAG（retrieval-augmented generation）这一概念由 [2005.11401](https://arxiv.org/abs/2005.11401) 提出，其为预训练的参数化记忆生成模型（预训练 transformer）赋予了非参数化记忆（向量索引），并将其用在知识密集型的任务上。具体方法如下：
 
 ![](../../assets/ml/llm/rag.png)
 

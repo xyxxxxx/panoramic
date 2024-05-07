@@ -1,7 +1,8 @@
-# 并行训练、计算加速与内存优化技术
+# 并行策略、计算加速与内存优化技术
 
 !!! info "推荐阅读"
     * [Methods and tools for efficient training on a single GPU](https://huggingface.co/docs/transformers/main/en/perf_train_gpu_one) 以及同一章节下的其他文章
+    * [DeepSpeed: Extreme-scale model training for everyone](https://www.microsoft.com/en-us/research/blog/deepspeed-extreme-scale-model-training-for-everyone/)
 
 ## Data Parallelism（DP，数据并行）
 
@@ -142,7 +143,7 @@ ZeRO（Zero Redundancy Optimizer）是一套强大的**内存优化**技术，�
 
 ### ZeRO-DP
 
-数据并行复制模型和优化器到所有的工作器，因此内存不高效。ZeRO-DP（以下简称 ZeRO）利用数据并行的内存和计算资源，降低了用于模型训练的每个设备（GPU）的内存和计算需求。ZeRO 通过将各种模型训练状态（权重、梯度和优化器状态）在分布式训练硬件中的可用设备（GPU 和 CPU）之间进行分割，从而降低了每个 GPU 的内存消耗。具体而言，ZeRO 被实现为逐级递增的三个优化 stage，分别对应于优化器状态、梯度和参数的分割：
+数据并行复制模型和优化器到所有的工作器，因此内存不高效。ZeRO-DP（以下简称 ZeRO）利用数据并行的内存和计算资源，降低了用于模型训练的每个设备（GPU）的内存和计算需求。ZeRO 通过将各种模型训练状态（权重、梯度和优化器状态）在并行训练硬件中的可用设备（GPU 和 CPU）之间进行分割，从而降低了每个 GPU 的内存消耗。具体而言，ZeRO 被实现为逐级递增的三个优化 stage，分别对应于优化器状态、梯度和参数的分割：
 
 1. 分割优化器状态：每个进程仅保留其被分配的优化器状态，仅更新其优化器状态和对应的参数；不增加通信量。
 1. 增加分割梯度：每个进程仅保留与其优化器状态对应的梯度；不增加通信量。

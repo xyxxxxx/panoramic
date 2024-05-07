@@ -127,9 +127,9 @@
         attention_mask = attention_mask.to(dtype=torch.float).view(batch_size, -1)[:, None, None, :]
         attention_mask = (1.0 - attention_mask) * torch.finfo(attention_mask.dtype).min  # e.g. [0, 1, 1, 1] -> [dtype.min, 0, 0, 0]
         attention_bias = attention_bias + attention_mask  # e.g. [[0, dtype.min, dtype.min, dtype.min]    [[dtype.min, dtype.min, dtype.min, dtype.min]
-                                                          #       [0,         0, dtype.min, dtype.min] ->  [dtype.min,         0, dtype.min, dtype.min]
-                                                          #       [0,         0,         0, dtype.min]     [dtype.min,         0,         0, dtype.min]
-                                                          #       [0,         0,         0,         0]]    [dtype.min,         0,         0,         0]]
+                                                            #       [0,         0, dtype.min, dtype.min] ->  [dtype.min,         0, dtype.min, dtype.min]
+                                                            #       [0,         0,         0, dtype.min]     [dtype.min,         0,         0, dtype.min]
+                                                            #       [0,         0,         0,         0]]    [dtype.min,         0,         0,         0]]
         # `F.scaled_dot_product_attention()` 不能正确地处理 -inf，这里用 dtype.min 替代
 
         # for transformer blocks
@@ -193,7 +193,7 @@
         # 残差连接
         x = x0 + self.dropout(x)
         # end for transformer blocks
-        
+
         # 计算 logits
         # x: (batch_size, seq_len, d_model)
         # logits: (batch_size, seq_len, embedding_size)
@@ -239,7 +239,7 @@
 
 ### SFT（有监督微调）
 
-选取具有代表性的问题，人类编写答案。
+数据来自：选取具有代表性的问题，人类编写答案。
 
 #### 实现
 
@@ -247,18 +247,16 @@
 
 [2203.02155](https://arxiv.org/abs/2203.02155)
 
-先训练奖励模型，再将其作为环境使用 PPO 算法训练 LLM。
+先训练反映人类偏好的奖励模型，再将其作为环境使用 PPO 算法训练 LLM。
 
 ![](../../assets/ml/llm/training/instruct-gpt.png)
+
+数据来自：选取具有代表性的问题，LLM 生成两个（或多个）答案，人类对这些答案进行排序。
 
 比较 SFT 和 RLHF：
 
 * 从人类产生训练数据的角度看，人类写出高质量的答案并不容易（甚至写不出来），成本也高；但人类比较答案的相对好坏则容易得多，成本也低得多。
 * 从模型学习的角度来看，在 SFT 中，模型学习的是接下一个 token，对于答案整体没有考量；在 RLHF 中，模型学习的是对于答案整体的选择（强化学习的思路）。
-
-#### 数据
-
-人类对问题的两个（或多个）答案进行排序。
 
 #### 流程
 
@@ -268,11 +266,10 @@ TODO
 
 TODO
 
-### DPO
+### 新的 RL 算法
 
-[2305.18290](https://arxiv.org/abs/2305.18290)
-
-
+* DPO（）[[2305.18290](https://arxiv.org/abs/2305.18290)]
+* SPIN（）[[2401.01335](https://arxiv.org/abs/2401.01335)]
 
 #### 流程
 
@@ -280,15 +277,70 @@ TODO
 
 ### RLAIF
 
-* Constitutional AI（宪法 AI，）[[2212.08073](https://arxiv.org/abs/2212.08073)]
-* [[2304.03277](https://arxiv.org/abs/2304.03277)]
-* RLAIF（）[[2309.00267](https://arxiv.org/abs/2309.00267)]
-* self-rewarding（）[[2401.10020](https://arxiv.org/abs/2401.10020)]
+!!! note "注意"
+    在这一部分的表述中，“指令”指 SFT 样本或 RL 样本中的 prompt 部分，“prompt”专指为了让 LLM 生成数据而构建的 prompt。
 
-#### 实现
+* self-instruct（LLM SFT 自己）[[2212.10560](https://arxiv.org/abs/2212.10560)]
+    * SFT（注：原论文为“指令微调”）需要的人类编写的数据受限于数量（成本高）、多样性和创造性，self-instruct 方法使用 LLM 生成指令和回答以 SFT 这个 LLM 自身。
+    * 生成指令和回答的 prompt 均采用 few-shot，需要准备一些任务示例。
+    * self-instruct 方法应用于 vanilla GPT-3 ，得到的模型表现接近 text-davinci-001。
+    * Alpaca（使用 GPT-3.5 生成的数据 SFT LLaMA）[[tatsu-lab/stanford_alpaca](https://github.com/tatsu-lab/stanford_alpaca)]
+    * Vicuna（使用 ChatGPT 生成的数据 SFT LLaMA，对话来自用户分享）[[lm-sys/FastChat](https://github.com/lm-sys/FastChat)]
+    * LLaMA-GPT4（使用 GPT-4 生成的数据 SFT LLaMA，指令来自 Alpaca；另外使用 GPT-4 生成的数据训练反映 GPT-4 偏好的奖励模型）[[2304.03277](https://arxiv.org/abs/2304.03277)]
+* Constitutional AI（CAI，宪法 AI）[[2212.08073](https://arxiv.org/abs/2212.08073)]
+    * 理念：
+        * 利用 AI 来更有效地监督 AI，人类只需要制定一些原则（宏大愿景）
+        * RLHF 需要大量人类标注的数据，这些数据的成本高，并且人类无法有效地理解或总结这些数据。将 RL 目标编码为自然语言表述的原则的列表，并让 LLM 根据原则解释为何拒绝有害请求，会是更好的方案。
+        * 在无害程度相当的条件下，偏好更加积极、透明、解释性的回答，而不是回避性质的回答，例如”我不能回答这个问题“。因为出于安全方面的考虑，让 LLM 的思维过程保持透明十分重要；出于实践方面的考虑，正面回应的回答的有用性也更好。
+    * 方法：
+        1. 向一个 helpful RLHF 模型（经过 RLHF 训练，且训练数据仅包括有用性比较）（称为模型 A）展示一个被设计引导有害行为的指令，采样一个回答。然后要求模型 A 批评并修改该回答，重复数次，其中每次要求批评和要求修改的 prompt 是一对，从预先编写好的若干对（称为原则）中随机抽取，这些原则可以分别强调不同面向的有害性，它们和 4. 中的原则共同构成了宪法。每次修改后的回答都和当前指令拼接为一个 SFT 样本，准备许多这样的指令以收集数据。
+        1. 准备一些 helpfulness 指令（用于评估回答有用性的指令），采样模型 A 的回答，与当前指令拼接为一个 SFT 样本。
+        1. 使用 1. 和 2. 收集的数据 SFT 一个预训练模型（称为模型 B），得到的模型称为 SL-CAI。
+        1. 向 SL-CAI 展示一个指令，采样一对回答。然后将该指令和回答对展示给一个 feedback 模型（称为模型 C），并附加一个原则，要求模型 C 选择更好的回答。同样地，原则也是从预先编写好的若干个中随机抽取。计算两个回答的概率，作为 soft label（相比 hard label，训练出来的模型产生的回答更加健壮）和当前指令以及回答对拼接为一个 RL 样本，准备许多这样的指令以收集数据。要求选择回答的 prompt 可以选用 CoT。
+        1. 准备一些人类标注的有用性比较样本。
+        1. 使用 5. 和 6. 收集的数据 RL 训练 SL-CAI，得到的模型称为 RL-CAI。
+    * 结果：
+        
+        ![](../../assets/ml/llm/training/constitutional-ai.png)
+
+        以及，RL-CAI 几乎不会回避问题，而是给出透明并且无害的回答。
+
+* RLAIF（完善 RLAIF 方法）[[2309.00267](https://arxiv.org/abs/2309.00267)]
+    * LLM 标注偏好：向一个 labeler 模型（称为模型 A）展示一个指令和回答对，要求模型 A 选择更好的回答，计算两个回答的概率，作为 soft label 和当前指令以及回答对拼接为一个 RL 样本。
+        * 指令和回答对来自已有的数据集。
+        * 要求选择回答的 prompt 可以选用 few-shot 和 CoT。
+        * 交换两个回答的位置计算两次取平均，以消除位置偏差。
+        * 模型 A 可以是一个预训练模型或 SFT 过的模型。
+    * RLAIF：
+        * distilled RLAIF：使用收集的数据训练一个奖励模型（称为模型 B）。具体地，将模型 B 生成的分数作 softmax，计算得到的概率分布与 soft label 的交叉熵。模型 B 学习的是模型 A 的偏好，这可以视作是一种模型蒸馏。
+        * direct RLAIF：向一个 LLM（称为模型 C）展示一个指令和一个回答，以及具体的评分标准，要求模型 C 进行评分，计算 10 个分数（从 1 到 10）的概率，计算加权分数，再归一化到 [0,1] 区间以作为奖励。
+            * 要求进行评分的 prompt 可以选用 few-shot 和 CoT。
+            * 模型 C 可以是一个预训练模型或 SFT 过的模型。
+    * 结果：
+        * RLAIF 实现与 RLHF 相当或更好的模型表现。
+        * 即使 labeler 模型的大小与 policy（在 RLAIF 之前是一个 SFT 过的模型）相同，RLAIF 依然可以提升 policy 的表现。
+        * direct RLAIF 实现比 distilled RLAIF 更好的模型表现。
+        * 对于不同的任务，prompt 的最优配置也不同。
+* self-rewarding（LLM 奖励自己）[[2401.10020](https://arxiv.org/abs/2401.10020)]
+    * 方法：
+        1. 准备一些人类标注的指令遵循样本（称为 IFT 数据）和 LLM-as-a-Judge 指令遵循样本（prompt 包括指令、回答、评分标准，采用 CoT，要求 LLM 进行评分，称为 EFT 数据），SFT 一个预训练模型（称为 M0），得到的模型称为 M1。
+        1. 使用模型 M1 生成 RL 样本，重复下列步骤以收集数据：
+            1. 生成一个新的指令，prompt 采用 few-shot（来自 IFT）。
+            1. 采样 N 个候选回答。
+            1. 使用 LLM-as-a-Judge prompt 评估候选回答，从 0 到 5 打分，取最高分和最低分回答组成回答对。若最高分和最低分相同，则跳过当前循环。回答对与指令拼接为一个 RL 样本。
+        1. 使用 2. 收集的数据 RL（DPO）训练 M1，得到的模型称为 M2。
+        1. 重复 2. 和 3.，训练 M2，得到的模型称为 M3。
+
+        ![](../../assets/ml/llm/training/self-rewarding.png)
+
+    * 结果：
+        * SFT 阶段 EFT 数据的加入提升 LLM 作为奖励模型的评估能力，而几乎不影响 LLM 的指令遵循能力。
+        * 对于指令遵循能力，M1 < M2 < M3。M3 在 AlpacaEval 2.0（评估指令遵循能力）排行榜上超过了 Claude 2、Gemini Pro 和 GPT4 0613。
+        * 对于作为奖励模型的评估能力，M1 < M2 < M3。
+        * 对于在下游任务上的表现，对于大部分 NLP benchmark，M1 > M2 > M3，[2203.02155](https://arxiv.org/abs/2203.02155) 将这种现象称为对齐税（alignment tax）。
 
 ### PEFT
 
-PEFT（Parameter-Efficient Fine-Tuning，参数高效微调）方法仅微调少量模型参数，显著降低计算和存储成本，却能够实现与全参数微调相当的模型性能。
+PEFT（Parameter-Efficient Fine-Tuning，参数高效微调）方法仅微调少量模型参数，显著降低计算和存储成本，却能够实现与全参数微调相当的模型表现。
 
 #### 实现
