@@ -51,15 +51,58 @@ $$
     * 扩大 LLM 的规模。
     * 对于简短的回答，在相应的问题末尾附加“Answer the question using a single word or phrase”。这样微调出来的模型可以根据用户指令适当地调整输出格式（长短）。
 * Mini-Gemini（）[[2403.18814](https://arxiv.org/abs/2403.18814)]
+* GPT-4o（）
+
 
 ### 实现
 
-## MOE
+## MoE
 
 * MoE（）[[1701.06538](https://arxiv.org/abs/1701.06538)]
+
+MoE 层由一组 n 个**专家网络** $E_1,\cdots,E_n$，和一个**门控网络** $G$ 组成。这些专家都有各自的参数；尽管原则上我们只需要专家接受相同大小的输入并产生相同大小的输出，但在研究和实践中通常设定所有专家都是具有相同架构的 FNN。设 $G(x)$ 和 $E_i(x)$ 分别表示门控网络和第 $i$ 个专家网络对于给定输入 $x$ 的输出，则 MoE 层的输出 $y$ 可以写成如下形式：
+
+$$
+y=\sum_{i=1}^nG(x)_iE_i(x)
+$$
+
+门控网络的计算如下：
+
+$$
+\displaylines{
+    G(x)={\rm Softmax}({\rm KeepTopK}(H(x),k))\\
+    H(x)_i=(x\cdot W_g)_i+{\rm StandardNormal}()\cdot{\rm Softplus}((x\cdot W_{noise})_i)\\
+    {\rm KeepTopK}(v,k)_i=
+        \begin{cases}
+            v_i,     & \text{if $v_i$ is one of the top $k$ elements}\\
+            -\infty, & \text{otherwise}\\
+        \end{cases}
+}
+$$
+
+在应用 Softmax 函数之前，我们添加可调的高斯噪声，然后仅保留最大的 $k$ 个值，将其余值设为 $-∞$。这种稀疏性有助于减少计算量。噪声有助于负载均衡；噪声量由另一个可训练的权重矩阵 $W_{noise}$ 控制。
+
+MoE 层与模型的剩余部分一起，通过简单的反向传播训练。在数据并行的基础上每个 GPU 有且仅有一个专家，GPU 之间通信专家的输入输出。这使得专家数量（以及参数量）随着 GPU 数量的增加成比例增加，每个专家的 batch size 保持稳定，每个 GPU 的显存和带宽使用也保持固定。为了维护计算效率，专家的计算量与其输入输出大小的比率必须超过 GPU 的计算能力与其网络容量的比率。
+
+门控网络倾向于收敛到总是为相同的几个专家产生大的权重。这种不平衡是自我强化的，因为受偏爱的专家会更快地被训练，从而被门控网络更频繁地选择。为了负载均衡，MoE 层采取软约束的方法，定义重要性和相应的损失项如下：
+
+$$
+\displaylines{
+    {\rm Importance}(X)=\sum_{x\in X}G(x)\\
+    L_{\rm importance}(X)=w_{\rm importance}\cdot{\rm CV}({\rm Importance}(X))^2
+}
+$$
+
+其中 $X$ 为一个 batch 的训练样本，${\rm CV}$ 为变异系数，$w_{\rm importance}$ 是一个超参数。这个额外的损失项鼓励所有专家有相等的重要性。
+
+尽管上述损失项可以确保相等的重要性，专家仍然可能收到数量非常不同的样本。例如，一个专家可能收到一些大权重的样本，而另一个则可能接到许多小权重的样本，从而导致分布式硬件上的内存和性能问题。为了解决这个问题，第二个损失项 $L_{\rm load}$ 被引入，详见原论文的附录 A。
 
 ### 实现
 
 ## 新架构
 
 * RWKV（）[[2305.13048](https://arxiv.org/abs/2305.13048)]
+
+* YOCO（You Only Cache Once）[[2405.05254](https://arxiv.org/abs/2405.05254)]
+
+* https://arxiv.org/pdf/2405.09818
