@@ -65,9 +65,10 @@ tensor([[    1,   518, 25580, 29962,  3532, 14816, 29903,  6778,    13,  3492,
 * Re3（生成长篇故事）[[2210.06774](https://arxiv.org/abs/2210.06774)]
 * automatic prompt engineer（提供输入输出示例，LLM 生成多个 prompt，评估选出效果最好的）[[2211.01910](https://arxiv.org/abs/2211.01910)]
 * active prompt（选出 LLM 多次回复最不一致的问题，人类标注 CoT 过程）[[2302.12246](https://arxiv.org/abs/2302.12246), [2305.08291](https://arxiv.org/abs/2305.08291)]
-* Tree-of-Thought(ToT)（将思维链扩展为思维树，LLM 每一步先生成几个备选答案，再检查每个答案是否正确；可以使用深度或广度优先的搜索策略）[[2305.10601](https://arxiv.org/abs/2305.10601)]
-* Graph-of-Thought(GoT)（将思维树扩展为思维图，类似一个工作流）[[2308.09687](https://arxiv.org/abs/2308.09687)]
+* Tree-of-Thought（ToT）（将思维链扩展为思维树，LLM 每一步先生成几个备选答案，再检查每个答案是否正确；可以使用深度或广度优先的搜索策略）[[2305.10601](https://arxiv.org/abs/2305.10601)]
+* Graph-of-Thought（GoT）（将思维树扩展为思维图，类似一个工作流）[[2308.09687](https://arxiv.org/abs/2308.09687)]
 * emotion prompt（对模型进行情绪勒索）[[2307.11760](https://arxiv.org/abs/2307.11760)]
+* Buffer of Thoughts（BoT）（）[[2406.04271](https://arxiv.org/abs/2406.04271)]
 
 !!! note "注意"
     prompting 方法对于更新、更强的 LLM 可能会失效。
@@ -157,6 +158,10 @@ LLM 凭借其推理、指令遵循、上下文学习和工具使用等多项能�
 * WebGPT（LLM 使用搜索引擎和浏览网页文本：环境将当前的完整状态提供给 LLM，LLM 生成一个命令以采取一项规定动作；训练方法是有监督微调和 RLHF）[[2112.09332](https://arxiv.org/abs/2112.09332)]
 * Toolformer（LLM 自主调用 API；训练方法是有监督微调，训练数据由 LLM 自己根据 few-shot 生成，且过滤掉没有帮助的调用；推理时一旦产生特殊 token →，则停止生成并调用 API，附加结果和特殊 token `</API>` 后继续生成）[[2302.04761](https://arxiv.org/abs/2302.04761)]
 * AnyTool（多个 LLM 组成具有层次结构的 API retriever，从结构化的 API 组织中检索与查询最相关的 API）[[2402.04253](https://arxiv.org/abs/2402.04253)]
+
+### 开放式学习
+
+* Voyager
 
 ### 迈向 OS
 

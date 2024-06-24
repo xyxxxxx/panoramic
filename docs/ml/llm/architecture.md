@@ -52,13 +52,17 @@ $$
     * 对于简短的回答，在相应的问题末尾附加“Answer the question using a single word or phrase”。这样微调出来的模型可以根据用户指令适当地调整输出格式（长短）。
 * Mini-Gemini（）[[2403.18814](https://arxiv.org/abs/2403.18814)]
 * GPT-4o（）
+* Chameleon（原生多模态模型）
 
+附图像嵌入方法：
+
+![](https://picx.zhimg.com/80/v2-ff587c6b8d0f0a2d4bf83fd2280025ed_720w.webp?source=1def8aca)
 
 ### 实现
 
 ## MoE
 
-* MoE（）[[1701.06538](https://arxiv.org/abs/1701.06538)]
+* MoE（混合专家网络）[[1701.06538](https://arxiv.org/abs/1701.06538)]
 
 MoE 层由一组 n 个**专家网络** $E_1,\cdots,E_n$，和一个**门控网络** $G$ 组成。这些专家都有各自的参数；尽管原则上我们只需要专家接受相同大小的输入并产生相同大小的输出，但在研究和实践中通常设定所有专家都是具有相同架构的 FNN。设 $G(x)$ 和 $E_i(x)$ 分别表示门控网络和第 $i$ 个专家网络对于给定输入 $x$ 的输出，则 MoE 层的输出 $y$ 可以写成如下形式：
 

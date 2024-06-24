@@ -171,7 +171,7 @@ tokenizer 的迭代呈现以下特点：
     GPT-2 的词汇表规模约为 50k，GPT-4 约为 100k，当前实践普遍将词汇表规模定在 50-100k 区间。进一步扩大词汇表规模不一定能提升 LLM 的表现，因为：
     
     * 嵌入表的规模扩大，使得 LLM 的计算量增加。
-    * 出现频率低的 token 对应的向量可能 undertrained。请参阅 [SolidGoldMagikarp](https://www.lesswrong.com/posts/aPeJE8bSo6rAFoLqg/solidgoldmagikarp-plus-prompt-generation)。
+    * 在 LLM 的训练数据中出现频率低（甚至从未出现过）的 token 对应的向量可能 undertrained。请参阅 [SolidGoldMagikarp](https://www.lesswrong.com/posts/aPeJE8bSo6rAFoLqg/solidgoldmagikarp-plus-prompt-generation)。
     * 一些 token 过于 dense，LLM 正确处理的难度增加。
 
 ### sentencepiece
