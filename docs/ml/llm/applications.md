@@ -46,6 +46,7 @@ tensor([[    1,   518, 25580, 29962,  3532, 14816, 29903,  6778,    13,  3492,
 ### 提示工程
 
 !!! info "参考"
+    * [2406.06608](https://arxiv.org/abs/2406.06608)
     * [提示工程指南](https://www.promptingguide.ai)
 
 在与 LLM 聊天（使用 LLM 生成文本）时，输入的格式和内容是自由的，而输入会影响 LLM 的行为（输出的分布）。精心或巧妙构建出的提示词（prompt）可以让 LLM 更加贴合用户的需求，提升特定能力，或处理特定形式的任务等。
@@ -54,21 +55,220 @@ tensor([[    1,   518, 25580, 29962,  3532, 14816, 29903,  6778,    13,  3492,
 
 但不应让用户自己来做提示工程，这会损害使用体验，自然的提示词（类似人与人的交流）一定是体验最好的。
 
-下面是一些 prompting 方法：
+下面是一些 prompting 技术：
 
-* zero-shot（基线）
-* few-shot（出自 GPT-3 的论文）[[2005.14165](https://arxiv.org/abs/2005.14165)]
-* generate knowledge prompting（LLM 先生成与问题相关的知识，再参考其进行回复）[[2110.08387](https://arxiv.org/abs/2110.08387)]
-* Chain-of-Thought（CoT）[[2201.11903](https://arxiv.org/abs/2201.11903)]
-* self-consistency（采样多个答案，选取最一致的答案）[[2203.11171](https://arxiv.org/abs/2203.11171)]
-* Auto-CoT（聚类选出多样的问题，LLM 对它们生成 CoT 过程）[[2210.03493](https://arxiv.org/abs/2210.03493)]
-* Re3（生成长篇故事）[[2210.06774](https://arxiv.org/abs/2210.06774)]
-* automatic prompt engineer（提供输入输出示例，LLM 生成多个 prompt，评估选出效果最好的）[[2211.01910](https://arxiv.org/abs/2211.01910)]
-* active prompt（选出 LLM 多次回复最不一致的问题，人类标注 CoT 过程）[[2302.12246](https://arxiv.org/abs/2302.12246), [2305.08291](https://arxiv.org/abs/2305.08291)]
-* Tree-of-Thought（ToT）（将思维链扩展为思维树，LLM 每一步先生成几个备选答案，再检查每个答案是否正确；可以使用深度或广度优先的搜索策略）[[2305.10601](https://arxiv.org/abs/2305.10601)]
-* Graph-of-Thought（GoT）（将思维树扩展为思维图，类似一个工作流）[[2308.09687](https://arxiv.org/abs/2308.09687)]
-* emotion prompt（对模型进行情绪勒索）[[2307.11760](https://arxiv.org/abs/2307.11760)]
-* Buffer of Thoughts（BoT）（）[[2406.04271](https://arxiv.org/abs/2406.04271)]
+<table>
+    <thead>
+        <tr>
+            <th>方法</th>
+            <th>概述</th>
+            <th>细节</th>
+            <th>备注</th>
+            <th>论文</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>zero-shot</td>
+            <td>仅给出指令</td>
+            <td></td>
+            <td>作为基线</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>few-shot</td>
+            <td>提供一些范例</td>
+            <td>
+                <ul>
+                    <li>增加范例的数量通常对模型表现有提升，但超过 20 个之后提升可能不显著</li>
+                    <li>范例的顺序对模型表现有影响（什么样的影响？）</li>
+                    <li>范例标签的不均匀分布会使得模型产生偏向</li>
+                    <li>范例标签的正确率对模型表现是否有影响尚有争议</li>
+                    <li>范例的格式对模型表现有影响，训练数据中常出现的格式会带来更好的表现</li>
+                </ul>
+            </td>
+            <td>又称为 ICL（In-Context Learning）</td>
+            <td><a href="https://arxiv.org/abs/2005.14165">2005.14165</a>（GPT-3 的论文）</td>
+        </tr>
+        <tr>
+            <td>generate knowledge prompting</td>
+            <td>LLM 先生成与问题相关的知识，再参考其进行回复</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2110.08387">2110.08387</a></td>
+        </tr>
+        <tr>
+            <td>Chain-of-Thought（CoT）</td>
+            <td>LLM 给出思维过程</td>
+            <td>
+                <ul>
+                    <li>对模型在数学和推理任务上的表现有显著提升</li>
+                    <li>可以是 zero-shot 或 few-shot</li>
+                </ul>
+            </td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2201.11903">2201.11903</a></td>
+        </tr>
+        <tr>
+            <td>self-consistency</td>
+            <td>采样多个答案（CoT），行多数决</td>
+            <td>方法通用</td>
+            <td>可以让 LLM 计数</td>
+            <td><a href="https://arxiv.org/abs/2203.11171">2203.11171</a></td>
+        </tr>
+        <tr>
+            <td>max mutual information</td>
+            <td>生成具有不同风格（或提供不同范例）的多个 prompt 模板，选取最优模板，即最大化 prompt 和 LLM 输出的互信息的模板</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2203.11364">2203.11364</a></td>
+        </tr>
+        <tr>
+            <td>least-to-most prompting</td>
+            <td>LLM 先分解问题为几个子问题，再顺序解答，已解答的子问题 Q&A 会被附加到 prompt 中</td>
+            <td></td>
+            <td>与 CoT 存在相似之处</td>
+            <td><a href="https://arxiv.org/abs/2205.10625">2205.10625</a></td>
+        </tr>
+        <tr>
+            <td>RLPrompt</td>
+            <td>（基于强化学习的方法）</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2205.12548">2205.12548</a></td>
+        </tr>
+        <tr>
+            <td>complexity-based prompting</td>
+            <td>基于 few-shot CoT；选取复杂（步数多）的范例；采样 n 个答案，其中最复杂的 k 个答案行多数决</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2210.00720">2210.00720</a></td>
+        </tr>
+        <tr>
+            <td>DECOMP（Decomposed Prompting）</td>
+            <td>一个 decomposer 负责分解任务为几个（预定义的）子任务，几个 sub-task handler 负责处理相应的子任务，它们各自有专属的 few-shot prompt，另见图 1 和图 2</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2210.02406">2210.02406</a></td>
+        </tr>
+        <tr>
+            <td>Re3</td>
+            <td>生成长篇故事</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2210.06774">2210.06774</a></td>
+        </tr>
+        <tr>
+            <td>Auto-CoT</td>
+            <td>聚类选取具有代表性的几个问题，LLM 生成 CoT（zero-shot）并作为新的范例</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2210.03493">2210.03493</a></td>
+        </tr>
+        <tr>
+            <td>Automatic Prompt Engineer（APE）</td>
+            <td>LLM 根据范例生成多个 prompt，评估选取得分最高的；（可选）LLM 为得分最高的 prompt 生成多个变体，继续评估选取得分最高的</td>
+            <td>方法通用</td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2211.01910">2211.01910</a></td>
+        </tr>
+        <tr>
+            <td>Program-of-Thoughts</td>
+            <td>LLM（e.g. Codex、CodeLlama）生成代码作为推理步骤，代码解释器执行这些步骤得到最终答案</td>
+            <td>在数学和编程相关的任务中效果出色，但在语义推理任务中效果较差</td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2211.12588">2211.12588</a></td>
+        </tr>
+        <tr>
+            <td>active prompting</td>
+            <td>从问题集中选取 LLM 多次回复（CoT）最不一致的几个问题，人类标注 CoT 并作为新的范例</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2302.12246">2302.12246</a>, <a href="https://arxiv.org/abs/2305.08291">2305.08291</a></td>
+        </tr>
+        <tr>
+            <td>Self-Refine</td>
+            <td>LLM 迭代地为它的答案提供反馈并据此改进</td>
+            <td>方法通用</td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2303.17651">2303.17651</a></td>
+        </tr>
+        <tr>
+            <td>ProTeGi</td>
+            <td>LLM 先根据 prompt 和失败示例生成改进意见，再根据 prompt、失败示例和改进意见生成多个新的 prompt，最后使用 bandit 算法选择一个</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2305.03495">2305.03495</a></td>
+        </tr>
+        <tr>
+            <td>Tree-of-Thought（ToT）</td>
+            <td>将思维链扩展为思维树，LLM 每一步先生成几个中间想法（few-shot），再自我评估（打分、投票等）选取朝向解决问题最有进展的想法（few-shot CoT）以继续；可以使用深度或广度优先的搜索策略</td>
+            <td>对需要计划和搜索的任务尤其有效</td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2305.10601">2305.10601</a></td>
+        </tr>
+        <tr>
+            <td>emotion prompting</td>
+            <td>对 LLM 进行情绪勒索</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2307.11760">2307.11760</a></td>
+        </tr>
+        <tr>
+            <td>Cumulative Reasoning（CR）</td>
+            <td>LLM 扮演三种角色合作推理（all with CoT）：proposer 基于当前上下文提出下一步的方案；verifier 评估方案，接受有效的方案并加入到上下文；reporter 选择适当的时机结束推理过程</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2308.04371">2308.04371</a></td>
+        </tr>
+        <tr>
+            <td>Graph-of-Thought（GoT）</td>
+            <td>将思维树扩展为思维图，类似一个工作流</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2308.09687">2308.09687</a></td>
+        </tr>
+        <tr>
+            <td>Chain-of-Verification（CoVe）</td>
+            <td>
+                <ul>
+                    <li>（all with few-shot）LLM 生成初始回复</li>
+                    <li>生成一组验证问题以检查该回复</li>
+                    <li>独立地回答每个验证问题</li>
+                    <li>根据验证 Q&A 生成最终回复</li>
+                </ul>
+            </td>
+            <td>适用于问答任务</td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2309.11495">2309.11495</a></td>
+        </tr>
+        <tr>
+            <td>role prompting</td>
+            <td>LLM 进行角色扮演</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2310.00746">2310.00746</a></td>
+        </tr>
+        <tr>
+            <td>System 2 Attention（S2A）</td>
+            <td>LLM 先改写 prompt 以移除与问题本身不相关的信息，再根据新的 prompt 生成回复</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2310.00746">2311.11829</a></td>
+        </tr>
+        <tr>
+            <td>Buffer of Thoughts（BoT）</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2406.04271">2406.04271</a></td>
+        </tr>
+    </tbody>
+</table>
+
+![](../../assets/ml/llm/applications/decomp1.png)
+
+![](../../assets/ml/llm/applications/decomp2.png)
 
 !!! note "注意"
     prompting 方法对于更新、更强的 LLM 可能会失效。
@@ -80,22 +280,19 @@ tensor([[    1,   518, 25580, 29962,  3532, 14816, 29903,  6778,    13,  3492,
 * 对 LLM 说“我会为一个更好的答案付x元小费”是有用的。
 * 对 LLM 说“（如果你不能完成任务）你将会受到惩罚”是有用的。
 
-提示注入（或提示攻击）是提示工程的一种恶意利用，其通过巧妙的提示词诱导 LLM 产生有害或不希望的输出（例如变更任务、突破限制、泄露机密或隐私信息等）。
+提示攻击（prompt hacking）是提示工程的一种恶意利用，其通过巧妙的提示词诱导 LLM 产生有害或不希望的输出（例如变更任务、突破限制、泄露机密或隐私信息等）。越狱（jailbreaking）和提示注入（prompt injection）都属于提示攻击，辨析如下：
 
-!!! info "信息"
-    对越狱（jailbreaking）和提示注入（prompt injection）概念的辨析：
-
-    |            | 越狱                       | 提示注入                                   |
-    | ---------- | -------------------------- | ------------------------------------------ |
-    | 攻击对象   | LLM 本身                   | 基于 LLM 的应用                            |
-    | 攻击结果   | LLM 产生有害或未对齐的输出 | LLM 玩忽职守，在不恰当的时机做不恰当的事情 |
-    | 类比到人类 | 违法犯罪                   | 在上课时间突然唱歌                         |
+|            | 越狱                       | 提示注入                                   |
+| ---------- | -------------------------- | ------------------------------------------ |
+| 攻击对象   | LLM 本身                   | 基于 LLM 的应用                            |
+| 攻击结果   | LLM 产生有害或未对齐的输出 | LLM 玩忽职守，在不恰当的时机做不恰当的事情 |
+| 类比到人类 | 违法犯罪                   | 在上课时间突然唱歌                         |
 
 ## RAG
 
 RAG（retrieval-augmented generation）这一概念由 [2005.11401](https://arxiv.org/abs/2005.11401) 提出，其为预训练的参数化记忆生成模型（预训练 transformer）赋予了非参数化记忆（向量索引），并将其用在知识密集型的任务上。具体方法如下：
 
-![](../../assets/ml/llm/rag.png)
+![](../../assets/ml/llm/applications/rag.png)
 
 该方法本来是一个微调方法，对组合架构进行端到端的训练。亦即，使用成对的 QA 数据，最小化 $\sum_i -\log p(y_i|x_i)$，来同时微调生成回复的 LM（BART）和编码查询文本的 LM（BERT）（若要微调编码文档的 LM（BERT），则需要定期重新编码文档，开销较大，原论文发现其对于模型表现提升不大，于是固定其参数）。
 
