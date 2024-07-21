@@ -145,7 +145,11 @@ nav:
       - 评估: ml/llm/evaluation.md
       - 应用: ml/llm/applications.md
       - 洞见: ml/llm/insights.md
-
+  - 生活方式:
+    - lifestyle/index.md
+    - 摄影: lifestyle/photography.md
+    - 烹饪: lifestyle/cooking.md
+    # - 驾驶: lifestyle/driving.md
 
 # Customization
 # extra:
