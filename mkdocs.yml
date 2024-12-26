@@ -72,8 +72,9 @@ plugins:
 # Page Tree
 nav:
   - 首页: index.html
-  # - 数学:
-  #   - math/index.md
+  - 数学:
+    - math/index.md
+    - 线性代数: math/la.md
   #   - 代数:
   #     - math/algebra/index.md
   #     - 基础代数: math/algebra/elementary-algebra.md

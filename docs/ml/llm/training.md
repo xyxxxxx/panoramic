@@ -347,4 +347,208 @@ TODO
 
 PEFT（Parameter-Efficient Fine-Tuning，参数高效微调）方法仅微调少量模型参数，显著降低计算和存储成本，却能够实现与全参数微调相当的模型表现。
 
+PEFT 方法可以粗略分为以下三大类：
+
+* additive：原始参数保持冻结，增加新的模块/参数进行微调
+    * adapters（引入 adapter 模块）
+    * soft prompts（引入虚拟 token）
+* selective：仅更新原始参数的一部分，其他参数保持冻结
+* reparameterization：不直接更新原始参数（的一部分），而是用一个更小的参数矩阵来表示原始参数的变化
+
+![](https://s2.loli.net/2024/12/26/ZV7T9eKfQ6kYSjs.png)
+
+* Adapter tuning（训练串联的 adapter 模块）[[1902.00751](https://arxiv.org/abs/1902.00751)]
+
+![](https://s2.loli.net/2024/12/25/qbWEhonlj5mPDkK.png)
+
+* Prefix-Tuning（训练虚拟 token 前缀）[[2101.00190](https://arxiv.org/abs/2101.00190)]
+    * 前缀就是若干个连续的、可训练的嵌入向量，放在输入序列之前，为接下来的生成提供某种上下文。
+    * 前缀长度最小可取 1；前缀越长，可训练参数越多，表达能力越强，与此同时需要的注意力计算量越大，从而降低训练和推理速度。
+    * 每个注意力层有自己单独的前缀。
+    * 每种任务可训练一套前缀。
+
+<img alt="architecture" src="https://s2.loli.net/2024/12/25/VYdtQxykNavSRjO.png" width="350" />
+
+* P-tuning（）[[]()]
+
+* LoRA（训练并联的秩分解矩阵）[[2106.09685](https://arxiv.org/abs/2106.09685)]
+    * 秩分解矩阵就是令权重更新矩阵 $ΔW=BA$，其中 $W\in\mathbb{R}^{m×n},B\in\mathbb{R}^{m×r},A\in\mathbb{R}^{r×n},r<<\min(m,n)$。
+    * 原则上，可为任何权重矩阵应用 LoRA；实践中，通常为 $W_q$ 和 $W_v$ 应用 LoRA。
+    * LoRA 对于小数据量的微调也十分有效。
+    * （对于预训练模型）较为简单的下游任务对应较小的最优秩 $r$ ，这意味着相应的 $ΔW$ 有较小的本征秩（intrinsic rank）；反之亦然。
+    * 秩分解矩阵潜在地放大对于特定下游任务重要的、在通用预训练模型中已学到但并未被强调的特征。
+
+<img alt="architecture" src="https://s2.loli.net/2024/12/25/obatldr4iWf5kIM.png" width="200" />
+
+* BitFit（仅更新偏置参数）[[2106.10199](https://arxiv.org/abs/2106.10199)]
+
+* QLoRA（）[[]()]
+
 #### 实现
+
+##### Adapter tuning
+
+
+
+##### Prefix-Tuning
+
+```python 
+def forward(
+    self,
+    input_ids=None,
+    attention_mask=None,
+    inputs_embeds=None,
+    labels=None,
+    output_attentions=None,
+    output_hidden_states=None,
+    return_dict=None,
+    task_ids=None,
+    **kwargs,
+):
+    peft_config = self.active_peft_config
+
+    # 非 soft prompts 类型方法
+    if not peft_config.is_prompt_learning:
+        ...
+
+    # soft prompts 类型方法
+    batch_size = _get_batch_size(input_ids, inputs_embeds)
+    if attention_mask is not None:
+        # 拼接 prompt attention mask
+        prefix_attention_mask = torch.ones(batch_size, peft_config.num_virtual_tokens).to(attention_mask.device)
+        attention_mask = torch.cat((prefix_attention_mask, attention_mask), dim=1)
+
+    ...
+    kwargs.update(
+        {
+            "attention_mask": attention_mask,
+            "labels": labels,
+            "output_attentions": output_attentions,
+            "output_hidden_states": output_hidden_states,
+            "return_dict": return_dict,
+        }
+    )
+
+    if peft_config.peft_type == PeftType.PREFIX_TUNING:
+        # 生成 past_key_values 格式的 prompt
+        kwargs["past_key_values"] = self.get_prompt(batch_size)
+        # 调用基础模型的前向计算
+        return self.base_model(input_ids=input_ids, inputs_embeds=inputs_embeds, **kwargs)
+```
+
+进一步查看如何生成 prompt：
+
+```python
+def get_prompt(self, batch_size: int, task_ids: Optional[torch.Tensor] = None) -> torch.Tensor:
+    peft_config = self.active_peft_config
+    # 获取 prefix encoder
+    prompt_encoder = self.prompt_encoder[self.active_adapter]
+    # 获取虚拟 token 索引，e.g. [0, 1, 2, 3]
+    prompt_tokens = (
+        self.prompt_tokens[self.active_adapter]
+        .unsqueeze(0)
+        .expand(batch_size, -1)
+        .to(prompt_encoder.embedding.weight.device)
+    )
+    if peft_config.peft_type == PeftType.PREFIX_TUNING:
+        prompt_tokens = prompt_tokens[:, : peft_config.num_virtual_tokens]
+        if peft_config.inference_mode:
+            # 在推理模式下，直接重复虚拟 token 前缀
+            past_key_values = prompt_encoder.embedding.weight.repeat(batch_size, 1, 1)
+        else:
+            # 在训练模式下，使用 prefix encoder 生成虚拟 token 前缀
+            past_key_values = prompt_encoder(prompt_tokens)
+        if self.base_model_torch_dtype is not None:
+            past_key_values = past_key_values.to(self.base_model_torch_dtype)
+        past_key_values = past_key_values.view(
+            batch_size,
+            peft_config.num_virtual_tokens,
+            peft_config.num_layers * 2,
+            peft_config.num_attention_heads,
+            peft_config.token_dim // peft_config.num_attention_heads,
+        )
+        if peft_config.num_transformer_submodules == 2:
+            past_key_values = torch.cat([past_key_values, past_key_values], dim=2)
+        past_key_values = past_key_values.permute([2, 0, 3, 1, 4]).split(
+            peft_config.num_transformer_submodules * 2
+        )
+        if TRANSFORMERS_MODELS_TO_PREFIX_TUNING_POSTPROCESS_MAPPING.get(self.config.model_type, None) is not None:
+            post_process_fn = TRANSFORMERS_MODELS_TO_PREFIX_TUNING_POSTPROCESS_MAPPING[self.config.model_type]
+            past_key_values = post_process_fn(past_key_values)
+        return past_key_values
+    else:
+        ...
+```
+
+进一步查看 prefix encoder 的实现：
+
+```python
+class PrefixEncoder(torch.nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        # 是否启用投影
+        self.prefix_projection = config.prefix_projection
+        # 虚拟 token 嵌入维数
+        token_dim = config.token_dim
+        # 层数
+        num_layers = config.num_layers
+        # 编码器隐藏维数
+        encoder_hidden_size = config.encoder_hidden_size
+        # 虚拟 token 数量
+        num_virtual_tokens = config.num_virtual_tokens
+
+        if self.prefix_projection and not config.inference_mode:
+            # 嵌入虚拟 token
+            self.embedding = torch.nn.Embedding(num_virtual_tokens, token_dim)
+            # 通过两层 MLP 变换
+            self.transform = torch.nn.Sequential(
+                torch.nn.Linear(token_dim, encoder_hidden_size),
+                torch.nn.Tanh(),
+                torch.nn.Linear(encoder_hidden_size, num_layers * 2 * token_dim),
+            )
+        else:
+            # 直接嵌入虚拟 token 到所有层
+            self.embedding = torch.nn.Embedding(num_virtual_tokens, num_layers * 2 * token_dim)
+
+    def forward(self, prefix: torch.Tensor):
+        if self.prefix_projection:
+            # 先嵌入后变换
+            prefix_tokens = self.embedding(prefix)
+            past_key_values = self.transform(prefix_tokens)
+        else:
+            # 直接嵌入
+            past_key_values = self.embedding(prefix)
+        return past_key_values
+```
+
+**P-tuning**
+
+
+**LoRA**
+
+以 peft 库为例，其 LoRA 微调的实现可以参阅[代码实现](https://zhuanlan.zhihu.com/p/650197598)。
+
+**BitFit**
+
+```python
+# 加载预训练模型
+model = AutoModelForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True)
+
+# 计算模型的总参数量
+print(sum(param.numel() for param in model.parameters()))
+
+# BitFit微调 - 只训练bias参数
+num_param = 0
+for name, param in model.named_parameters():
+    if "bias" not in name:
+        param.requires_grad = False  # 非bias参数冻结
+    else:
+        num_param += param.numel()  # 统计bias参数数量
+
+# 打印bias参数数量
+print(num_param)
+# 打印bias参数占总参数的比例
+print(num_param / sum(param.numel() for param in model.parameters()))
+```
+
+**QLoRA**

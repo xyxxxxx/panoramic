@@ -307,6 +307,9 @@ RAG（retrieval-augmented generation）这一概念由 [2005.11401](https://arxi
 
 ## 智能体
 
+!!! info "参考"
+    * [从第一性原理看大模型 Agent 技术](https://mp.weixin.qq.com/s/PL-QjlvVugUfmRD4g0P-qQ)
+
 对于智能体（agent）的定义，就和对于通用人工智能（AGI）的定义一样莫衷一是。综合现有的观点，智能体应能够：
 
 * 通过某种方式与环境互动（包括输入和输出）
@@ -339,6 +342,72 @@ LLM 凭借其推理、指令遵循、上下文学习和工具使用等多项能�
 * AutoGen（基于多智能体对话的 LLM 应用框架）[[2308.08155](https://arxiv.org/abs/2308.08155)]
 * Dynamic LLM-Agent Network（考核智能体的表现，开除表现较差的智能体，从而优化团队）[[2310.02170](https://arxiv.org/abs/2310.02170)]
 * Exchange-of-Thought（不同任务适合不同的讨论模式）[[2312.01823](https://arxiv.org/abs/2312.01823)]
+* Swarm（符合人体工学的、轻量级的、多智能体编排框架）[[openai/swarm](https://github.com/openai/swarm)]
+
+#### Swarm
+
+**运行 Swarm**
+
+`client.run()` 实现如下流程：
+
+1. 从当前代理的属性获取模型、指令（作为 system message）和函数（作为 tools），发送 chat completion 请求。
+2. 将响应的 message 添加到对话历史。如果 message 包含 content，返回最终的 Response；如果 message 包含 tool_calls，调用相应的函数，构造 message 并添加到对话历史，更新上下文变量。
+3. 如果对话历史的长度超过最大轮数，返回最终的 Response；否则回到 1.。
+
+`client.run()` 的参数：
+
+| 参数                  | 类型    | 描述                                                                                                                                         | 默认值         |
+| --------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| **agent**             | `Agent` | 要调用的（初始）代理。                                                                                                                       | （必填）       |
+| **messages**          | `List`  | 消息对象的列表，格式与 [Chat Completions `messages`](https://platform.openai.com/docs/api-reference/chat/create#chat-create-messages) 相同。 | （必填）       |
+| **context_variables** | `dict`  | 一个包含额外上下文变量的字典，这些变量可供函数和代理指令使用。                                                                               | `{}`           |
+| **max_turns**         | `int`   | 允许的最大对话轮次。                                                                                                                         | `float("inf")` |
+| **model_override**    | `str`   | 一个可选的字符串，用于覆盖代理使用的模型。                                                                                                   | `None`         |
+| **execute_tools**     | `bool`  | 如果为 `False`，当代理尝试调用函数时，会中断执行并立即返回 `tool_calls` 消息。                                                               | `True`         |
+| **stream**            | `bool`  | 如果为 `True`，启用流式响应。                                                                                                                | `False`        |
+| **debug**             | `bool`  | 如果为 `True`，启用调试日志记录。                                                                                                            | `False`        |
+
+`client.run()` 返回一个 `Response` 对象，其包含最新的状态信息，可以被传递给下一个 `client.run()` 以继续交互。`Response` 的属性：
+
+| 字段                  | 类型    | 描述                                                                                                                                                                                             |
+| --------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **messages**          | `List`  | 消息对象的列表，格式与 [Chat Completions `messages`](https://platform.openai.com/docs/api-reference/chat/create#chat-create-messages) 类似，但增加了一个 `sender` 字段，指示该消息来自哪个代理。 |
+| **agent**             | `Agent` | 处理最后一条消息的代理。                                                                                                                                                                         |
+| **context_variables** | `dict`  | 最新的上下文变量。                                                                                                                                                                               |
+
+**代理**
+
+`Agent` 的属性：
+
+| 属性             | 类型                     | 描述                                             | 默认值                       |
+| ---------------- | ------------------------ | ------------------------------------------------ | ---------------------------- |
+| **name**         | `str`                    | 代理的名称。                                     | `"Agent"`                    |
+| **model**        | `str`                    | 代理使用的模型。                                 | `"gpt-4o"`                   |
+| **instructions** | `str` 或 `func() -> str` | 代理的指令，可以是一个字符串或返回字符串的函数。 | `"You are a helpful agent."` |
+| **functions**    | `List`                   | 代理可以调用的函数列表。                         | `[]`                         |
+| **tool_choice**  | `str`                    | 代理的工具选择（如果有的话）。                   | `None`                       |
+
+代理的说明：
+
+* 当前代理的指令被设为聊天的系统信息。
+
+**函数**
+
+函数的说明：
+
+* 函数应返回一个字符串、一个代理对象或一个 `Result` 对象：
+    * 如果返回一个字符串，则作为 tool message 的 content。
+    * 如果返回一个代理对象，则执行将转移给它。
+    * 如果返回一个 `Result` 对象，则可选地返回一个字符串、返回一个代理对象以及更新上下文变量。
+* 如果函数定义了 `context_variables` 参数，则该参数将由传递给 `client.run()` 的 `context_variables` 参数的值填充。
+
+`Result` 的属性：
+
+| 字段                  | 类型    | 描述                   |
+| --------------------- | ------- | ---------------------- |
+| **value**             | `str`   |                        |
+| **agent**             | `Agent` | 执行被转移给的代理。   |
+| **context_variables** | `dict`  | 对于上下文变量的更新。 |
 
 ### 工具使用
 
@@ -363,3 +432,6 @@ LLM 凭借其推理、指令遵循、上下文学习和工具使用等多项能�
 ### 迈向 OS
 
 * MemGPT
+
+
+

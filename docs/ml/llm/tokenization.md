@@ -85,12 +85,12 @@ def decode(ids):
 ```
 
 !!! info "信息"
-    训练 tokenizer 完成后，保存合并规则和词汇表即可进行后续编解码。
+    训练 tokenizer 完成后，保存合并规则和词汇表即可进行后续编解码：前者用于编码，后者用于解码。
 
 !!! question "为什么使用 UTF-8 编码？"
     从 UTF-8 到 UTF-16 再到 UTF-32，编码相同的 Unicode 码点/字符串得到的字节串长度增加，为了将相同的 token 添加到词汇表所需要的合并次数也增加。这意味着过渡 token（不能被解码）的数量增加，从而挤占非过渡 token 的空间；tokenizer 需要处理更长的字节串，进行更多的合并操作，从而损害性能。
 
-[GPT-2 的论文](https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)中写道：……然而，直接对字节序列应用 BPE 会由于 BPE 使用基于贪婪频率的启发式方法构建词汇表，导致不理想的合并。我们观察到 BPE 包含了许多常见词的不同版本，比如 `dog`，因为它们以多种变体出现，如 `dog`、`dog!`、`dog?` 等。这导致有限的词汇表空间和模型容量被次优地分配。为了避免这种情况，我们阻止 BPE 跨字符类别合并任何字节序列。我们将空格作为一个例外，这显著提高了压缩效率，同时只增加了最小的词的碎片化。（总结：空格前缀能够极大地提升英文文本的压缩效率，因而保留；标点符号后缀对于压缩效率的提升很大，因而移除。）
+[GPT-2 的论文](https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)中写道：……然而，直接对字节序列应用 BPE 会由于 BPE 使用基于贪婪频率的启发式方法构建词汇表，导致不理想的合并。我们观察到 BPE 包含了许多常见词的不同版本，比如 `dog`，因为它们以多种变体出现，如 `dog`、`dog!`、`dog?` 等。这导致有限的词汇表空间和模型容量被次优地分配。为了避免这种情况，我们阻止 BPE 跨字符类别合并任何字节序列。我们将空格作为一个例外，这显著提高了压缩效率，同时只增加了最小的词的碎片化。（总结：空格前缀能够极大地提升英文文本的压缩效率，因而保留；标点符号后缀对于压缩效率的提升不大，因而移除。）
 
 在 [tokenizer 的推理代码](https://github.com/openai/gpt-2/blob/master/src/encoder.py)中，文本按照以下正则表达式模式被拆分为多个子串，每个子串分别编码，最后再将结果拼接起来。这样保证了合并不会跨越模式的边界，从而达成了上述目标。训练数据也应该按照相同的模式被拆分，否则 tokenizer 学习了跨越模式边界的合并却使用不上，造成词汇表空间的浪费。然而 GPT-2 及其 tokenizer 的训练代码未被开源，具体细节尚不清楚。
 
@@ -133,13 +133,21 @@ r"""'(?i:[sdmt]|ll|ve|re)|[^\r\n\p{L}\p{N}]?+\p{L}+|\p{N}{1,3}| ?[^\s\p{L}\p{N}]
 下面是一些常见的特殊 token：
 
 * tiktoken：
-    * `<|endoftext|>`：标识文本结束。
-    * `<|im_start|>`：标识输入消息（input message）开始。见于 chat 模型。
-    * `<|im_end|>`：标识输入消息（input message）结束。见于 chat 模型。
-    * `<|im_end|>`：标识输入消息（input message）结束。见于 chat 模型。
-    * `<|fim-prefix|>`：
-    * `<|fim-middle|>`：
-    * `<|fim-suffix|>`：
+    * `<|endoftext|>`：文本结束标记，用于标识模型训练数据或生成文本的结束位置。
+    * `<|im_start|>`：对话中输入消息（input message）的开始标记，通常后面会跟角色名称，例如 `<|im_start|>system`、`<|im_start|>user`、`<|im_start|>assistant`。
+    * `<|im_end|>`：对话中输入消息的结束标记。
+    * `<|fim-prefix|>`：FIM（Fill-in-the-Middle）任务中的前缀标记，用于标识需要填充的文本的上文起始位置。
+    * `<|fim-middle|>`：FIM 任务中的中间部分标记，用于标识需要填充的文本的位置。
+    * `<|fim-suffix|>`：FIM 任务中的后缀标记，用于标识需要填充的文本的下文结束位置。
+    * `<|fim-pad|>`：FIM 任务中的填充标记，用于对齐或填充文本。
+    * `<|object_ref_start|>` 和 `<|object_ref_end|>`：用于标识对象引用的开始和结束。
+    * `<|box_start|>` 和 `<|box_end|>`：用于标识边界框（bounding box）的开始和结束。
+    * `<|quad_start|>` 和 `<|quad_end|>`：用于标识四边形区域的开始和结束。
+    * `<|vision_start|>` 和 `<|vision_end|>`：用于标识视觉数据的开始和结束。
+    * `<|vision_pad|>`：视觉数据的填充标记。
+    * `<|image_pad|>`：图像数据的填充标记。
+    * `<|video_pad|>`：视频数据的填充标记。
+    * `<tool_call>` 和 `</tool_call>`：用于标记工具调用的开始和结束。
 * sentencepiece：
     * `<unk>`：表示未知。
     * `<s>`：标识序列开始。
