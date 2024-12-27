@@ -1,11 +1,10 @@
 # 推理
 
-这里以开源项目 OLMo 为例，介绍代码实现。
-
 ## 量化
 
 !!! info "参考"
     * [1712.05877](https://arxiv.org/abs/1712.05877)
+    * [Introduction to Weight Quantization](https://mlabonne.github.io/blog/posts/Introduction_to_Weight_Quantization.html)
     * [Quantization for Neural Networks](https://leimao.github.io/article/Neural-Networks-Quantization/)
 
 量化（quantization）是一种通过使用低精度数据类型（如 8 位整数 int8）代替通常的 32 位浮点数（float32）表示权重和激活来降低推理计算和内存成本的技术。
@@ -109,32 +108,6 @@ $$
 
 不需要准备数据，但由于动态量化激活张量的开销，推理速度的提升较小。
 
-#### 量化感知训练
-
-量化会损失信息，因而不可避免地降低推理正确率。量化感知训练（quantization aware training）的想法是在训练过程中就将引入这种损失，从而减少推理正确率的损失。
-
-在量化感知训练中，对于每个变量（权重张量和激活张量），都增加一个量化层和一个反量化层，即：
-
-$$
-\begin{align}
-\hat{x}&=f_d(f_q(x,s_x,z_x),s_x,z_x)\\
-&=s_x(\text{clip}(\text{round}(\frac{1}{s_x}x+z_x),\alpha_q,\beta_q)-z_x)
-\end{align}
-$$
-
-其中各参数的获取方法和静态量化相同。经过量化和反量化后，张量依然是浮点类型，训练照常进行。唯一的问题是，量化层和反量化层不可微，在实践中，通常采用 STE（straight through estimation）导数近似，即：
-
-![](https://leimao.github.io/images/article/2020-11-01-Neural-Networks-Quantization/backpropagation.png)
-
-$$
-\frac{\partial{\hat{x}}}{\partial{x}}=\begin{cases}
-1, & \text{if}\ \alpha\le x\le\beta\\
-0, & \text{else}
-\end{cases}
-$$
-
-除此之外，STE 还允许在量化感知训练中学习缩放，数学推导请参阅 [Quantization Aware Training](https://leimao.github.io/article/Neural-Networks-Quantization/#Quantization-Aware-Training)。
-
 #### 校准
 
 校准是预先确定张量的取值范围（从而确定张量的缩放和零点）的过程，有以下方法：
@@ -147,6 +120,42 @@ $$
 * 均方误差：计算得到的范围使得全精度数据与量化数据之间的均方误差最小。
 * 百分位数：计算得到的范围基于观测值的给定百分位值 $p$，其想法是尝试使 $p%$ 的观测值位于计算的范围内。适用于仿射映射，对于缩放映射则不一定能完全匹配。
 
+#### 量化感知训练
+
+量化会损失信息，因而不可避免地降低推理正确率。量化感知训练（quantization aware training，QAT）的想法是在训练过程中就将引入这种损失，从而减少推理正确率的损失。
+
+在量化感知训练中，对于每个变量（权重张量和激活张量），都增加一个量化层和一个反量化层，即：
+
+$$
+\begin{align}
+\hat{x}&=f_d(f_q(x,s_x,z_x),s_x,z_x)\\
+&=s_x(\text{clip}(\text{round}(\frac{1}{s_x}x+z_x),\alpha_q,\beta_q)-z_x)
+\end{align}
+$$
+
+其中各参数的获取方法和静态量化相同。经过量化和反量化后，张量依然是浮点类型，训练照常进行。唯一的问题是，量化层和反量化层不可微，在实践中，通常采用 STE（straight through estimation）导数近似，即：
+
+<img alt="architecture" src="https://leimao.github.io/images/article/2020-11-01-Neural-Networks-Quantization/backpropagation.png" width="500" />
+
+$$
+\frac{\partial{\hat{x}}}{\partial{x}}=\begin{cases}
+1, & \text{if}\ \alpha\le x\le\beta\\
+0, & \text{else}
+\end{cases}
+$$
+
+除此之外，STE 还允许在量化感知训练中学习缩放，数学推导请参阅 [Quantization Aware Training](https://leimao.github.io/article/Neural-Networks-Quantization/#Quantization-Aware-Training)。
+
+### 量化方法
+
+* LLM.int8()
+* GPTQ
+* AWQ
+
+### 量化工具
+
+* llama.cpp
+
 ## 加速
 
 * speculative decoding（预测接下来的几个 token，类似 CPU 的分支预测）[[2211.17192](https://arxiv.org/abs/2211.17192)]
@@ -158,11 +167,15 @@ $$
 ![](https://s2.loli.net/2024/05/24/TaAHMh19xNIXYd3.png)
 
 * KV cache（缓存已计算的 kv 向量）[[2211.05102](https://arxiv.org/abs/2211.05102)]
-    * 避免重复计算。
+    * 避免重复计算，以空间换时间。
+    * 计算复杂度从 $O(s^2)$ 降低到 $O(s)$，其中 $s$ 是序列长度。
+    * 缓存大小计算为 `cache_size = batch_size * seq_len * num_layers * 2 * hidden_dim * dtype_size`。
+
+![](https://s2.loli.net/2024/12/27/RtmPygN2qeAjU1C.png)
 
 ## 上下文长度
 
-[2309.17453](https://arxiv.org/abs/2309.17453) 提出的 StreamingLLM 通过在计算注意力时固定包含前几个 token，提升了注意力计算的稳定性，使得 LLM 推理在超出预训练时的注意力窗口长度后依然{稳定}。
+[2309.17453](https://arxiv.org/abs/2309.17453) 提出的 StreamingLLM 通过在计算注意力时固定包含前几个 token，提升了注意力计算的稳定性，使得 LLM 推理在超出预训练时的注意力窗口长度后依然**稳定**。
 
 将 LLM 应用于无限长度的输入流（如图 1a）时，存在三个主要问题：
 
@@ -176,11 +189,11 @@ $$
 
 ![](../../assets/ml/llm/inference/streamingllm.png)
 
-为了理解窗口注意力方法的失败原因，原论文进行了一些探索。简言之，对于高层的 transformer 块，其输入很可能已经包含足够的用于预测下一个 token 的信息，因而不再需要 attend，注意力分数以集中到初始 token 的形式被丢弃（相当于丢垃圾）。一旦初始 token 被驱逐出窗口，注意力分数的分布会发生显著变化，从而严重影响（每一层的）注意力乃至最终预测。
+为了理解窗口注意力方法的失败原因，原论文进行了一些探索。简言之，对于高层的 transformer 块，单个 token 的向量很可能已经包含足够的用于预测下一个 token 的信息，因而不再需要 attend，注意力分数以集中到初始 token 的形式被丢弃。一旦初始 token 被驱逐出窗口，注意力分数的分布会发生显著变化，从而严重影响（每一层的）注意力乃至最终预测。
 
 ??? abstract "详细解释"
 
-    图 3 显示了在 20k token 文本上进行语言建模时的困惑度。显而易见的是，当文本长度超过缓存大小时，困惑度会激增，这是由于排除了初始 token 导致的。这表明，无论初始 token 与预测 token 的距离如何，它们对于维持 LLM 的稳定性都是至关重要的。
+    图 3 显示了在 20k token 文本上进行语言建模时的困惑度。显而易见的是，对于窗口注意力方法，当文本长度超过缓存大小时，困惑度会激增，这是由于排除了初始 token 导致的。这表明，无论初始 token 与预测 token 的距离如何，它们对于维持 LLM 的稳定性都是至关重要的。
 
     ![](../../assets/ml/llm/inference/streamingllm-ppl.png)
 
@@ -196,7 +209,15 @@ $$
 
 StreamingLLM 采用缓存区中的相对位置而非原始文本中的相对位置，即 attention sink 和滑动窗口总是相邻的。因此对于像 RoPE 这样的编码，我们缓存引入旋转变换之前的 token 的 key。然后在每个解码阶段，我们对缓存区中的键应用旋转变换。
 
-手动引入一个全局可训练的 attention sink token 是一个潜在的补救方案，它将作为不必要的注意力分数的存储仓库。实验显示，该方案在稳定注意力机制方面非常有效。基于此，我们建议在训练未来的 LLM 时在所有样本的起始位置都添加一个 sink token 以优化 streaming。
+手动引入一个全局可训练的 attention sink token（虚拟 token）是一个潜在的补救方案，它将作为不必要的注意力分数的存储仓库。实验显示，该方案在稳定注意力机制方面非常有效。基于此，我们建议在训练未来的 LLM 时在所有样本的起始位置都添加一个 sink token 以优化 streaming。
+
+另一个方案是使用 SoftMax-off-by-One 这样的变体来替代传统的 SoftMax 函数：
+
+$$
+\text{SoftMax}_1(x)_i=\frac{e^{x_i}}{1+\sum_{j=1}^{N}e^{x_j}}
+$$
+
+这种变体不要求所有上下文 token 的注意力分数之和为 1——如果当前 token 的向量不需要 attend，那么所有上下文 token 的注意力分数都可以很小。SoftMax1 也等效于在注意力计算中在序列的起始位置添加一个具有全零 kv 状态的虚拟 token。原论文将这种方法称为 Zero Sink。
 
 ## 提升表现
 

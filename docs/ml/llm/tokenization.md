@@ -182,6 +182,12 @@ tokenizer 的迭代呈现以下特点：
     * 在 LLM 的训练数据中出现频率低（甚至从未出现过）的 token 对应的向量可能 undertrained。请参阅 [SolidGoldMagikarp](https://www.lesswrong.com/posts/aPeJE8bSo6rAFoLqg/solidgoldmagikarp-plus-prompt-generation)。
     * 一些 token 过于 dense，LLM 正确处理的难度增加。
 
+下列 LLM 采用 tiktoken：
+
+* GPT 系列
+* Pythia 系列
+* Qwen 系列
+
 ### sentencepiece
 
 [sentencepiece](https://github.com/google/sentencepiece) 能够高效地训练和推理 BPE tokenizer，用于 Llama 和 Mistral 系列模型。
@@ -193,6 +199,12 @@ tokenizer 的迭代呈现以下特点：
 Llama tokenizer 的分词结果呈现以下特点：
 
 * 算术：每个数字字符一个 token，Transformer 想要正确执行算术运算必须正确拼接这些数字字符。
+
+下列 LLM 采用 sentencepiece：
+
+* Llama 系列
+* Mistral 系列
+* ChatGLM 系列
 
 ## 展望
 
