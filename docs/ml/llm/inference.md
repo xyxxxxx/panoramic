@@ -146,15 +146,55 @@ $$
 
 除此之外，STE 还允许在量化感知训练中学习缩放，数学推导请参阅 [Quantization Aware Training](https://leimao.github.io/article/Neural-Networks-Quantization/#Quantization-Aware-Training)。
 
-### 量化方法
+### 量化方法    
 
-* LLM.int8()
-* GPTQ
-* AWQ
+* LLM.int8()（异常值回退到 FP16）[[2208.07339](https://arxiv.org/abs/2208.07339)]
+    * 异常值（outlier）指振幅（绝对值）超过特定的阈值、显著偏离总体分布的激活值。异常值显著影响注意力以及总体预测表现。
+    * 异常值的出现存在稀疏性和系统性：异常值占比约 0.1%，剩余激活值以 8 位表示，因此内存占用砍掉近一半（相比 16 位激活）；异常值出现在几乎所有的序列维度，但被限制在特定的特征维度（即下图中的某几列）。
+    * 从激活矩阵抽取包含异常值的列，从权重矩阵抽取相应的行。抽取出的子矩阵作 FP16 计算（相应的权重转换为 FP16 类型），剩余的子矩阵作 INT8 逐向量量化计算（见下图）。
+    * 所有权重以 INT8 类型加载。
+    * 几乎没有指标下降。
+
+![](https://s2.loli.net/2024/12/30/qXxKvPUG9Rhmrkp.png)
+
+* GPTQ（）[[2210.17323](https://arxiv.org/abs/2210.17323)]
+    * 问题描述：对于神经网络，移除哪些参数，可以引入尽量小的误差（输出的变化）。
+    * OBS：在近似条件（输出对于参数的一阶和三阶及以上偏导数为 0，仅考虑二阶偏导数）下给出计算最优的被移除参数的公式，以及计算最优的剩余参数更新的公式。参照公式循环移除参数并更新剩余参数，直到指标刚好不低于要求。
+    * OBS -> OBQ：
+        * 变更问题描述为：对于网络的某层，以何种顺序量化权重矩阵的所有元素，可以引入尽量小的误差（输出的变化）。
+    * OBQ -> GPTQ：
+    * 流程：
+        1. GPTQ 算法首先对 Hessian 矩阵的逆矩阵进行 Cholesky 分解（这个矩阵用于帮助决定如何调整权重）
+        2. 然后它以循环方式运行，每次处理一批列
+        3. 对于批次中的每一列，它会量化权重，计算误差，并相应地更新该块中的权重
+        4. 在处理完一个批次后，它会根据该块的误差更新所有剩余的权重
+* AWQ（）[[2306.17874](https://arxiv.org/abs/2306.17874)]
+* QLoRA（）[[2305.14395](https://arxiv.org/abs/2305.14395)]
+
+* GGUF 量化方法
+    * [k-quants](https://github.com/ggerganov/llama.cpp/pull/1684)
 
 ### 量化工具
 
-* llama.cpp
+* [bitsandbytes](https://github.com/bitsandbytes-foundation/bitsandbytes)（实现了 LLM.int8() 和 NF4/QLoRA；集成到 Hugging Face 生态）
+    * LLM.int8()：
+        * [示例 1](https://colab.research.google.com/drive/1QIYiaJXc43qQLprrg6ULbK30pY-dwBdq?usp=sharing)
+        * [示例 2（附讲解）](https://www.bilibili.com/video/BV1bX4y1e7a5/)
+        * [高级选项](https://huggingface.co/docs/transformers/en/quantization/bitsandbytes?bnb=8-bit#8-bit-llmint8-algorithm)
+        * 加载时量化。
+        * 检测异常值的方法请参阅[讨论](https://github.com/bitsandbytes-foundation/bitsandbytes/issues/891)。
+    * QLoRA：
+        * [QLoRA 示例](https://colab.research.google.com/drive/1QIYiaJXc43qQLprrg6ULbK30pY-dwBdq?usp=sharing)
+
+* [AutoGPTQ](https://github.com/AutoGPTQ/AutoGPTQ)（实现了 GPTQ；集成到 Hugging Face 生态）
+    * [官方示例](https://github.com/AutoGPTQ/AutoGPTQ?tab=readme-ov-file#quantization-and-inference)
+
+* [AutoAWQ](https://github.com/casper-hansen/AutoAWQ)（实现了 AWQ；集成到 Hugging Face 生态）
+    * [官方示例](https://github.com/casper-hansen/AutoAWQ?tab=readme-ov-file#examples)
+
+* [llama.cpp](https://github.com/ggerganov/llama.cpp)（实现了 GGUF 量化方法）
+    * k-quants：
+        * [示例 1](https://colab.research.google.com/drive/1dNxxZFkvuL_coggz7el5lSIJKXy5m5Ss?usp=sharing)
 
 ## 加速
 
@@ -172,6 +212,8 @@ $$
     * 缓存大小计算为 `cache_size = batch_size * seq_len * num_layers * 2 * hidden_dim * dtype_size`。
 
 ![](https://s2.loli.net/2024/12/27/RtmPygN2qeAjU1C.png)
+
+* PagedAttention（）[[2405.12889](https://arxiv.org/abs/2405.12889)]
 
 ## 上下文长度
 
@@ -223,3 +265,11 @@ $$
 
 * self-consistency（采样多个回答，选取最一致的回答）[[2203.11171](https://arxiv.org/abs/2203.11171)]
 * LLM cascade（顺序调用从弱到强，同时也是成本从低到高的多个 LLM，当回答足够可靠时返回给用户，并取消后续调用）[[2305.05176](https://arxiv.org/abs/2305.05176)]
+
+## 推理工具
+
+* [llama.cpp](https://github.com/ggerganov/llama.cpp)
+    * 设计用于 CPU 推理，亦可卸载部分或全部层到 GPU 上以加速推理。
+* [ollama](https://github.com/ollama/ollama)
+    * 设计用于 CPU 推理，亦可卸载部分或全部层到 GPU 上以加速推理。
+* [vllm](https://github.com/vllm-project/vllm)
