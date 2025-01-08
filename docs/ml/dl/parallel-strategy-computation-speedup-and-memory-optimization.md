@@ -1,22 +1,22 @@
 # 并行策略、计算加速与内存优化技术
 
 !!! info "推荐阅读"
-    * [Methods and tools for efficient training on a single GPU](https://huggingface.co/docs/transformers/main/en/perf_train_gpu_one) 以及同一章节下的其他文章
+    * [Performance and Scalability](https://huggingface.co/docs/transformers/v4.47.1/en/performance)
     * [DeepSpeed: Extreme-scale model training for everyone](https://www.microsoft.com/en-us/research/blog/deepspeed-extreme-scale-model-training-for-everyone/)
 
-## Data Parallelism（DP，数据并行）
+## 数据并行（Data Parallelism，DP）
 
-模型被复制到多个设备上，训练数据的每个 batch（批次）被平均分为多个 mini-batch（小批次），在这些设备上并行处理。每个设备上计算的梯度被收集和聚合（平均），用于更新模型参数。
+模型被复制到多个设备上，训练数据的每个 batch（批次）被平均分为多个 mini-batch（小批次），在这些设备上并行处理。每个设备上计算的梯度被聚合（all reduce），用于更新模型参数。
 
 [ZeRO-DP](#zero-dp) 消除 DP 进程之间的内存冗余，并保持 DP 的计算/通信效率。
 
-## Model Parallelism（MP，模型并行）
+## 模型并行（Model Parallelism，MP）
 
 由于单个设备无法容纳整个模型，模型的所有层被划分为若干个组，分别放置在不同的设备上。每个设备负责计算被分配的层，并将激活传递给其他设备进行进一步的处理和传递。
 
 （朴素）MP 的主要问题是，在任意时刻只有一个设备工作，并且设备之间还有复制数据的通信开销。因此，4x 8G GPU 的计算比 1x 32G GPU 的训练还要慢，因为前者还有通信开销（假设 8G GPU 和 32G GPU 的计算能力相同）。
 
-### Pipeline Parallelism（PP，流水线并行）
+### 流水线并行（Pipeline Parallelism，PP）
 
 !!! note "注意"
     有些文档将 PP 称为垂直（vertical）并行。微软的 DeepSpeed 系列论文或博客将 PP 称为水平（horizontal）并行。
@@ -32,7 +32,7 @@ mini-batch 被拆分出的 micro-batch 数量是一个超参数，称为 chunks�
 
 ![](../../assets/ml/dl/parallel-training-computation-speedup-and-memory-optimization/pp.png)
 
-### Tensor Parallelism（TP，张量并行）
+### 张量并行（Tensor Parallelism，TP）
 
 !!! note "注意"
     有些文档将 TP 称为水平（horizontal）并行或 Megatron-style 并行。微软的 DeepSpeed 系列论文或博客将 TP 称为 MP 或垂直（vertical）并行。
@@ -62,9 +62,9 @@ mini-batch 被拆分出的 micro-batch 数量是一个超参数，称为 chunks�
 
 对于嵌入层，其权重矩阵也沿词汇表维度分割，并且需要 all-reduce 操作。详见原论文。
 
-## 2D Parallelism（2D 并行）& 3D Parallelism（3D 并行）
+## 2D 并行（2D Parallelism）& 3D 并行（3D Parallelism）
 
-DP、MP（PP）和 TP 在提高内存效率和计算效率上有各自的功能，2D Parallelism 结合使用其中两种，而 3D Parallelism 结合使用三种。
+DP、MP（PP）和 TP 在提高内存效率和计算效率上有各自的功能，2D 并行结合使用其中两种，而 3D 并行结合使用三种。
 
 |                | ZeRO-DP                                                              | PP                                                                              | TP                                                                                                     |
 | -------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |

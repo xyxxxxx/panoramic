@@ -3,8 +3,8 @@
 深度学习计算，尤其是大型模型的并行训练，需要高性能的硬件平台。这里的高性能体现在以下方面：
 
 * 计算性能：尤其是浮点性能，用于模型的前向和反向计算
-* 网络和内存带宽：用于并行训练中的设备间通信
-* 内存大小：用于存放模型参数、激活、梯度等数据
+* 通信速度：用于并行训练中的设备间通信
+* 内存大小：用于存放模型权重、激活、梯度等数据
 * 存储容量：用于存放模型、数据集等的文件
 
 针对深度学习计算进行专门优化的硬件设备和硬件平台正在快速迭代当中。
@@ -41,18 +41,20 @@
 | H100 PCIe | 26   | 51          | 51   | 756  | 205  | 1513        | 1513        | 3026        |
 | H100 SXM  | 34   | 67          | 67   | 989  | 268  | 1979        | 1979        | 3958        |
 
-## 网络带宽
+## 通信速度
 
 !!! info "参考"
-    * [Performance and Scalability: How To Fit a Bigger Model and Train It Faster](https://huggingface.co/docs/transformers/v4.13.0/en/performance)
+    * [【GPU 互联革命史】PCIe 到 NVLink，再到 NVSwitch 的成长故事 —— 看 GPU 如何推动 AI 与高性能计算！](https://www.bilibili.com/video/BV193BBYYEaG)
+    * [【RDMA 深度科普】高效通信三剑客：RDMA 与 RoCE、InfiniBand 入门解读！](https://www.bilibili.com/video/BV1WokRYrEZw)
+    * [AI 集群基础设施 InfiniBand 详解](https://zhuanlan.zhihu.com/p/673903240)
 
-### 连接方式
+在并行训练中，GPU 之间的通信方式决定了通信速度，进而对总体训练时间有重大影响。常见的通信方式如下：
 
-在分布式训练中，GPU 之间的连接方式决定了通信速度，进而对总体训练时间有重大影响。常见的连接方式介绍如下：
+节点内通信：
 
-节点内：
+* 共享内存：CPU 之间通过共享内存进行通信，速度最快，延迟最低。
 
-* PCIe（Peripheral Component Interconnect Express）：PCIe 是一种计算机总线标准，用于连接主板上的各种设备，包括 GPU。PCIe 互连提供了一种相对简单和广泛支持的 GPU 间通信方式，但它的带宽和延迟相对较高，因为数据需要通过主板上的 PCIe 总线进行传输。
+* PCIe（Peripheral Component Interconnect Express）：PCIe 是一种计算机总线标准，用于连接主板上的各种设备，包括 GPU。PCIe 互连提供了一种相对简单和广泛支持的 GPU 间通信方式，但它的带宽相对较低，延迟相对较高，因为数据需要通过主板上的 PCIe 总线进行传输。
 
     标准带宽：
 
@@ -60,36 +62,55 @@
     * PCIe 5.0：63.0GB/s（x16，每个方向）
     * PCIe 6.0：126.0GB/s（x16，每个方向）
 
+![](https://s2.loli.net/2025/01/01/VPMfcoykmHg9UON.png)
+
 * NVLink：[NVLink](https://www.nvidia.com/en-us/data-center/nvlink/) 是一种由 NVIDIA 开发的高速、低延迟的 GPU 间互连技术。NVLink 通过直接连接 GPU 之间的通信通道，可以实现更高的带宽和更低的延迟。相对于 PCIe，NVLink 提供了更快速和更可靠的 GPU 间通信，特别适用于多 GPU 配置下的高性能计算和深度学习任务。
 
 	NVSwitch 是 NVLink 的交换机，其提供所有连接到它的 GPU 之间的通信。
 
-    标准带宽：
+    标准带宽：（来源：
+[NVLink and NVLink Switch](https://www.nvidia.com/en-us/data-center/nvlink/)）
 
-| NVLink                          |                            |                            |                             |
-| ------------------------------- | -------------------------- | -------------------------- | --------------------------- |
-| Supported NVIDIA Architectures  | NVIDIA Volta™ architecture | NVIDIA Ampere Architecture | NVIDIA Hopper™ Architecture |
-| NVLink bandwidth per GPU        | 300GB/s                    | 600GB/s                    | 900GB/s                     |
-| Maximum Number of Links per GPU | 6                          | 12                         | 18                          |
+| NVLink                                   | Second Generation          | Third Generation           | Fourth Generation           | Fifth Generation              |
+| ---------------------------------------- | -------------------------- | -------------------------- | --------------------------- | ----------------------------- |
+| NVLink bandwidth per GPU (bidirectional) | 300GB/s                    | 600GB/s                    | 900GB/s                     | 1,800GB/s                     |
+| Maximum Number of Links per GPU          | 6                          | 12                         | 18                          | 18                            |
+| Supported NVIDIA Architectures           | NVIDIA Volta™ architecture | NVIDIA Ampere architecture | NVIDIA Hopper™ architecture | NVIDIA Blackwell architecture |
 
-| NVSwitch                                     |                           |                            |                            |
-| -------------------------------------------- | ------------------------- | -------------------------- | -------------------------- |
-| Supported NVIDIA architectures               | NVIDIA Volta architecture | NVIDIA Ampere architecture | NVIDIA Hopper architecture |
-| Number of GPUs with direct connection / node | Up to 8                   | Up to 8                    | Up to 8                    |
-| NVSwitch GPU-to-GPU bandwidth                | 300GB/s                   | 600GB/s                    | 900GB/s                    |
-| Total aggregate bandwidth                    | 2.4TB/s                   | 4.8TB/s                    | 7.2TB/s                    |
+| NVSwitch                                                     | First Generation           | Second Generation          | Third Generation            | Fourth Generation             |
+| ------------------------------------------------------------ | -------------------------- | -------------------------- | --------------------------- | ----------------------------- |
+| Number of GPUs with direct connection within a NVLink domain | Up to 8                    | Up to 8                    | Up to 8                     | Up to 576                     |
+| NVSwitch GPU-to-GPU bandwidth (bidirectional)                | 300GB/s                    | 600GB/s                    | 900GB/s                     | 1,800GB/s                     |
+| Total aggregate bandwidth                                    | 2.4TB/s                    | 4.8TB/s                    | 7.2TB/s                     | 1PB/s                         |
+| Supported NVIDIA architectures                               | NVIDIA Volta™ architecture | NVIDIA Ampere architecture | NVIDIA Hopper™ architecture | NVIDIA Blackwell architecture |
 
-节点间：
+![](https://s2.loli.net/2025/01/01/ehGl8F5HtjaDfLS.png)
 
-* IP (with Ethernet)：在 GPU 之间使用标准的 IP 协议进行通信，适用于一般的 GPU 间通信需求，尤其在小规模 GPU 集群和一般网络环境中使用。
+![](https://www.nvidia.com/content/nvidiaGDC/us/en_US/data-center/nvlink/_jcr_content/root/responsivegrid/nv_container_1813223422/nv_image.coreimg.svg/1710784006566/hopper-grace-gtc24-charts-aggregate-bandwith-nvlink-at-scale.svg)
+
+节点间通信：
+
+* TCP/IP (over Ethernet)：节点之间使用标准的 TCP/IP 协议进行通信，适用于一般的 GPU 间通信需求，尤其在小规模 GPU 集群和一般网络环境中使用。
 
     典型带宽：100Mbps/1Gbps/10Gbps
 
-* GPUDirect RDMA (with InfiniBand)：RDMA 是一种高性能、低延迟的数据传输技术，它允许 GPU 之间直接在 InfiniBand 网络上进行内存访问和数据传输，避免了 CPU 的参与，从而实现了极低的延迟和高带宽的 GPU 间通信。RDMA 适用于对延迟和带宽要求非常高的高性能计算和大规模并行计算任务。
+![](https://s2.loli.net/2025/01/01/8Wil3YkUPyQuXrT.png)
 
-    典型带宽：660Gbps
+* RDMA (Remote Direct Memory Access)：RDMA 是一种高性能、低延迟的数据传输技术，它允许应用程序之间直接进行内存访问和数据传输，避免了 CPU 的参与，从而实现了极低的延迟和高带宽的应用间通信。RDMA 适用于对延迟和带宽要求非常高的高性能计算和大规模并行计算任务。
 
-    ![](../../assets/ml/dl/rdma.png)
+![](https://s2.loli.net/2025/01/01/LWKs6pM9P2Jhn3I.png)
+
+    * InfiniBand（IB）：InfiniBand 是一种用于高性能计算的网络通信标准，它具有极高的带宽和极低的延迟，用于节点之间的数据互连。InfiniBand 专为 RDMA 设计并提供 RDMA 能力，从硬件层面保证可靠传输。搭建 InfiniBand 网络需要专用的 IB 网卡、IB 交换机和 IB 线缆，成本较高。
+
+        典型带宽：200Gbps/400Gbps/800Gbps
+
+    * RoCE (RDMA over Converged Ethernet)：以太网上的 RDMA 实现。利用现有的标准以太网基础设施，但需要专用的 RoCE 网卡（HCA，host channel adapter）。
+
+        典型带宽：100Gbps/200Gbps/400Gbps
+
+    * GPUDirect RDMA：针对 NVIDIA GPU 的 RDMA 实现，它允许 GPU 和支持 RDMA 的设备（例如 IB/RoCE 网卡、支持 RDMA 的存储设备）之间直接通过 PCIe 总线进行数据传输，而无需经过 CPU 或系统内存。
+
+![](../../assets/ml/dl/rdma.png)
 
 对于同一物理节点上的 GPU，它们之间的连接方式可以通过以下命令获取：
 
@@ -220,14 +241,25 @@ NCCL 方便地消除了开发人员针对特定机器进行应用程序优化的
 NCCL 提供了一组有特定功能的环境变量：
 
 ```bash
-# 控制 NCCL 打印的调试信息
+# 控制打印的调试信息
 NCCL_DEBUG=VERSION/WARN/INFO/TRACE
 
 # 禁用 InfiniBand 传输，强制使用 IP socket 传输
 NCCL_IB_DISABLE=1
 
+# 指定使用的 InfiniBand/RoCE 网卡
+# 网卡越多，节点间通信带宽越大
+NCCL_IB_HCA=mlx5_0
+
+# 指定 InfiniBand Verbs 的超时时间
+# 设为最大值 22，以减少 nccl timeout 异常
+NCCL_IB_TIMEOUT=22
+
 # 禁用 GPU 之间通过 NVLink 或 PCI 进行 CUDA 直接访问
 NCCL_P2P_DISABLE=1
+
+# 指定使用的 socket 网卡
+NCCL_SOCKET_IFNAME=eth0
 ```
 
 GPU 之间的集合通信带宽和时延可以通过 [nccl-tests](https://github.com/NVIDIA/nccl-tests) 得到。例如对于 sm02：
@@ -274,3 +306,9 @@ $ all_reduce_perf -b 8 -e 128M -f 2 -g 4
 # Avg bus bandwidth    : 2.19202 
 #
 ```
+
+### OpenMPI
+
+### Gloo
+
+### Horovod
