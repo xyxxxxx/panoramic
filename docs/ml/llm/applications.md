@@ -424,6 +424,7 @@ LLM 凭借其推理、指令遵循、上下文学习和工具使用等多项能�
 * WebGPT（LLM 使用搜索引擎和浏览网页文本：环境将当前的完整状态提供给 LLM，LLM 生成一个命令以采取一项规定动作；训练方法是有监督微调和 RLHF）[[2112.09332](https://arxiv.org/abs/2112.09332)]
 * Toolformer（LLM 自主调用 API；训练方法是有监督微调，训练数据由 LLM 自己根据 few-shot 生成，且过滤掉没有帮助的调用；推理时一旦产生特殊 token →，则停止生成并调用 API，附加结果和特殊 token `</API>` 后继续生成）[[2302.04761](https://arxiv.org/abs/2302.04761)]
 * AnyTool（多个 LLM 组成具有层次结构的 API retriever，从结构化的 API 组织中检索与查询最相关的 API）[[2402.04253](https://arxiv.org/abs/2402.04253)]
+* MCP（Anthropic 发布的模型上下文协议）
 
 ### 开放式学习
 

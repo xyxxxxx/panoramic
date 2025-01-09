@@ -135,7 +135,7 @@ $$
 
 其中各参数的获取方法和静态量化相同。经过量化和反量化后，张量依然是浮点类型，训练照常进行。唯一的问题是，量化层和反量化层不可微，在实践中，通常采用 STE（straight through estimation）导数近似，即：
 
-<img alt="architecture" src="https://leimao.github.io/images/article/2020-11-01-Neural-Networks-Quantization/backpropagation.png" width="500" />
+<img alt="" src="https://leimao.github.io/images/article/2020-11-01-Neural-Networks-Quantization/backpropagation.png" width="500" />
 
 $$
 \frac{\partial{\hat{x}}}{\partial{x}}=\begin{cases}
@@ -153,30 +153,53 @@ $$
     * 异常值的出现存在稀疏性和系统性：异常值占比约 0.1%，剩余激活值以 8 位表示，因此内存占用砍掉近一半（相比 16 位激活）；异常值出现在几乎所有的序列维度，但被限制在特定的特征维度（即下图中的某几列）。
     * 从激活矩阵抽取包含异常值的列，从权重矩阵抽取相应的行。抽取出的子矩阵作 FP16 计算（相应的权重转换为 FP16 类型），剩余的子矩阵作 INT8 逐向量量化计算（见下图）。
     * 所有权重以 INT8 类型加载。
-    * 几乎没有指标下降。
+    * 几乎不损失指标。
 
 ![](https://s2.loli.net/2024/12/30/qXxKvPUG9Rhmrkp.png)
 
-* GPTQ（）[[2210.17323](https://arxiv.org/abs/2210.17323)]
+* GPTQ（OBS -> OBQ -> GPTQ）[[2210.17323](https://arxiv.org/abs/2210.17323)]
     * 问题描述：对于神经网络，移除哪些参数，可以引入尽量小的误差（输出的变化）。
     * OBS：在近似条件（输出对于参数的一阶和三阶及以上偏导数为 0，仅考虑二阶偏导数）下给出计算最优的被移除参数的公式，以及计算最优的剩余参数更新的公式。参照公式循环移除参数并更新剩余参数，直到指标刚好不低于要求。
+
+    ![](https://s2.loli.net/2025/01/08/TRWA7j5K8ykgQJB.png)
+
     * OBS -> OBQ：
-        * 变更问题描述为：对于网络的某层，以何种顺序量化权重矩阵的所有元素，可以引入尽量小的误差（输出的变化）。
+        * 变更问题描述为：对于网络的某层，以何种顺序量化（量化映射是给定的）权重矩阵的所有元素，可以引入尽量小的误差（输出的变化）。
+        * 分行并行计算。
+        * 循环量化最优的元素并更新剩余元素以及 Inverse Hessian。
+        * 计算复杂度为 $O(mn^3)$，其中 $m$ 是权重矩阵的行数，$n$ 是列数。
+
+    ![](https://s2.loli.net/2025/01/08/3DAHTZR5fKvsoWO.png)
+
     * OBQ -> GPTQ：
-    * 流程：
-        1. GPTQ 算法首先对 Hessian 矩阵的逆矩阵进行 Cholesky 分解（这个矩阵用于帮助决定如何调整权重）
-        2. 然后它以循环方式运行，每次处理一批列
-        3. 对于批次中的每一列，它会量化权重，计算误差，并相应地更新该块中的权重
-        4. 在处理完一个批次后，它会根据该块的误差更新所有剩余的权重
+        * 顺序量化元素，所有行共享一个 Inverse Hessian（因为它们的输入是共享的）。
+        * 分批次（块）处理：每量化完一列，立即计算并更新块内的剩余元素以及 Inverse Hessian 的相应部分；每量化完一块，一次性计算并更新后续块的元素以及 Inverse Hessian 的相应部分。
+        * 对 Inverse Hessian 进行 Cholesky 分解以增强数值稳定性。
+        * 计算复杂度为 $O(\max\{mn^2, n^3\})$，其中 $m$ 是权重矩阵的行数，$n$ 是列数。
+
+    * 将位宽降低到 3-4 bpw，几乎不损失指标。
+
+    ![](https://s2.loli.net/2025/01/09/pY9cgSjw6IlieCn.png)
+
+    <img alt="" src="https://s2.loli.net/2025/01/09/BKaAsVgq8CZSRvx.png" width="400" />
+
+* SmoothQuant（）[[2211.10438](https://arxiv.org/abs/2211.10438)]
+
+* QLoRA（基于 NF4 量化的 LoRA 微调和推理）[[2305.14314](https://arxiv.org/abs/2305.14314)]
+    * 提出 NF4 数据类型，其对于服从均值为 0 的正态分布的数据是信息论上最优的。NF4 类型的所有值的推导过程和量化过程请参阅 <https://www.bilibili.com/video/BV15y411a7so?t=245.6>。
+    * 双重量化：每 64 个元素作 NF4 量化，缩放存储为 32 位浮点数；每 256 个缩放作 FP8 量化，缩放的缩放存储为 32 位浮点数。
+    * NF4 类型仅作存储用途，参与计算需要先反量化为 BF16 类型。
+
+![](https://arxiv.org/html/2405.03103v2/extracted/5657574/figures/quantized_values.png)
+
 * AWQ（）[[2306.17874](https://arxiv.org/abs/2306.17874)]
-* QLoRA（）[[2305.14395](https://arxiv.org/abs/2305.14395)]
 
 * GGUF 量化方法
     * [k-quants](https://github.com/ggerganov/llama.cpp/pull/1684)
 
 ### 量化工具
 
-* [bitsandbytes](https://github.com/bitsandbytes-foundation/bitsandbytes)（实现了 LLM.int8() 和 NF4/QLoRA；集成到 Hugging Face 生态）
+* [bitsandbytes](https://github.com/bitsandbytes-foundation/bitsandbytes)（实现了 LLM.int8() 和 QLoRA；集成到 Hugging Face 生态）
     * LLM.int8()：
         * [示例 1](https://colab.research.google.com/drive/1QIYiaJXc43qQLprrg6ULbK30pY-dwBdq?usp=sharing)
         * [示例 2（附讲解）](https://www.bilibili.com/video/BV1bX4y1e7a5/)
@@ -184,7 +207,8 @@ $$
         * 加载时量化。
         * 检测异常值的方法请参阅[讨论](https://github.com/bitsandbytes-foundation/bitsandbytes/issues/891)。
     * QLoRA：
-        * [QLoRA 示例](https://colab.research.google.com/drive/1QIYiaJXc43qQLprrg6ULbK30pY-dwBdq?usp=sharing)
+        * [示例 1（推理）](https://colab.research.google.com/drive/1ge2F1QSK8Q7h0hn3YKuBCOAS0bK8E0wf?usp=sharing)
+        * [示例 2（训练）](https://colab.research.google.com/drive/1xekhRx7ueowqVzLPOrTLd9OPucrLO68L)
 
 * [AutoGPTQ](https://github.com/AutoGPTQ/AutoGPTQ)（实现了 GPTQ；集成到 Hugging Face 生态）
     * [官方示例](https://github.com/AutoGPTQ/AutoGPTQ?tab=readme-ov-file#quantization-and-inference)
