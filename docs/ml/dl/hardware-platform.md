@@ -241,25 +241,82 @@ NCCL 方便地消除了开发人员针对特定机器进行应用程序优化的
 NCCL 提供了一组有特定功能的环境变量：
 
 ```bash
+# 指定 NCCL 通信算法
+# Tree：树状算法，适用于多节点通信
+# Ring：环状算法，适用于单节点通信
+# CollnetDirect：直接通信，适用于单节点通信
+# CollnetChain：链状通信，适用于单节点通信
+# NVLS：NVLink 通信，适用于单节点通信
+# NVLSTree：NVLink 树状通信，适用于多节点通信
+NCCL_ALGO=Tree/Ring/CollnetDirect/CollnetChain/NVLS/NVLSTree
+
+# 启用 NCCL 网络发现
+NCCL_COLLNET_ENABLE
+
+# 指定 NCCL 配置文件
+NCCL_CONF_FILE=~/.nccl.conf
+
 # 控制打印的调试信息
 NCCL_DEBUG=VERSION/WARN/INFO/TRACE
 
+# 重定向 NCCL 调试日志输出到指定文件
+# 若不设置此环境变量，则默认重定向到 stdout
+NCCL_DEBUG_FILE=/path/to/debug.log
+
+# 强制启用或禁用 GPU Direct RDMA
+# 默认会在拓扑允许的情况下启用 GPU Direct RDMA
+NCCL_IB_CUDA_SUPPORT=0/1
+
 # 禁用 InfiniBand 传输，强制使用 IP socket 传输
 NCCL_IB_DISABLE=1
+
+# 指定 RoCE 模式下的 GID 索引
+NCCL_IB_GID_INDEX=-1
 
 # 指定使用的 InfiniBand/RoCE 网卡
 # 网卡越多，节点间通信带宽越大
 NCCL_IB_HCA=mlx5_0
 
 # 指定 InfiniBand Verbs 的超时时间
-# 设为最大值 22，以减少 nccl timeout 异常
-NCCL_IB_TIMEOUT=22
+# 设为最大值 31，以减少 nccl timeout 异常
+NCCL_IB_TIMEOUT=31
+
+# 精细控制何时在 GPU 和 NIC 之间使用 GPU Direct RDMA
+# LOC：不使用 GPU Direct RDMA（始终禁用）
+# PIX：当 GPU 和 NIC 在同一个 PCI 交换机上时使用 GPU Direct RDMA
+# PXB：当 GPU 和 NIC 通过 PCI 交换机连接时使用 GPU Direct RDMA（可能经过多个跳转）
+# PHB：当 GPU 和 NIC 在同一个 NUMA 节点上时使用 GPU Direct RDMA，流量将通过 CPU
+# SYS：即使跨越 NUMA 节点之间的 SMP 互联（如 QPI/UPI）也使用 GPU Direct RDMA（始终启用）
+NCCL_NET_GDR_LEVEL=LOC/PIX/PXB/PHB/SYS
+
+# 
+NCCL_P2P_DIRECT_DISABLE=1
 
 # 禁用 GPU 之间通过 NVLink 或 PCI 进行 CUDA 直接访问
 NCCL_P2P_DISABLE=1
 
+# 精细控制何时使用 P2P 通信
+# 某些软硬件配置可能不支持 P2P 通信
+# LOC：不使用 P2P（始终禁用）
+# NVL：当 GPU 通过 NVLink 连接时使用 P2P
+# PIX：当 GPU 在同一个 PCI 交换机上时使用 P2P
+# PXB：当 GPU 通过 PCI 交换机连接时使用 P2P（可能经过多个跳转）
+# PHB：当 GPU 在同一个 NUMA 节点上时使用 P2P，流量将通过 CPU
+# SYS：即使跨越 NUMA 节点之间的 SMP 互联（如 QPI/UPI）也使用 P2P（始终启用）
+NCCL_P2P_LEVEL=LOC/NVL/PIX/PXB/PHB/SYS
+
+# 禁用 SHM 通信
+# SHM 的通信速度介于 P2P 和 NET 之间；SHM 是 P2P 的备选方案，NET 是 SHM 的备选方案
+NCCL_SHM_DISABLE=1
+
 # 指定使用的 socket 网卡
 NCCL_SOCKET_IFNAME=eth0
+
+# 指定要加载的 XML 文件
+NCCL_TOPO_FILE=/path/to/topo.xml
+
+# 将检测到的拓扑保存到指定文件
+NCCL_TOPO_DUMP_FILE=/path/to/topo-dump.xml
 ```
 
 GPU 之间的集合通信带宽和时延可以通过 [nccl-tests](https://github.com/NVIDIA/nccl-tests) 得到。例如对于 sm02：
