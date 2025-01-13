@@ -224,7 +224,7 @@ NOTE: The CUDA Samples are not meant for performance measurements. Results may v
 
 ### NCCL
 
-[NCCL](https://github.com/NVIDIA/nccl)（NVIDIA Collective Communications Library）是一个库，其提供了面向拓扑感知的 GPU 间通信原语，并可以轻松集成到应用程序中。NCCL 实现了集合通信和点对点发送/接收原语。它不是一个完整的并行编程框架，而是一个专注于加速 GPU 间通信的库。
+[NCCL](https://github.com/NVIDIA/nccl)（NVIDIA Collective Communications Library）是一个库，其提供了面向拓扑感知的 GPU 间通信原语，并可以轻松集成到应用程序中。NCCL 实现了集合通信和 P2P（点对点）发送/接收原语。它不是一个完整的并行编程框架，而是一个专注于加速 GPU 间通信的库。
 
 NCCL 提供以下集合通信原语：
 
@@ -234,7 +234,9 @@ NCCL 提供以下集合通信原语：
 * AllGather
 * ReduceScatter
 
-此外，它还支持点对点的发送/接收通信，可以实现 Scatter、Gather 或 All-to-All 操作。
+此外，它还支持 P2P 的发送/接收通信，可以实现 Scatter、Gather 或 All-to-All 操作。
+
+![](https://s2.loli.net/2025/01/13/WdBD3j7geimpSVU.png)
 
 NCCL 方便地消除了开发人员针对特定机器进行应用程序优化的需求。NCCL 可以在节点内和节点间的多个 GPU 之间提供快速的集合通信。它支持多种互连技术，包括 PCIe、NVLink、InfiniBand Verbs 和 IP sockets。
 
@@ -242,16 +244,31 @@ NCCL 提供了一组有特定功能的环境变量：
 
 ```bash
 # 指定 NCCL 通信算法
-# Tree：树状算法，适用于多节点通信
-# Ring：环状算法，适用于单节点通信
-# CollnetDirect：直接通信，适用于单节点通信
-# CollnetChain：链状通信，适用于单节点通信
-# NVLS：NVLink 通信，适用于单节点通信
-# NVLSTree：NVLink 树状通信，适用于多节点通信
+# Ring：GPU 0 ─→ GPU 1 ─→ GPU 2 ─→ GPU 3
+#        ↑                           ↓
+#        └───────────── ←────────────┘
+# 构建多个环路以充分利用带宽
+# 延迟随 GPU 数量线性增长
+# 瓶颈在于最慢的连接，例如跨 NUMA 节点的连接、跨节点的网络连接
+# 可以用于测量真实的网络带宽
+#
+# Tree：     GPU 0
+#       ╱            ╲
+#    GPU 1          GPU 2
+#    ╱   ╲          ╱   ╲
+# GPU 3  GPU 4   GPU 5  GPU 6
+# 采用双二叉树算法，请参阅 https://www.bilibili.com/video/BV1DErsYwEhc
+# 延迟随 GPU 数量对数增长
+# 瓶颈在于负载最重的根节点
+#
+# CollnetDirect：
+# CollnetChain：
+# NVLS：
+# NVLSTree：
 NCCL_ALGO=Tree/Ring/CollnetDirect/CollnetChain/NVLS/NVLSTree
 
-# 启用 NCCL 网络发现
-NCCL_COLLNET_ENABLE
+# 启用 COLLNET
+NCCL_COLLNET_ENABLE=1
 
 # 指定 NCCL 配置文件
 NCCL_CONF_FILE=~/.nccl.conf
@@ -288,9 +305,6 @@ NCCL_IB_TIMEOUT=31
 # PHB：当 GPU 和 NIC 在同一个 NUMA 节点上时使用 GPU Direct RDMA，流量将通过 CPU
 # SYS：即使跨越 NUMA 节点之间的 SMP 互联（如 QPI/UPI）也使用 GPU Direct RDMA（始终启用）
 NCCL_NET_GDR_LEVEL=LOC/PIX/PXB/PHB/SYS
-
-# 
-NCCL_P2P_DIRECT_DISABLE=1
 
 # 禁用 GPU 之间通过 NVLink 或 PCI 进行 CUDA 直接访问
 NCCL_P2P_DISABLE=1

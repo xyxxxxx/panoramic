@@ -26,7 +26,7 @@
 
 PP 通过进一步拆分 mini-batch 为 micro-batch，使不同的 micro-batch 能够并行处理，压缩了流水线中的 bubble，从而提高了计算效率。
 
-mini-batch 被拆分出的 micro-batch 数量是一个超参数，称为 chunks（在 DeepSpeed 中即为超参数 gradient_accumulation_steps）。当 chunks=1 时，PP 退化为（朴素）MP；当 chunks=4? × pipeline stages 时，设备使用率达到 81%；当 chunks=8? × pipeline stages 时，设备使用率达到 90%。但当 chunks 过大时，micro-batch size 过小亦可能损害计算效率（对于较小的模型），因此需要测试找到使设备计算效率最高的 chunks 值。
+mini-batch 被拆分出的 micro-batch 数量是一个超参数，称为 chunks（在 DeepSpeed 中即为超参数 gradient_accumulation_steps）。当 chunks=1 时，PP 退化为（朴素）MP；当 chunks=4 × pipeline stages 时，设备使用率达超过 80%；当 chunks=8 × pipeline stages 时，设备使用率达到 88%。但当 chunks 过大时，micro-batch size 过小亦可能损害计算效率（对于较小的模型），因此需要测试找到使设备计算效率最高的 chunks 值。
 
 为追求设备使用率，令 mini-batch size = n × pipeline stages × micro-batch size 可能导致 mini-batch size 过大，进而导致 total batch size 过大影响收敛，即使有 micro-batch size = 1（对于较大的模型）。此外，每个设备上激活的显存占用与 mini-batch size 成正比，mini-batch size 较大也会使激活的显存占用较多。
 
@@ -64,14 +64,14 @@ mini-batch 被拆分出的 micro-batch 数量是一个超参数，称为 chunks�
 
 ## 2D 并行（2D Parallelism）& 3D 并行（3D Parallelism）
 
-DP、MP（PP）和 TP 在提高内存效率和计算效率上有各自的功能，2D 并行结合使用其中两种，而 3D 并行结合使用三种。
+(ZeRO-)DP、PP 和 TP 在提高内存效率和计算效率上有各自的功能，2D 并行结合使用其中两种，而 3D 并行结合使用三种。
 
 |                | ZeRO-DP                                                              | PP                                                                              | TP                                                                                                     |
 | -------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | 总计算效率     | 小规模时几乎等比例增加<br>大规模时受带宽限制，与设备数量和参数量有关 | 相比等比例增加有损失，chunks 不能过大或过小<br>stage 不能过多，并且需要负载均衡 | 小规模时几乎等比例增加<br>大规模时受带宽限制，受每设备计算效率限制<br>并行度不能过高，并且需要负载均衡 |
-| 每设备使用内存 | 优化器状态/梯度/参数等比例减少                                       | 参数等比例减少，激活不变                                                        | 参数等比例减少，激活等比例减少（需要 ZeRO-R）                                                          |
-| 通信开销       | 中<br>ZeRO-3 增加通信开销                                            | 小<br>Stage 越多通信开销越大                                                    | 大<br>不建议跨节点                                                                                     |
-| 其他           | 实现简单，应用广泛，首选的并行方法                                   |                                                                                 | Megatron-LM 实现了 TP，但仅支持有限模型<br>不增加 total batch size，因而不影响收敛                     |
+| 每设备使用内存 | 激活/优化器状态/梯度/参数等比例减少                                  | 参数和激活等比例减少                                                            | 参数等比例减少，激活等比例减少（需要 ZeRO-R）                                                          |
+| 通信开销       | 中<br>ZeRO-3 增加通信开销                                            | 小<br>Stage 越多通信开销越大                                                    | 大<br>跨节点需要高带宽互联                                                                             |
+| 其他           | 实现简单，应用广泛，首选的并行方法                                   |                                                                                 | Megatron-LM 实现了 TP，但仅支持有限模型<br>不改变 batch size，因而不影响收敛                           |
 
 ![](../../assets/ml/dl/parallel-training-computation-speedup-and-memory-optimization/parallelism-comparison.png)
 
