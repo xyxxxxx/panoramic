@@ -305,6 +305,12 @@ RAG（retrieval-augmented generation）这一概念由 [2005.11401](https://arxi
 * [perplexity](https://www.perplexity.ai/)
 * [Search with Lepton](https://github.com/leptonai/search_with_lepton)
 
+### GraphRAG
+
+!!! info "参考"
+    * [GraphRAG 从原理到实战技术精讲](https://www.bilibili.com/video/BV1uCifYLEQd)
+    * [DeepSeek v3+GraphRAG 技术实战](https://www.bilibili.com/video/BV1Xwc6eoEW5)
+
 ## 智能体
 
 !!! info "参考"

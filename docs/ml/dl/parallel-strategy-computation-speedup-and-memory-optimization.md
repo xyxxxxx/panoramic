@@ -8,13 +8,11 @@
 
 模型被复制到多个设备上，训练数据的每个 batch（批次）被平均分为多个 mini-batch（小批次），在这些设备上并行处理。每个设备上计算的梯度被聚合（all reduce），用于更新模型参数。
 
+PyTorch 的 DDP（`torch.nn.DistributedDataParallel`）即为（朴素）DP 的实现。
+
 [ZeRO-DP](#zero-dp) 消除 DP 进程之间的内存冗余，并保持 DP 的计算/通信效率。
 
 ## 模型并行（Model Parallelism，MP）
-
-由于单个设备无法容纳整个模型，模型的所有层被划分为若干个组，分别放置在不同的设备上。每个设备负责计算被分配的层，并将激活传递给其他设备进行进一步的处理和传递。
-
-（朴素）MP 的主要问题是，在任意时刻只有一个设备工作，并且设备之间还有复制数据的通信开销。因此，4x 8G GPU 的计算比 1x 32G GPU 的训练还要慢，因为前者还有通信开销（假设 8G GPU 和 32G GPU 的计算能力相同）。
 
 ### 流水线并行（Pipeline Parallelism，PP）
 
@@ -22,15 +20,45 @@
     有些文档将 PP 称为垂直（vertical）并行。微软的 DeepSpeed 系列论文或博客将 PP 称为水平（horizontal）并行。
 
 !!! info "参考"
+    * [1806.03377](https://arxiv.org/abs/1806.03377)
     * [1811.06965](https://arxiv.org/abs/1811.06965)
+    * [2006.09503](https://arxiv.org/abs/2006.09503)
+    * [2104.04473](https://arxiv.org/abs/2104.04473)
 
-PP 通过进一步拆分 mini-batch 为 micro-batch，使不同的 micro-batch 能够并行处理，压缩了流水线中的 bubble，从而提高了计算效率。
+由于单个设备无法容纳整个模型，模型的所有层被划分为若干个组，分别放置在不同的设备上。每个设备负责计算被分配的层，并将激活传递给其他设备进行进一步的处理和传递。
 
-mini-batch 被拆分出的 micro-batch 数量是一个超参数，称为 chunks（在 DeepSpeed 中即为超参数 gradient_accumulation_steps）。当 chunks=1 时，PP 退化为（朴素）MP；当 chunks=4 × pipeline stages 时，设备使用率达超过 80%；当 chunks=8 × pipeline stages 时，设备使用率达到 88%。但当 chunks 过大时，micro-batch size 过小亦可能损害计算效率（对于较小的模型），因此需要测试找到使设备计算效率最高的 chunks 值。
+朴素 PP 的主要问题是，在任意时刻只有一个设备工作，并且设备之间还有复制数据的通信开销。因此，4x 8G GPU 的计算比 1x 32G GPU 的训练还要慢，因为前者还有通信开销（假设 8G GPU 和 32G GPU 的计算能力相同）。
+
+micro-batch PP 通过进一步拆分 mini-batch 为 micro-batch，使不同的 micro-batch 能够并行处理，压缩了流水线中的 bubble，从而提高了计算效率。
+
+mini-batch 被拆分出的 micro-batch 数量是一个超参数，称为 chunks（在 DeepSpeed 中即为超参数 gradient_accumulation_steps）。当 chunks=1 时，PP 退化为朴素 MP；当 chunks=4 × pipeline stages 时，设备使用率达超过 80%；当 chunks=8 × pipeline stages 时，设备使用率达到 88%。但当 chunks 过大时，micro-batch size 过小亦可能损害计算效率（对于较小的模型），因此需要测试找到使设备计算效率最高的 chunks 值。
 
 为追求设备使用率，令 mini-batch size = n × pipeline stages × micro-batch size 可能导致 mini-batch size 过大，进而导致 total batch size 过大影响收敛，即使有 micro-batch size = 1（对于较大的模型）。此外，每个设备上激活的显存占用与 mini-batch size 成正比，mini-batch size 较大也会使激活的显存占用较多。
 
 ![](../../assets/ml/dl/parallel-training-computation-speedup-and-memory-optimization/pp.png)
+
+#### PipeDream
+
+PP 根据调度策略，可以分为两种模式：
+
+* F-then-B：先进行前向计算，再进行反向计算。由于缓存了多个 micro-batch 的激活，实际的显存利用率并不高。
+* 1F1B：前向计算和反向计算交叉进行。在完成一个 micro-batch 的前向计算后，立即进行反向计算，以尽早释放该 micro-batch 的激活占用的显存。
+
+![](https://s2.loli.net/2025/01/14/lrGqLWZcJkxUy1t.png)
+
+![](https://s2.loli.net/2025/01/14/gbruM7P1mdfA8eo.png)
+
+上图的 1F1B 调度方法称为 PipeDream-Flush。尽管看起来 bubble 率和 micro-batch PP 相同，但节省了显存之后，就可以通过增加 chunks 来降低 bubble 率。
+
+又观察到，上图的 1F1B 调度的后半段正好可以插入 F15、F25、F35、F45 等，从而填充所有的 bubble，该方法称为 PipeDream。
+
+![](https://s2.loli.net/2025/01/14/Z4rF9lLmJRVuT5D.png)
+
+此时采用 weight stashing 方法更新权重：每个 worker 每做一次反向计算（图中的绿色方块）后，更新并备份权重。如上图所示，在计算第 5 个 micro-batch 时，worker 1 的前向和反向计算都使用第 1 个 micro-batch 反向计算后更新的权重，worker 3 的前向和反向计算都使用第 3 个 micro-batch 反向计算后更新的权重；每个 worker 需要的 buffer 数量也在图中给出。
+
+PipeDream 的一个问题是，worker 需要额外保留 1 到 d 个版本的隐藏权重，内存开销过大，不同 worker 的内存使用难以平衡。为解决这个问题，PipeDream-2BW 方法累积梯度，每 m 个 micro-batch 更新一次权重版本（$m \geq d$，即流水线深度）。新版本的权重必须用于新的 micro-batch；等到使用旧版本的权重的 micro-batch 全部完成计算后，旧版本的权重就可以丢弃了。最多同时维护 2 个版本的权重。
+
+![](https://s2.loli.net/2025/01/14/hsAFmQPkgV6LGzj.png)
 
 ### 张量并行（Tensor Parallelism，TP）
 
@@ -151,13 +179,18 @@ ZeRO（Zero Redundancy Optimizer）是一套强大的**内存优化**技术，�
 
 ![](../../assets/ml/dl/parallel-training-computation-speedup-and-memory-optimization/zero-dp.png)
 
-在 DP 训练中，所有 DP 进程的梯度会在每一个 step 的反向计算的最后进行平均。这种平均操作通过使用 all-reduce 操作来完成。现代的 all-reduce 实现采用两步方法：第一步是 reduce-scatter 操作，它在不同的进程上 reduce 数据的不同分片；第二步是 all-gather 操作，其中每个进程将所有进程上的 reduced 数据收集起来。reduce-scatter 和 all-gather 都使用流水线方法实现，每个操作的数据移动量为 (n-1)Ψ（对于具有 Ψ 个参数的模型，单位为半精度浮点数）。因此在每个 step 中，标准的 DP 方法会产生 2(n-1)Ψ 的数据移动量。
+在朴素 DP 的训练中，所有 DP 进程的梯度会在每一个 step 的反向计算的最后进行平均。这种平均操作通过使用 all-reduce 操作来完成。现代的 all-reduce 实现采用两步方法：第一步是 reduce-scatter 操作，它在不同的进程上 reduce 梯度的不同分片；第二步是 all-gather 操作，其中每个进程将所有进程上的 reduced 梯度收集起来。reduce-scatter 和 all-gather 都使用流水线方法实现，每个操作的数据移动量为 (n-1)Ψ（对于具有 Ψ 个参数的模型，单位为半精度浮点数）。因此在每个 step 中，朴素 DP 会产生 2(n-1)Ψ 的数据移动量。
 
 ZeRO-1 和 ZeRO-2 与上述方法的区别在于 all-gather 操作是对（FP16 模型的）参数而非梯度进行，但这并没有增加通信量，因此也没有增加总通信量。
 
-ZeRO-3 的每个 DP 进程只存储它更新的（FP16 模型的）参数，因此在前向计算期间，它需要接收所有其他分片的参数。然而，可以通过流水线方法避免内存开销：在计算特定分片的前向计算之前，负责该分片的 DP 进程将参数广播到所有 DP 进程；完成该分片的前向计算后，即丢弃这些参数。因此，总通信量为 (n-1)Ψ。换言之，我们将参数的 all-gather 操作分散到整个前向计算过程中，并在使用后丢弃参数。之后在反向计算中，这个 all-gather 操作以逆序再次进行，另外还有梯度的 reduce-scatter 操作。因此，总的通信量为 3(n-1)Ψ，相较于基线增加了 50%。
+!!! info "信息"
+    按照这种说法，每个进程保留完整的梯度是没有意义的。另外一种说法是，ZeRO-1 先对梯度进行 all-reduce 操作，再对参数进行 all-gather 操作，这样反而增加了 (n-1)Ψ 的通信量。总而言之，ZeRO-1 相比 ZeRO-2 没有任何优势。
 
-此外，ZeRO-3 还包括无限卸载引擎，形成 ZeRO-Infinity，可以将数据卸载到 CPU 和 NVMe 内存中，以实现巨大的内存节省。
+ZeRO-3 的每个 DP 进程只存储它更新的（FP16 模型的）参数，因此在前向计算期间，它需要接收所有其他分片的参数。然而，可以通过流水线方法避免内存开销：在计算特定分片的前向计算之前，负责该分片的 DP 进程将参数广播到所有 DP 进程；完成该分片的前向计算后，即丢弃这些参数。因此，总通信量为 (n-1)Ψ。换言之，我们将参数的 all-gather 操作分散到整个前向计算过程中，并在使用后丢弃参数。之后在反向计算中，这个 all-gather 操作以逆序再次进行，另外还有梯度的 reduce-scatter 操作。因此，总通信量为 3(n-1)Ψ，相较于基线增加了 50%。
+
+此外，ZeRO-3 还包括无限卸载引擎，形成 ZeRO-Infinity，可以将优化器状态、梯度和参数卸载到 CPU 和 NVMe 内存中，以实现巨大的内存节省。
+
+PyTorch 的 FSDP（`torch.distributed.fsdp.FullyShardedDataParallel`）即为 ZeRO-3 的实现。
 
 ### ZeRO-R
 
