@@ -1,5 +1,22 @@
 # 推理
 
+## 基本概念
+
+!!! info "参考"
+    * [大语言模型推理加速](https://www.bilibili.com/video/BV128411v7us)
+
+LLM 的推理过程分为两个阶段：
+
+1. **预填充（prefill）**：处理初始提示词（prompt）。对于每个 token，需要计算其与之前所有 token 的注意力，生成 KV cache。
+2. **解码（decode）**：自回归生成回答。每生成一个新的 token，需要计算其与之前所有 token 的注意力，使用并更新 KV cache。
+
+### 指标
+
+* 吞吐量
+* 首个 token 延迟
+* token 间延迟
+* QPS
+
 ## 量化
 
 !!! info "参考"
@@ -234,10 +251,20 @@ $$
     * 避免重复计算，以空间换时间。
     * 计算复杂度从 $O(s^2)$ 降低到 $O(s)$，其中 $s$ 是序列长度。
     * 缓存大小计算为 `cache_size = batch_size * seq_len * num_layers * 2 * hidden_dim * dtype_size`。
+    * 可以量化 KV cache 以减少显存占用。
 
 ![](https://s2.loli.net/2024/12/27/RtmPygN2qeAjU1C.png)
 
-* PagedAttention（）[[2405.12889](https://arxiv.org/abs/2405.12889)]
+## 服务调度
+
+!!! info "参考"
+    * [How continuous batching enables 23x throughput in LLM inference while reducing p50 latency](https://www.anyscale.com/blog/continuous-batching-llm-inference)
+
+* continuous batching（）[]
+
+## 显存管理
+
+* PagedAttention（）[]
 
 ## 上下文长度
 
@@ -285,7 +312,7 @@ $$
 
 这种变体不要求所有上下文 token 的注意力分数之和为 1——如果当前 token 的向量不需要 attend，那么所有上下文 token 的注意力分数都可以很小。SoftMax1 也等效于在注意力计算中在序列的起始位置添加一个具有全零 kv 状态的虚拟 token。原论文将这种方法称为 Zero Sink。
 
-## 提升表现
+## 指标
 
 * self-consistency（采样多个回答，选取最一致的回答）[[2203.11171](https://arxiv.org/abs/2203.11171)]
 * LLM cascade（顺序调用从弱到强，同时也是成本从低到高的多个 LLM，当回答足够可靠时返回给用户，并取消后续调用）[[2305.05176](https://arxiv.org/abs/2305.05176)]
@@ -297,3 +324,38 @@ $$
 * [ollama](https://github.com/ollama/ollama)
     * 设计用于 CPU 推理，亦可卸载部分或全部层到 GPU 上以加速推理。
 * [vllm](https://github.com/vllm-project/vllm)
+
+
+ ./llama.cpp/llama-cli --model DeepSeek-R1-GGUF/DeepSeek-R1-UD-IQ1_S/DeepSeek-R1-UD-IQ1_S-00001-of-00003.gguf --cache-type-k q4_0  --threads 10 -no-cnv --prio 2 --n-gpu-layers 14 --temp 0.6 --ctx-size 2048 --seed 3407 --prompt "<｜User｜>Why is the sky blue?<｜Assistant｜>"
+
+./llama-cli --model /workspace/DeepSeek-R1-GGUF/DeepSeek-R1-UD-IQ1_S/DeepSeek-R1-UD-IQ1_S-00001-of-00003.gguf --cache-type-k q4_0  --threads 96 -no-cnv --prio 2 --n-gpu-layers 62 --temp 0.6 --ctx-size 2048 --seed 3407 --prompt "<｜User｜>Why is the sky blue?<｜Assistant｜>"
+
+./llama-cli --model /workspace/DeepSeek-R1-GGUF/DeepSeek-R1-UD-IQ1_S/DeepSeek-R1-UD-IQ1_S-00001-of-00003.gguf --cache-type-k q4_0  --threads 112 -no-cnv --prio 2 --temp 0.6 --ctx-size 8192 --seed 3407 --prompt "<｜User｜>Why is the sky blue?<｜Assistant｜>"
+
+./llama-server --model /workspace/DeepSeek-R1-GGUF/DeepSeek-R1-UD-IQ1_S/DeepSeek-R1-UD-IQ1_S-00001-of-00003.gguf --cache-type-k q4_0  --threads 112 --prio 2 --temp 0.6 --ctx-size 8192 --host 0.0.0.0 --port 8080
+
+./llama-cli --model /workspace/DeepSeek-R1-GGUF/DeepSeek-R1-UD-IQ2_XXS/DeepSeek-R1-UD-IQ2_XXS-00001-of-00004.gguf --cache-type-k q4_0  --threads 112 -no-cnv --prio 2 --temp 0.6 --ctx-size 2048 --seed 3407 --prompt "<｜User｜>Why is the sky blue?<｜Assistant｜>"
+
+cpu  memory     gpu    offload  n_ctx  tok/s       full-cuda
+ 10    128G  a100*1         10   8192  1.81/1.06               sm02
+                            14         0.75/1.14   2.09/1.14
+                                 4096  1.97/1.13   1.94/1.16
+                                 2048  1.80/1.09   1.95/1.11
+                            16                     1.88/1.06
+
+ 20    256G  -              -                      2.56/1.15
+             a100*1         16                     3.04/1.54
+             a100*2         32                     4.10/2.12
+                            28   8192              3.44/1.98
+             a100*4         62   2048              7.89/5.55
+
+
+100    256G  -              -    2048              9.32/3.79   qy
+112                                                5.99/4.89
+(IQ2)                                              5.11/4.70                                    
+
+96     enough     -         -                      13.15/7.28  h21
+              h20*1         32                     14.61/7.69
+              h20*2         62                     16.53/11.75
+
+ 96    768G  3090*1          8   8192  4.89/3.28

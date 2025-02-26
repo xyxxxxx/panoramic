@@ -305,6 +305,34 @@ RAG（retrieval-augmented generation）这一概念由 [2005.11401](https://arxi
 * [perplexity](https://www.perplexity.ai/)
 * [Search with Lepton](https://github.com/leptonai/search_with_lepton)
 
+### 检索方法
+
+1. 向量检索
+
+![](https://s2.loli.net/2025/01/21/O4dokvzHlGQt2qV.png)
+
+向量检索
+
+2. 向量检索+重排
+
+![](https://s2.loli.net/2025/01/21/ohQgGYsT5meatU7.png)
+
+重排
+
+3. 全文检索+重排
+
+![](https://s2.loli.net/2025/01/21/BGuqxW3SZMLgNf6.png)
+
+全文检索
+
+4. 混合检索+重排
+
+![](https://s2.loli.net/2025/01/21/jYRzWAulcNQ1oxg.png)
+
+5. 多知识库混合检索+二次重排
+
+![](https://s2.loli.net/2025/01/21/O8NjAxuq1n762Bh.png)
+
 ### GraphRAG
 
 !!! info "参考"

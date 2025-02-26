@@ -68,8 +68,7 @@
 
 	NVSwitch 是 NVLink 的交换机，其提供所有连接到它的 GPU 之间的通信。
 
-    标准带宽：（来源：
-[NVLink and NVLink Switch](https://www.nvidia.com/en-us/data-center/nvlink/)）
+    标准带宽：（来源：[NVLink and NVLink Switch](https://www.nvidia.com/en-us/data-center/nvlink/)）
 
 | NVLink                                   | Second Generation          | Third Generation           | Fourth Generation           | Fifth Generation              |
 | ---------------------------------------- | -------------------------- | -------------------------- | --------------------------- | ----------------------------- |
@@ -100,15 +99,15 @@
 
 ![](https://s2.loli.net/2025/01/01/LWKs6pM9P2Jhn3I.png)
 
-    * InfiniBand（IB）：InfiniBand 是一种用于高性能计算的网络通信标准，它具有极高的带宽和极低的延迟，用于节点之间的数据互连。InfiniBand 专为 RDMA 设计并提供 RDMA 能力，从硬件层面保证可靠传输。搭建 InfiniBand 网络需要专用的 IB 网卡、IB 交换机和 IB 线缆，成本较高。
+  * InfiniBand（IB）：InfiniBand 是一种用于高性能计算的网络通信标准，它具有极高的带宽和极低的延迟，用于节点之间的数据互连。InfiniBand 专为 RDMA 设计并提供 RDMA 能力，从硬件层面保证可靠传输。搭建 InfiniBand 网络需要专用的 IB 网卡、IB 交换机和 IB 线缆，成本较高。
 
         典型带宽：200Gbps/400Gbps/800Gbps
 
-    * RoCE (RDMA over Converged Ethernet)：以太网上的 RDMA 实现。利用现有的标准以太网基础设施，但需要专用的 RoCE 网卡（HCA，host channel adapter）。
+  * RoCE (RDMA over Converged Ethernet)：以太网上的 RDMA 实现。利用现有的标准以太网基础设施，但需要专用的 RoCE 网卡（HCA，host channel adapter）。
 
         典型带宽：100Gbps/200Gbps/400Gbps
 
-    * GPUDirect RDMA：针对 NVIDIA GPU 的 RDMA 实现，它允许 GPU 和支持 RDMA 的设备（例如 IB/RoCE 网卡、支持 RDMA 的存储设备）之间直接通过 PCIe 总线进行数据传输，而无需经过 CPU 或系统内存。
+  * GPUDirect RDMA：针对 NVIDIA GPU 的 RDMA 实现，它允许 GPU 和支持 RDMA 的设备（例如 IB/RoCE 网卡、支持 RDMA 的存储设备）之间直接通过 PCIe 总线进行数据传输，而无需经过 CPU 或系统内存。
 
 ![](../../assets/ml/dl/rdma.png)
 
