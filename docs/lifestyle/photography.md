@@ -1,5 +1,12 @@
 # 摄影
 
+## 好照片的标准
+
+1. 有主题/中心思想
+2. 正确/合理使用各种摄影技术，为 1. 服务
+3. 高完成度/雕琢细节
+4. 有亮点/创意
+
 ## 基础
 
 ### 对焦
@@ -73,7 +80,7 @@
             <td>F22-F1.4</td>
             <td>
                 <ul>
-                    <li>光圈大景深小，有背景虚化效果</li>
+                    <li>光圈大景深小，虚化效果强</li>
                     <li>进光量与光圈值的平方成反比</li>
                 </ul>
             </td>
@@ -84,7 +91,7 @@
             <td>1/4000''-30''</td>
             <td>
                 <ul>
-                    <li>大于 1/10'' 为慢速快门（慢门），适用于拍摄夜景，手要拿稳；大于 1'' 为超慢速快门，适用于拍摄流云、平滑水面、光源轨迹等，需要使用三脚架</li>
+                    <li>大于 1/10'' 为快门（慢门），适用于拍摄夜景，手要拿稳；大于 1'' 为超慢速快门，适用于拍摄流云、平滑水面、光源轨迹等，需要使用三脚架</li>
                     <li>小于 1/200'' 为高速快门，小于 1/2000'' 为超高速快门，适用于拍摄运动主体</li>
                     <li>进光量与快门时间成正比</li>
                 </ul>
@@ -141,7 +148,7 @@
 
 构图原则：
 
-1. 确认画面的主体，乃至进一步明确主题；
+1. 明确主题，确认画面的主体；
 2. 移除与主体或主题无关的元素；
 3. 加入突出主体或主题的元素并合理摆放；
 4. 最终成功传达想表达的内容。
@@ -276,9 +283,33 @@ RGB 颜色模型和 CMYK 颜色模型：
 
 ![](https://globalcomix.com/img/processed/blog-image/e27c9fd96a4534e1ef596eee69123207/13868_1e269c50f4aa35a8a211a1e2846f0ffb_large.jpg)
 
+其中：
+
+* **红色（Red）**的互补色是**青色（Cyan）**，支持色是**品红色（Magenta）**和**黄色（Yellow）**
+* **绿色（Green）**的互补色是品红色，支持色是青色和黄色
+* **蓝色（Blue）**的互补色是黄色，支持色是青色和品红色
+
 HSL 颜色模型：
 
 ![](https://s2.loli.net/2024/08/18/D5cHad12NEqyvWs.png)
+
+其中：
+
+* **色相（Hue）**：
+    * 定义：颜色的基本属性，对应光谱中的不同波长（如红、绿、蓝）。
+    * 范围：0° 到 360°，形成一个色轮。0° 对应红色，120° 对应绿色，240° 对应蓝色。
+* **饱和度（Saturation）**：
+    * 定义：颜色的鲜艳程度或纯度，表示颜色中混入灰色的比例。
+    * 范围：0% 到 100%。0% 对应完全灰度，100% 对应完全饱和，颜色最鲜艳（如纯红、纯绿）。
+* **明度（Lightness）**：
+    * 定义：颜色的明暗程度。
+    * 范围：0% 到 100%。0% 对应黑色（无论色相和饱和度如何），50% 对应色相本身的亮度，100% 对应白色。
+
+!!! tip "提示"
+    明度影响视觉饱和度：明度等于 50% 时，视觉饱和度最高；明度大于/小于 50% 时，颜色混入白色/黑色，从而导致视觉饱和度降低。
+
+!!! tip "提示"
+    HSL 与 RGB 共享相同的色域。
 
 ### 光线
 
@@ -332,7 +363,7 @@ HSL 颜色模型：
 * 快门影响环境光亮度
 * ISO 影响两者
 
-### 噪音
+#### 噪音
 
 前期降噪思路：提升进光量（信噪比）
 
@@ -340,7 +371,7 @@ HSL 颜色模型：
 
 后期降噪思路：AI 降噪
 
-### 反光
+#### 反光
 
 利用反光：人物面部的反光表达情绪，街景的反光增加层次
 
@@ -395,6 +426,8 @@ HSL 颜色模型：
 * 镜头：
     * 24-70/24-105：通用
     * 16-35：大景
+    * 70-200：建筑、景物细节；野生动物
+    * 50：风光人像
 * 三脚架：提高画质
 * 机顶闪：风光人像
 
@@ -402,7 +435,7 @@ HSL 颜色模型：
 
 * 使用向右曝光，大光比场景（e.g. 日出日落，夜景灯光）使用包围曝光
 * 大景深使用小光圈 + 三脚架，或小光圈 + 防抖 + 大 ISO（必要时），或大光圈 + 景深合成；小景深使用大光圈
-* 在蓝调时段拍摄夜景；夜景使用三脚架，或大光圈 + 防抖 + 大 ISO（必要时）
+* 在蓝调时段拍摄夜景；夜景使用小光圈 + 三脚架 + 小 ISO，或大光圈 + 防抖 + 大 ISO（必要时）
 
 !!! tip "提示"
     三脚架隐含了慢速快门（长曝光），防抖隐含了相对长的安全快门。
@@ -491,7 +524,13 @@ HSL 颜色模型：
 
 [使用修复工具](https://helpx.adobe.com/cn/lightroom-classic/help/healing-tool.html)去除照片上不需要的部分。
 
-[使用“变换”面板中的 Upright 功能](https://helpx.adobe.com/cn/lightroom-classic/help/guided-upright-perspective-correction.html)校正垂直透视或水平透视发生扭曲的照片。
+[使用“变换”面板中的 Upright 功能](https://helpx.adobe.com/cn/lightroom-classic/help/guided-upright-perspective-correction.html)校正垂直透视或水平透视发生扭曲的照片，校正选项包括：
+
+* 自动：在平衡整个图像并且尽量保留原始图像的情况下，校正垂直扭曲和水平扭曲。
+* 水平：校正水平扭曲，适用于画面中有明显的水平线（地平线、海平线）且水平线不水平的情形。
+* 垂直：校正垂直扭曲，可以将三点透视的画面校正为两点透视。
+* 完全：所有水平、垂直和自动透视校正的组合，可以校正扭曲的一点透视。
+* 引导式：允许您在照片上绘制两条或更多条参考线，以自定义校正透视。最好在画面四周、远离中心的位置绘制参考线。
 
 [使用“裁剪叠加”工具](https://helpx.adobe.com/cn/lightroom-classic/help/retouch-photos.html#adjust_crop_and_rotation)裁剪照片以二次构图，常用的长宽比包括：
 
@@ -499,33 +538,68 @@ HSL 颜色模型：
 * 16:9（显示器）
 * 2.35:1（电影）
 
-[使用“镜头校正”面板](https://helpx.adobe.com/cn/lightroom-classic/help/retouch-photos.html#correct_lens_distortion_and_adjust_perspective)校正镜头扭曲（畸变）、暗角和色差。
+[使用“镜头校正”面板](https://helpx.adobe.com/cn/lightroom-classic/help/retouch-photos.html#correct_lens_distortion_and_adjust_perspective)校正镜头扭曲（畸变）、暗角和色差。但基于以下考量可能会刻意保留暗角：
+
+* 胶片/复古感：暗角是胶片摄影的常见特征，保留暗角可以模拟老照片的质感，增强怀旧或经典氛围（如 LOMO 风格、纪实摄影）。
+* 情绪渲染：暗角能营造神秘、压抑或聚焦的视觉感受，适用于暗调人像、电影感画面或叙事性较强的作品。
+* 视觉控制：通过暗角引导观众视线向画面中心集中，强化主体或场景的视觉冲击力（如肖像、静物特写）。
 
 ### 影调
 
 [使用“基本”面板上的色调控件](https://helpx.adobe.com/cn/lightroom-classic/help/image-tone-color.html#adjust_overall_image_tonal_scale)调整图像的整体色调（实际上是影调）等级：
 
-* 曝光：确定影调
-* 高光/阴影：恢复细节
-* 黑色/白色：控制宽容度
-* 对比度：微调反差
+* 曝光度：
+    * 作用：定调
+    * 官方介绍：设置图像总体亮度；将曝光度调整 +1.00 相当于将光圈开大 1 档（e.g. f/2.8 变为 f/2）。
+    * 实测效果：曝光度影响视觉对比度。
+* 对比度：
+    * 作用：微调明暗反差
+    * 官方介绍：增加或降低图像对比度，主要影响中间调；增加对比度时，中间调到阴影会变得更暗，而中间调到高光会变得更亮。
+* 高光/阴影：
+    * 作用：恢复亮部/暗部细节
+    * 官方介绍：调整图像的高光/阴影；向左拖动可使高光/阴影变暗，并恢复高光细节/与此同时尽量不引入阴影剪切，向右拖动可使高光/阴影变亮，与此同时尽量不引入高光剪切/并恢复阴影细节。
+    * 实测效果：高光影响整体亮度，对于高光影响最大（但在高光内部并没有越亮影响越大），中间调次之，阴影几乎没有影响；<u>增加局部的对比度</u>；<u>同一亮度的像素可能提亮/压暗的幅度不同</u>，故直方图形状可能有横向拉伸/压缩以外的变化；高光不能用亮度曲线实现。阴影同理。
+* 白色/黑色色阶：
+    * 作用：控制宽容度
+    * 官方介绍：调整白色/黑色色阶剪切。向左拖动可减少高光剪切/增加阴影剪切。向右拖动可增加高光剪切/减少阴影剪切。
+    * 实测效果：白色色阶影响整体亮度，越亮影响越大；<u>尽量保持原有的对比度</u>；<u>亮度相同则影响相同</u>，故直方图形状仅有横向拉伸/压缩的变化；白色色阶相当于亮度曲线 $y=ax$。黑色色阶同理。
 
 [使用“色调曲线”面板](https://helpx.adobe.com/cn/lightroom-classic/help/image-tone-color.html#fine_tune_the_tonal_scale_using_the_tone_curve_panel)微调影调等级（编辑参数曲线或点曲线），常用的曲线类型包括：
 
 ![](https://s2.loli.net/2024/08/18/WENcpZdgaSXv5UG.png)
 
 !!! tip "提示"
-    [使用蒙版工具](https://helpx.adobe.com/cn/lightroom-classic/help/masking.html)进行局部的影调和色调调整。
+    曲线就是函数/映射，横坐标是输入，纵坐标是输出。
+
+!!! tip "提示"
+    [使用蒙版工具](https://helpx.adobe.com/cn/lightroom-classic/help/masking.html)进行局部的影调和色调调整，蒙版支持：
+
+    * 智能选择：选择主题、天空、背景、对象、人物（人物的部位）
+    * 区域选择：涂抹区域、拉取渐变区域
+    * 范围选择：选择指定明亮度范围、色彩范围
 
 ### 色调
 
-[设置白平衡](https://helpx.adobe.com/cn/lightroom-classic/help/image-tone-color.html#set_the_white_balance)
+[使用“基本”面板上的“白平衡”控件](https://helpx.adobe.com/cn/lightroom-classic/help/image-tone-color.html#set_the_white_balance)设置白平衡：
 
-[使用“基本”面板上的“偏好”控件](https://helpx.adobe.com/cn/lightroom-classic/help/image-tone-color.html#set_overall_color_saturation)更改所有颜色的饱和度（鲜明度或颜色纯度）。
+* 选择白平衡预设选项
+* 从图像中拾取目标中性色
+* [使用色温和色调控件微调白平衡](https://helpx.adobe.com/cn/lightroom-classic/help/image-tone-color.html#fine_tune_the_white_balance_using_the_temp_and_tint_controls)：
+    * 色温可设置图像呈现的黄色/暖或蓝色/冷程度。移动色温滑块，以使用 Kelvin 色温比例微调白平衡。
+    * 色调可设置图像呈现的绿色或洋红色程度。移动色调滑块，以对绿色或洋红色色调进行补偿，从而微调白平衡。
+    * 色温和色调的组合决定了图像呈现的红色或青色程度，例如黄色程度高且洋红色程度高，则红色程度高。
+
+[使用“基本”面板上的“偏好”控件](https://helpx.adobe.com/cn/lightroom-classic/help/image-tone-color.html#set_overall_color_saturation)设置所有颜色的饱和度：
+
+* 鲜艳度：调整饱和度使得颜色在接近完全饱和时尽量不引入剪切，从而对低饱和颜色影响较大，高饱和颜色影响较小。鲜艳度还会防止肤色过饱和。
+* 饱和度：将所有颜色的饱和度从黑白（-100）同步调整为双倍原有的饱和度（+100）。
 
 [使用“混色器”面板](https://helpx.adobe.com/cn/lightroom-classic/help/image-tone-color.html#fine_tune_image_colors_with_hsl_sliders)调整照片中的各种颜色范围。
 
 [颜色分级的逐步指南](https://www.adobe.com/tw/creativecloud/photography/discover/colour-grading.html)
+
+!!! tip "提示"
+    在 LrC 中，明亮度最小（-100）不会到纯黑，最大（+100）不会到纯白。
 
 [使用“色调曲线”面板](https://helpx.adobe.com/cn/lightroom-classic/help/image-tone-color.html#fine_tune_the_tonal_scale_using_the_tone_curve_panel)微调色调等级（编辑红色、绿色或蓝色通道）。
 
@@ -533,11 +607,43 @@ HSL 颜色模型：
 
 ### 效果
 
-[进行照片锐化](https://www.adobe.com/tw/creativecloud/photography/discover/image-sharpener.html)
+[使用“基本”面板上的“偏好”控件](https://helpx.adobe.com/cn/lightroom-classic/help/image-tone-color.html#set_overall_color_saturation)设置部分效果：
 
-使用“细节”面板上的噪点消除控件手动或自动降噪。
+* 纹理：控制纹理细节。相当于一个锐化的预设。
+* 清晰度：通过增加局部的对比度来增加图像的深度。使用此设置时，最好将画面放大到 100% 或更大。要使效果达到最佳，增大直到看到边缘细节附近出现光晕，然后再稍微减小。
+* 去朦胧：控制照片中的朦胧量或雾量，适用于营造雾气感/朦胧感，或消除雾霾。
 
-[应用暗角、颗粒和去朦胧效果](https://helpx.adobe.com/cn/lightroom-classic/help/retouch-photos.html#vignette_and_grain_effects)
+[使用“细节”面板上的“锐化”控件](https://helpx.adobe.com/cn/lightroom-classic/help/retouch-photos.html#sharpening_and_noise_reduction)锐化照片：
+
+* 数量：调整边缘清晰度，即定位到与周围像素不同的一些像素（基于所指定的半径），增加这些像素的对比度（基于所指定的数量）。设置为 0 则关闭锐化。通常设置为较低的值，以让图像更清晰。
+* 半径：调整应用锐化的细节的大小。具备精细细节的照片可能需要较小的半径，具有粗略细节的照片可以使用较大的半径。使用太大的半径通常会产生不自然的视觉效果。
+* 细节：调整锐化高频信息和锐化过程强调边缘的程度。较低的设置主要锐化边缘以消除模糊，较高的值有助于使图像中的纹理更显著。
+* 蒙版：控制边缘蒙版。设置为 0 时，图像中的所有部分接受等量的锐化；设置为 100 时，锐化主要限制在边缘区域。按下 Alt 键以显示蒙版区域。
+
+!!! tip "提示"
+    导出时再进行一次输出锐化。
+
+[使用“细节”面板上的“噪点消除”控件](https://helpx.adobe.com/cn/lightroom-classic/help/retouch-photos.html#reduce_image_noise)自动（或手动）降噪。
+
+[使用“效果”面板的“颗粒”控件](https://helpx.adobe.com/cn/lightroom-classic/help/retouch-photos.html#simulate_film_grain)模拟胶片的颗粒感，或掩盖重采样伪影：
+    * 数量：控制颗粒数量。设置为 0 则禁用颗粒。
+    * 大小：控制颗粒大小。大小为 25 或更大时，将增加蓝色和降噪以改善视觉效果。
+    * 粗糙度：控制颗粒的均匀程度。
+
+[使用“效果”面板的“裁剪后暗角”控件](https://helpx.adobe.com/cn/lightroom-classic/help/retouch-photos.html#apply_a_postcrop_vignette)对照片应用暗角艺术效果。从“样式”菜单选择一个选项：
+    * 高光优先：启用高光修正，但会导致阴影区域出现色差。适用于具备明亮区域的照片，例如裁剪下来的镜片高光。
+    * 颜色优先：尽量减小阴影区域的色差，但无法执行高光修正。
+    * 绘画叠加：将已裁剪图像的像素与黑白像素混合。可能导致视觉上的色彩单调。
+
+然后调整滑块：
+    * 数量：负值使角部变暗；正值使角部变亮。
+    * 中点：较低的值将调整应用在远离角部的较大区域；较高的值将调整限制在接近角部的较小区域。
+    * 圆度：较低的值使暗角效果更椭圆；较高的值使暗角效果更圆。
+    * 羽化：较低的值可减弱暗角与暗角周围像素之间的柔化效果；较高的值可增强暗角与暗角周围像素之间的柔化效果。
+    * 高光：（仅限高光优先和颜色优先样式）控制“数量”为负时保留的高光对比度。适用于具备高光较少的照片，例如蜡烛和台灯。
+
+!!! tip "提示"
+    裁剪后暗角既适用于已裁剪图像，也适用于未裁剪图像。LrC 裁剪后暗角样式会对已裁剪图像的曝光度进行相应的调整，以保持原始图像的对比度并创建视觉上更加美观的效果。
 
 ### 经典风格
 
