@@ -1,0 +1,2042 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="xyx">
+      
+      
+        <link rel="canonical" href="https://xyxxxxx.github.io/panoramic/ml/llm/applications.html">
+      
+      
+        <link rel="prev" href="evaluation.html">
+      
+      
+        <link rel="next" href="insights.html">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
+    
+    
+      
+        <title>应用 - Panoramic</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2afb09e1.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#应用" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Panoramic" class="md-header__button md-logo" aria-label="Panoramic" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Panoramic
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              应用
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../math/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  数学
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  机器学习
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../lifestyle/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  生活方式
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Panoramic" class="md-nav__button md-logo" aria-label="Panoramic" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Panoramic
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    首页
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../math/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    数学
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            数学
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../math/la.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    线性代数
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    机器学习
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            机器学习
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    深度学习
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            深度学习
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dl/hardware-platform.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    硬件平台
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dl/common-techniques.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    常用技术
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dl/parallel-strategy-computation-speedup-and-memory-optimization.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    并行策略、计算加速与内存优化技术
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../rl/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    强化学习专题
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            强化学习专题
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rl/algorithm.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    算法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    LLM 专题
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            LLM 专题
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    架构
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    训练
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="inference.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    推理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    评估
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    应用
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="applications.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    应用
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#聊天机器人" class="md-nav__link">
+    <span class="md-ellipsis">
+      聊天机器人
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="聊天机器人">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#提示工程" class="md-nav__link">
+    <span class="md-ellipsis">
+      提示工程
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      RAG
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RAG">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#检索方法" class="md-nav__link">
+    <span class="md-ellipsis">
+      检索方法
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graphrag" class="md-nav__link">
+    <span class="md-ellipsis">
+      GraphRAG
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#智能体" class="md-nav__link">
+    <span class="md-ellipsis">
+      智能体
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="智能体">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#多智能体讨论对话" class="md-nav__link">
+    <span class="md-ellipsis">
+      多智能体讨论/对话
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="多智能体讨论/对话">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#swarm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Swarm
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#工具使用" class="md-nav__link">
+    <span class="md-ellipsis">
+      工具使用
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#开放式学习" class="md-nav__link">
+    <span class="md-ellipsis">
+      开放式学习
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#迈向-os" class="md-nav__link">
+    <span class="md-ellipsis">
+      迈向 OS
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="insights.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    洞见
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../lifestyle/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    生活方式
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            生活方式
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lifestyle/photography.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    摄影
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lifestyle/cooking.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    烹饪
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#聊天机器人" class="md-nav__link">
+    <span class="md-ellipsis">
+      聊天机器人
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="聊天机器人">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#提示工程" class="md-nav__link">
+    <span class="md-ellipsis">
+      提示工程
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      RAG
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RAG">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#检索方法" class="md-nav__link">
+    <span class="md-ellipsis">
+      检索方法
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graphrag" class="md-nav__link">
+    <span class="md-ellipsis">
+      GraphRAG
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#智能体" class="md-nav__link">
+    <span class="md-ellipsis">
+      智能体
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="智能体">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#多智能体讨论对话" class="md-nav__link">
+    <span class="md-ellipsis">
+      多智能体讨论/对话
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="多智能体讨论/对话">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#swarm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Swarm
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#工具使用" class="md-nav__link">
+    <span class="md-ellipsis">
+      工具使用
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#开放式学习" class="md-nav__link">
+    <span class="md-ellipsis">
+      开放式学习
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#迈向-os" class="md-nav__link">
+    <span class="md-ellipsis">
+      迈向 OS
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="应用">应用<a class="headerlink" href="#应用" title="Permanent link">&para;</a></h1>
+<p>LLM 应用广泛，但不同的应用类型之间并没有明显的界限。这里选取一些主题进行讨论。</p>
+<h2 id="聊天机器人">聊天机器人<a class="headerlink" href="#聊天机器人" title="Permanent link">&para;</a></h2>
+<p>用结构化的模板引导 LLM 生成与用户聊天的内容。例如下面展示了传入 Llama-2-7b-chat-hf 模型的 token 序列：</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoTokenizer</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;meta-llama/Llama-2-7b-chat-hf&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">use_default_system_prompt</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">conversation</span> <span class="o">=</span> <span class="p">[</span>
+<span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello, how are you?&quot;</span><span class="p">},</span>
+<span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;I&#39;m doing great. How can I help you today?&quot;</span><span class="p">},</span>
+<span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;I&#39;d like to show off how chat templating works!&quot;</span><span class="p">},</span>
+ <span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">apply_chat_template</span><span class="p">(</span><span class="n">conversation</span><span class="p">,</span> <span class="n">tokenize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="s2">&quot;&lt;s&gt;[INST] &lt;&lt;SYS&gt;&gt;</span><span class="se">\n</span><span class="s2">You are a helpful assistant.</span><span class="se">\n</span><span class="s2">&lt;&lt;/SYS&gt;&gt;</span><span class="se">\n\n</span><span class="s2">Hello, how are you? [/INST] I&#39;m doing great. How can I help you today? &lt;/s&gt;&lt;s&gt;[INST] I&#39;d like to show off how chat templating works! [/INST]&quot;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">apply_chat_template</span><span class="p">(</span><span class="n">conversation</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s2">&quot;pt&quot;</span><span class="p">)</span>
+<span class="n">tensor</span><span class="p">([[</span>    <span class="mi">1</span><span class="p">,</span>   <span class="mi">518</span><span class="p">,</span> <span class="mi">25580</span><span class="p">,</span> <span class="mi">29962</span><span class="p">,</span>  <span class="mi">3532</span><span class="p">,</span> <span class="mi">14816</span><span class="p">,</span> <span class="mi">29903</span><span class="p">,</span>  <span class="mi">6778</span><span class="p">,</span>    <span class="mi">13</span><span class="p">,</span>  <span class="mi">3492</span><span class="p">,</span>
+           <span class="mi">526</span><span class="p">,</span>   <span class="mi">263</span><span class="p">,</span>  <span class="mi">8444</span><span class="p">,</span> <span class="mi">20255</span><span class="p">,</span> <span class="mi">29889</span><span class="p">,</span>    <span class="mi">13</span><span class="p">,</span> <span class="mi">29966</span><span class="p">,</span>   <span class="mi">829</span><span class="p">,</span> <span class="mi">14816</span><span class="p">,</span> <span class="mi">29903</span><span class="p">,</span>
+          <span class="mi">6778</span><span class="p">,</span>    <span class="mi">13</span><span class="p">,</span>    <span class="mi">13</span><span class="p">,</span> <span class="mi">10994</span><span class="p">,</span> <span class="mi">29892</span><span class="p">,</span>   <span class="mi">920</span><span class="p">,</span>   <span class="mi">526</span><span class="p">,</span>   <span class="mi">366</span><span class="p">,</span> <span class="mi">29973</span><span class="p">,</span>   <span class="mi">518</span><span class="p">,</span>
+         <span class="mi">29914</span><span class="p">,</span> <span class="mi">25580</span><span class="p">,</span> <span class="mi">29962</span><span class="p">,</span>   <span class="mi">306</span><span class="p">,</span> <span class="mi">29915</span><span class="p">,</span> <span class="mi">29885</span><span class="p">,</span>  <span class="mi">2599</span><span class="p">,</span>  <span class="mi">2107</span><span class="p">,</span> <span class="mi">29889</span><span class="p">,</span>  <span class="mi">1128</span><span class="p">,</span>
+           <span class="mi">508</span><span class="p">,</span>   <span class="mi">306</span><span class="p">,</span>  <span class="mi">1371</span><span class="p">,</span>   <span class="mi">366</span><span class="p">,</span>  <span class="mi">9826</span><span class="p">,</span> <span class="mi">29973</span><span class="p">,</span> <span class="mi">29871</span><span class="p">,</span>     <span class="mi">2</span><span class="p">,</span>     <span class="mi">1</span><span class="p">,</span>   <span class="mi">518</span><span class="p">,</span>
+         <span class="mi">25580</span><span class="p">,</span> <span class="mi">29962</span><span class="p">,</span>   <span class="mi">306</span><span class="p">,</span> <span class="mi">29915</span><span class="p">,</span> <span class="mi">29881</span><span class="p">,</span>   <span class="mi">763</span><span class="p">,</span>   <span class="mi">304</span><span class="p">,</span>  <span class="mi">1510</span><span class="p">,</span>  <span class="mi">1283</span><span class="p">,</span>   <span class="mi">920</span><span class="p">,</span>
+         <span class="mi">13563</span><span class="p">,</span>  <span class="mi">1350</span><span class="p">,</span>   <span class="mi">572</span><span class="p">,</span>  <span class="mi">1218</span><span class="p">,</span>  <span class="mi">1736</span><span class="p">,</span> <span class="mi">29991</span><span class="p">,</span>   <span class="mi">518</span><span class="p">,</span> <span class="mi">29914</span><span class="p">,</span> <span class="mi">25580</span><span class="p">,</span> <span class="mi">29962</span><span class="p">]])</span>
+
+<span class="c1"># 其中：</span>
+<span class="c1"># * INST 指 instruction，[INST] 和 [/INST] 标签包裹用户消息</span>
+<span class="c1"># * &lt;s&gt; 和 &lt;/s&gt; 标签包裹用户和 LLM 的一个聊天回合</span>
+<span class="c1"># * &lt;&lt;SYS&gt;&gt; 和 &lt;&lt;/SYS&gt;&gt; 标签包裹系统消息，放在第一个用户消息前，[INST] 标签内</span>
+<span class="c1"># * 只有 &lt;s&gt; 和 &lt;/s&gt; 是特殊 token</span>
+</code></pre></div>
+<p>通过 RLHF 微调使 LLM 对齐。可以在返回输出前增加事实核查、有害词汇检测和处理、偏见检测和处理等步骤。</p>
+<p>典型应用：</p>
+<ul>
+<li>ChatGPT</li>
+<li>Claude</li>
+<li>Gemini</li>
+<li>……（不计其数）</li>
+</ul>
+<h3 id="提示工程">提示工程<a class="headerlink" href="#提示工程" title="Permanent link">&para;</a></h3>
+<div class="admonition info">
+<p class="admonition-title">参考</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2406.06608">2406.06608</a></li>
+<li><a href="https://www.promptingguide.ai">提示工程指南</a></li>
+</ul>
+</div>
+<p>在与 LLM 聊天（使用 LLM 生成文本）时，输入的格式和内容是自由的，而输入会影响 LLM 的行为（输出的分布）。精心或巧妙构建出的提示词（prompt）可以让 LLM 更加贴合用户的需求，提升特定能力，或处理特定形式的任务等。</p>
+<p>提示工程是 LLM 领域的一个新兴的子学科。一些人认为提示工程最终会消失；我认为提示工程本身作为优化模型表现的方法总会存在：输入不同，输出的分布必然不同，若对其计算量化指标，则必然有高有低，总会有优化的空间。与此同时，模型本身的能力、应用/系统的工作流也会影响模型表现，应结合实际需求，综合考虑不同部分的优化难度、优化效果（这些仍在发展中）选择方案。</p>
+<p>但不应让用户自己来做提示工程，这会损害使用体验，自然的提示词（类似人与人的交流）一定是体验最好的。</p>
+<p>下面是一些 prompting 技术：</p>
+<table>
+    <thead>
+        <tr>
+            <th>方法</th>
+            <th>概述</th>
+            <th>细节</th>
+            <th>备注</th>
+            <th>论文</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>zero-shot</td>
+            <td>仅给出指令</td>
+            <td></td>
+            <td>作为基线</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>few-shot</td>
+            <td>提供一些范例</td>
+            <td>
+                <ul>
+                    <li>增加范例的数量通常对模型表现有提升，但超过 20 个之后提升可能不显著</li>
+                    <li>范例的顺序对模型表现有影响（什么样的影响？）</li>
+                    <li>范例标签的不均匀分布会使得模型产生偏向</li>
+                    <li>范例标签的正确率对模型表现是否有影响尚有争议</li>
+                    <li>范例的格式对模型表现有影响，训练数据中常出现的格式会带来更好的表现</li>
+                </ul>
+            </td>
+            <td>又称为 ICL（In-Context Learning）</td>
+            <td><a href="https://arxiv.org/abs/2005.14165">2005.14165</a>（GPT-3 的论文）</td>
+        </tr>
+        <tr>
+            <td>generate knowledge prompting</td>
+            <td>LLM 先生成与问题相关的知识，再参考其进行回复</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2110.08387">2110.08387</a></td>
+        </tr>
+        <tr>
+            <td>Chain-of-Thought（CoT）</td>
+            <td>LLM 给出思维过程</td>
+            <td>
+                <ul>
+                    <li>对模型在数学和推理任务上的表现有显著提升</li>
+                    <li>可以是 zero-shot 或 few-shot</li>
+                </ul>
+            </td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2201.11903">2201.11903</a></td>
+        </tr>
+        <tr>
+            <td>self-consistency</td>
+            <td>采样多个答案（CoT），行多数决</td>
+            <td>方法通用</td>
+            <td>可以让 LLM 计数</td>
+            <td><a href="https://arxiv.org/abs/2203.11171">2203.11171</a></td>
+        </tr>
+        <tr>
+            <td>max mutual information</td>
+            <td>生成具有不同风格（或提供不同范例）的多个 prompt 模板，选取最优模板，即最大化 prompt 和 LLM 输出的互信息的模板</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2203.11364">2203.11364</a></td>
+        </tr>
+        <tr>
+            <td>least-to-most prompting</td>
+            <td>LLM 先分解问题为几个子问题，再顺序解答，已解答的子问题 Q&A 会被附加到 prompt 中</td>
+            <td></td>
+            <td>与 CoT 存在相似之处</td>
+            <td><a href="https://arxiv.org/abs/2205.10625">2205.10625</a></td>
+        </tr>
+        <tr>
+            <td>RLPrompt</td>
+            <td>（基于强化学习的方法）</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2205.12548">2205.12548</a></td>
+        </tr>
+        <tr>
+            <td>complexity-based prompting</td>
+            <td>基于 few-shot CoT；选取复杂（步数多）的范例；采样 n 个答案，其中最复杂的 k 个答案行多数决</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2210.00720">2210.00720</a></td>
+        </tr>
+        <tr>
+            <td>DECOMP（Decomposed Prompting）</td>
+            <td>一个 decomposer 负责分解任务为几个（预定义的）子任务，几个 sub-task handler 负责处理相应的子任务，它们各自有专属的 few-shot prompt，另见图 1 和图 2</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2210.02406">2210.02406</a></td>
+        </tr>
+        <tr>
+            <td>Re3</td>
+            <td>生成长篇故事</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2210.06774">2210.06774</a></td>
+        </tr>
+        <tr>
+            <td>Auto-CoT</td>
+            <td>聚类选取具有代表性的几个问题，LLM 生成 CoT（zero-shot）并作为新的范例</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2210.03493">2210.03493</a></td>
+        </tr>
+        <tr>
+            <td>Automatic Prompt Engineer（APE）</td>
+            <td>LLM 根据范例生成多个 prompt，评估选取得分最高的；（可选）LLM 为得分最高的 prompt 生成多个变体，继续评估选取得分最高的</td>
+            <td>方法通用</td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2211.01910">2211.01910</a></td>
+        </tr>
+        <tr>
+            <td>Program-of-Thoughts</td>
+            <td>LLM（e.g. Codex、CodeLlama）生成代码作为推理步骤，代码解释器执行这些步骤得到最终答案</td>
+            <td>在数学和编程相关的任务中效果出色，但在语义推理任务中效果较差</td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2211.12588">2211.12588</a></td>
+        </tr>
+        <tr>
+            <td>active prompting</td>
+            <td>从问题集中选取 LLM 多次回复（CoT）最不一致的几个问题，人类标注 CoT 并作为新的范例</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2302.12246">2302.12246</a>, <a href="https://arxiv.org/abs/2305.08291">2305.08291</a></td>
+        </tr>
+        <tr>
+            <td>Self-Refine</td>
+            <td>LLM 迭代地为它的答案提供反馈并据此改进</td>
+            <td>方法通用</td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2303.17651">2303.17651</a></td>
+        </tr>
+        <tr>
+            <td>ProTeGi</td>
+            <td>LLM 先根据 prompt 和失败示例生成改进意见，再根据 prompt、失败示例和改进意见生成多个新的 prompt，最后使用 bandit 算法选择一个</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2305.03495">2305.03495</a></td>
+        </tr>
+        <tr>
+            <td>Tree-of-Thought（ToT）</td>
+            <td>将思维链扩展为思维树，LLM 每一步先生成几个中间想法（few-shot），再自我评估（打分、投票等）选取朝向解决问题最有进展的想法（few-shot CoT）以继续；可以使用深度或广度优先的搜索策略</td>
+            <td>对需要计划和搜索的任务尤其有效</td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2305.10601">2305.10601</a></td>
+        </tr>
+        <tr>
+            <td>emotion prompting</td>
+            <td>对 LLM 进行情绪勒索</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2307.11760">2307.11760</a></td>
+        </tr>
+        <tr>
+            <td>Cumulative Reasoning（CR）</td>
+            <td>LLM 扮演三种角色合作推理（all with CoT）：proposer 基于当前上下文提出下一步的方案；verifier 评估方案，接受有效的方案并加入到上下文；reporter 选择适当的时机结束推理过程</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2308.04371">2308.04371</a></td>
+        </tr>
+        <tr>
+            <td>Graph-of-Thought（GoT）</td>
+            <td>将思维树扩展为思维图，类似一个工作流</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2308.09687">2308.09687</a></td>
+        </tr>
+        <tr>
+            <td>Chain-of-Verification（CoVe）</td>
+            <td>
+                <ul>
+                    <li>（all with few-shot）LLM 生成初始回复</li>
+                    <li>生成一组验证问题以检查该回复</li>
+                    <li>独立地回答每个验证问题</li>
+                    <li>根据验证 Q&A 生成最终回复</li>
+                </ul>
+            </td>
+            <td>适用于问答任务</td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2309.11495">2309.11495</a></td>
+        </tr>
+        <tr>
+            <td>role prompting</td>
+            <td>LLM 进行角色扮演</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2310.00746">2310.00746</a></td>
+        </tr>
+        <tr>
+            <td>System 2 Attention（S2A）</td>
+            <td>LLM 先改写 prompt 以移除与问题本身不相关的信息，再根据新的 prompt 生成回复</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2310.00746">2311.11829</a></td>
+        </tr>
+        <tr>
+            <td>Buffer of Thoughts（BoT）</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a href="https://arxiv.org/abs/2406.04271">2406.04271</a></td>
+        </tr>
+    </tbody>
+</table>
+
+<p><img alt="" src="../../assets/ml/llm/applications/decomp1.png" /></p>
+<p><img alt="" src="../../assets/ml/llm/applications/decomp2.png" /></p>
+<div class="admonition note">
+<p class="admonition-title">注意</p>
+<p>prompting 方法对于更新、更强的 LLM 可能会失效。</p>
+</div>
+<p>下面是一些 prompting 小窍门：</p>
+<ul>
+<li>对 LLM 礼貌没用，但说无妨。</li>
+<li>尽量使用肯定的指示（“做什么”）而不是否定的指示（“不要做什么”）。</li>
+<li>对 LLM 说“我会为一个更好的答案付x元小费”是有用的。</li>
+<li>对 LLM 说“（如果你不能完成任务）你将会受到惩罚”是有用的。</li>
+</ul>
+<p>提示攻击（prompt hacking）是提示工程的一种恶意利用，其通过巧妙的提示词诱导 LLM 产生有害或不希望的输出（例如变更任务、突破限制、泄露机密或隐私信息等）。越狱（jailbreaking）和提示注入（prompt injection）都属于提示攻击，辨析如下：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>越狱</th>
+<th>提示注入</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>攻击对象</td>
+<td>LLM 本身</td>
+<td>基于 LLM 的应用</td>
+</tr>
+<tr>
+<td>攻击结果</td>
+<td>LLM 产生有害或未对齐的输出</td>
+<td>LLM 玩忽职守，在不恰当的时机做不恰当的事情</td>
+</tr>
+<tr>
+<td>类比到人类</td>
+<td>违法犯罪</td>
+<td>在上课时间突然唱歌</td>
+</tr>
+</tbody>
+</table>
+<h2 id="rag">RAG<a class="headerlink" href="#rag" title="Permanent link">&para;</a></h2>
+<p>RAG（retrieval-augmented generation）这一概念由 <a href="https://arxiv.org/abs/2005.11401">2005.11401</a> 提出，其为预训练的参数化记忆生成模型（预训练 transformer）赋予了非参数化记忆（向量索引），并将其用在知识密集型的任务上。具体方法如下：</p>
+<p><img alt="" src="../../assets/ml/llm/applications/rag.png" /></p>
+<p>该方法本来是一个微调方法，对组合架构进行端到端的训练。亦即，使用成对的 QA 数据，最小化 <span class="arithmatex">\(\sum_i -\log p(y_i|x_i)\)</span>，来同时微调生成回复的 LM（BART）和编码查询文本的 LM（BERT）（若要微调编码文档的 LM（BERT），则需要定期重新编码文档，开销较大，原论文发现其对于模型表现提升不大，于是固定其参数）。</p>
+<p>对于外挂知识库的优点，原论文提到：可以直接扩展或修改（位于向量索引的）知识；可以对被检索到的知识作进一步的检查，减少 LLM 的幻觉。</p>
+<p>如今的知识库问答应用都是基于这一方法，但不进行训练，只进行推理。典型应用：</p>
+<ul>
+<li><a href="https://github.com/QuivrHQ/quivr">quivr</a></li>
+<li><a href="https://github.com/arc53/DocsGPT">DocsGPT</a></li>
+<li><a href="https://www.perplexity.ai/">perplexity</a></li>
+<li><a href="https://github.com/leptonai/search_with_lepton">Search with Lepton</a></li>
+</ul>
+<h3 id="检索方法">检索方法<a class="headerlink" href="#检索方法" title="Permanent link">&para;</a></h3>
+<ol>
+<li>向量检索</li>
+</ol>
+<p><img alt="" src="https://s2.loli.net/2025/01/21/O4dokvzHlGQt2qV.png" /></p>
+<p>向量检索</p>
+<ol>
+<li>向量检索+重排</li>
+</ol>
+<p><img alt="" src="https://s2.loli.net/2025/01/21/ohQgGYsT5meatU7.png" /></p>
+<p>重排</p>
+<ol>
+<li>全文检索+重排</li>
+</ol>
+<p><img alt="" src="https://s2.loli.net/2025/01/21/BGuqxW3SZMLgNf6.png" /></p>
+<p>全文检索</p>
+<ol>
+<li>混合检索+重排</li>
+</ol>
+<p><img alt="" src="https://s2.loli.net/2025/01/21/jYRzWAulcNQ1oxg.png" /></p>
+<ol>
+<li>多知识库混合检索+二次重排</li>
+</ol>
+<p><img alt="" src="https://s2.loli.net/2025/01/21/O8NjAxuq1n762Bh.png" /></p>
+<h3 id="graphrag">GraphRAG<a class="headerlink" href="#graphrag" title="Permanent link">&para;</a></h3>
+<div class="admonition info">
+<p class="admonition-title">参考</p>
+<ul>
+<li><a href="https://www.bilibili.com/video/BV1uCifYLEQd">GraphRAG 从原理到实战技术精讲</a></li>
+<li><a href="https://www.bilibili.com/video/BV1Xwc6eoEW5">DeepSeek v3+GraphRAG 技术实战</a></li>
+</ul>
+</div>
+<h2 id="智能体">智能体<a class="headerlink" href="#智能体" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">参考</p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/PL-QjlvVugUfmRD4g0P-qQ">从第一性原理看大模型 Agent 技术</a></li>
+</ul>
+</div>
+<p>对于智能体（agent）的定义，就和对于通用人工智能（AGI）的定义一样莫衷一是。综合现有的观点，智能体应能够：</p>
+<ul>
+<li>通过某种方式与环境互动（包括输入和输出）</li>
+<li>具有记忆、推理、规划、应变、反思等能力</li>
+<li>独立地（不需要人为干预）完成一项现实世界的任务</li>
+<li>完成多步任务</li>
+<li>使用工具</li>
+<li>主动地（预判用户的需求）完成任务</li>
+</ul>
+<p>LLM 凭借其推理、指令遵循、上下文学习和工具使用等多项能力，成为当前智能体开发的首选引擎。基于 LLM 的智能体是 LLM 的一项综合应用，围绕 LLM 的各种技术都会被使用到。</p>
+<p><a href="https://arxiv.org/abs/2210.03629">2210.03629</a> 提出的 ReAct 是一种具有里程碑意义的智能体范式，其协同 LLM 的推理和行动（包括决策和工具使用），以解决通用的任务。具体地：</p>
+<ul>
+<li>LLM 交替生成推理和行动</li>
+<li>推理帮助 LLM 跟踪进度，分析当前情况，调整行动计划，处理异常等；行动使 LLM 与外部源交互并获取更多的信息（反馈）</li>
+<li>提高人类可解释性和可信任性</li>
+<li>克服幻觉和错误传播问题</li>
+<li>有较好的泛化性和健壮性</li>
+</ul>
+<p><a href="https://arxiv.org/abs/2303.11366">2303.11366</a> 提出的 Reflexion</p>
+<h3 id="多智能体讨论对话">多智能体讨论/对话<a class="headerlink" href="#多智能体讨论对话" title="Permanent link">&para;</a></h3>
+<p>下面是用于构建基于 LLM 智能体的应用的框架：</p>
+<ul>
+<li>CAMEL（使用提示词引导智能体进行角色扮演，从而促进智能体之间的合作，形成一个团队）[<a href="https://arxiv.org/abs/2303.17760">2303.17760</a>]</li>
+<li>multi-agent debate（多智能体讨论提升数学和策略能力，减少错误信息和幻觉，并且参与的智能体越多，讨论的回合数越多（会逐渐收敛），得到的结果越好）[<a href="https://arxiv.org/abs/2305.14325">2305.14325</a>]</li>
+<li>multi-agent debate（多智能体讨论相比自我反省更能鼓励多样性思考）[<a href="https://arxiv.org/abs/2305.19118">2305.19118</a>]</li>
+<li>MetaGPT（基于多智能体对话的软件开发团队）[<a href="https://arxiv.org/abs/2308.00352">2308.00352</a>]</li>
+<li>AutoGen（基于多智能体对话的 LLM 应用框架）[<a href="https://arxiv.org/abs/2308.08155">2308.08155</a>]</li>
+<li>Dynamic LLM-Agent Network（考核智能体的表现，开除表现较差的智能体，从而优化团队）[<a href="https://arxiv.org/abs/2310.02170">2310.02170</a>]</li>
+<li>Exchange-of-Thought（不同任务适合不同的讨论模式）[<a href="https://arxiv.org/abs/2312.01823">2312.01823</a>]</li>
+<li>Swarm（符合人体工学的、轻量级的、多智能体编排框架）[<a href="https://github.com/openai/swarm">openai/swarm</a>]</li>
+</ul>
+<h4 id="swarm">Swarm<a class="headerlink" href="#swarm" title="Permanent link">&para;</a></h4>
+<p><strong>运行 Swarm</strong></p>
+<p><code>client.run()</code> 实现如下流程：</p>
+<ol>
+<li>从当前代理的属性获取模型、指令（作为 system message）和函数（作为 tools），发送 chat completion 请求。</li>
+<li>将响应的 message 添加到对话历史。如果 message 包含 content，返回最终的 Response；如果 message 包含 tool_calls，调用相应的函数，构造 message 并添加到对话历史，更新上下文变量。</li>
+<li>如果对话历史的长度超过最大轮数，返回最终的 Response；否则回到 1.。</li>
+</ol>
+<p><code>client.run()</code> 的参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>描述</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>agent</strong></td>
+<td><code>Agent</code></td>
+<td>要调用的（初始）代理。</td>
+<td>（必填）</td>
+</tr>
+<tr>
+<td><strong>messages</strong></td>
+<td><code>List</code></td>
+<td>消息对象的列表，格式与 <a href="https://platform.openai.com/docs/api-reference/chat/create#chat-create-messages">Chat Completions <code>messages</code></a> 相同。</td>
+<td>（必填）</td>
+</tr>
+<tr>
+<td><strong>context_variables</strong></td>
+<td><code>dict</code></td>
+<td>一个包含额外上下文变量的字典，这些变量可供函数和代理指令使用。</td>
+<td><code>{}</code></td>
+</tr>
+<tr>
+<td><strong>max_turns</strong></td>
+<td><code>int</code></td>
+<td>允许的最大对话轮次。</td>
+<td><code>float("inf")</code></td>
+</tr>
+<tr>
+<td><strong>model_override</strong></td>
+<td><code>str</code></td>
+<td>一个可选的字符串，用于覆盖代理使用的模型。</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><strong>execute_tools</strong></td>
+<td><code>bool</code></td>
+<td>如果为 <code>False</code>，当代理尝试调用函数时，会中断执行并立即返回 <code>tool_calls</code> 消息。</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><strong>stream</strong></td>
+<td><code>bool</code></td>
+<td>如果为 <code>True</code>，启用流式响应。</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><strong>debug</strong></td>
+<td><code>bool</code></td>
+<td>如果为 <code>True</code>，启用调试日志记录。</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>client.run()</code> 返回一个 <code>Response</code> 对象，其包含最新的状态信息，可以被传递给下一个 <code>client.run()</code> 以继续交互。<code>Response</code> 的属性：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>messages</strong></td>
+<td><code>List</code></td>
+<td>消息对象的列表，格式与 <a href="https://platform.openai.com/docs/api-reference/chat/create#chat-create-messages">Chat Completions <code>messages</code></a> 类似，但增加了一个 <code>sender</code> 字段，指示该消息来自哪个代理。</td>
+</tr>
+<tr>
+<td><strong>agent</strong></td>
+<td><code>Agent</code></td>
+<td>处理最后一条消息的代理。</td>
+</tr>
+<tr>
+<td><strong>context_variables</strong></td>
+<td><code>dict</code></td>
+<td>最新的上下文变量。</td>
+</tr>
+</tbody>
+</table>
+<p><strong>代理</strong></p>
+<p><code>Agent</code> 的属性：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+<th>描述</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>name</strong></td>
+<td><code>str</code></td>
+<td>代理的名称。</td>
+<td><code>"Agent"</code></td>
+</tr>
+<tr>
+<td><strong>model</strong></td>
+<td><code>str</code></td>
+<td>代理使用的模型。</td>
+<td><code>"gpt-4o"</code></td>
+</tr>
+<tr>
+<td><strong>instructions</strong></td>
+<td><code>str</code> 或 <code>func() -&gt; str</code></td>
+<td>代理的指令，可以是一个字符串或返回字符串的函数。</td>
+<td><code>"You are a helpful agent."</code></td>
+</tr>
+<tr>
+<td><strong>functions</strong></td>
+<td><code>List</code></td>
+<td>代理可以调用的函数列表。</td>
+<td><code>[]</code></td>
+</tr>
+<tr>
+<td><strong>tool_choice</strong></td>
+<td><code>str</code></td>
+<td>代理的工具选择（如果有的话）。</td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+<p>代理的说明：</p>
+<ul>
+<li>当前代理的指令被设为聊天的系统信息。</li>
+</ul>
+<p><strong>函数</strong></p>
+<p>函数的说明：</p>
+<ul>
+<li>函数应返回一个字符串、一个代理对象或一个 <code>Result</code> 对象：<ul>
+<li>如果返回一个字符串，则作为 tool message 的 content。</li>
+<li>如果返回一个代理对象，则执行将转移给它。</li>
+<li>如果返回一个 <code>Result</code> 对象，则可选地返回一个字符串、返回一个代理对象以及更新上下文变量。</li>
+</ul>
+</li>
+<li>如果函数定义了 <code>context_variables</code> 参数，则该参数将由传递给 <code>client.run()</code> 的 <code>context_variables</code> 参数的值填充。</li>
+</ul>
+<p><code>Result</code> 的属性：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>value</strong></td>
+<td><code>str</code></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>agent</strong></td>
+<td><code>Agent</code></td>
+<td>执行被转移给的代理。</td>
+</tr>
+<tr>
+<td><strong>context_variables</strong></td>
+<td><code>dict</code></td>
+<td>对于上下文变量的更新。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="工具使用">工具使用<a class="headerlink" href="#工具使用" title="Permanent link">&para;</a></h3>
+<p>下列工具可以提供给 LLM 使用：</p>
+<ul>
+<li>计算器</li>
+<li>程序运行环境</li>
+<li>向量数据库、搜索引擎（RAG）</li>
+<li>其他模型，例如图像/语音/视频生成模型</li>
+<li>其他应用程序</li>
+</ul>
+<p>下面是一些让 LLM 使用工具的实践：</p>
+<ul>
+<li>WebGPT（LLM 使用搜索引擎和浏览网页文本：环境将当前的完整状态提供给 LLM，LLM 生成一个命令以采取一项规定动作；训练方法是有监督微调和 RLHF）[<a href="https://arxiv.org/abs/2112.09332">2112.09332</a>]</li>
+<li>Toolformer（LLM 自主调用 API；训练方法是有监督微调，训练数据由 LLM 自己根据 few-shot 生成，且过滤掉没有帮助的调用；推理时一旦产生特殊 token →，则停止生成并调用 API，附加结果和特殊 token <code>&lt;/API&gt;</code> 后继续生成）[<a href="https://arxiv.org/abs/2302.04761">2302.04761</a>]</li>
+<li>AnyTool（多个 LLM 组成具有层次结构的 API retriever，从结构化的 API 组织中检索与查询最相关的 API）[<a href="https://arxiv.org/abs/2402.04253">2402.04253</a>]</li>
+<li>MCP（Anthropic 发布的模型上下文协议）</li>
+</ul>
+<h3 id="开放式学习">开放式学习<a class="headerlink" href="#开放式学习" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Voyager</li>
+</ul>
+<h3 id="迈向-os">迈向 OS<a class="headerlink" href="#迈向-os" title="Permanent link">&para;</a></h3>
+<ul>
+<li>MemGPT</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    2025-04-27
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="../../javascripts/tex-mml-chtml.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.cs/net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

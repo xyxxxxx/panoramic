@@ -1,0 +1,2141 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="xyx">
+      
+      
+        <link rel="canonical" href="https://xyxxxxx.github.io/panoramic/ml/llm/training.html">
+      
+      
+        <link rel="prev" href="architecture.html">
+      
+      
+        <link rel="next" href="inference.html">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
+    
+    
+      
+        <title>训练 - Panoramic</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2afb09e1.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#训练" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Panoramic" class="md-header__button md-logo" aria-label="Panoramic" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Panoramic
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              训练
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../math/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  数学
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  机器学习
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../lifestyle/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  生活方式
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Panoramic" class="md-nav__button md-logo" aria-label="Panoramic" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Panoramic
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    首页
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../math/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    数学
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            数学
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../math/la.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    线性代数
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    机器学习
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            机器学习
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    深度学习
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            深度学习
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dl/hardware-platform.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    硬件平台
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dl/common-techniques.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    常用技术
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dl/parallel-strategy-computation-speedup-and-memory-optimization.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    并行策略、计算加速与内存优化技术
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../rl/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    强化学习专题
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            强化学习专题
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rl/algorithm.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    算法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    LLM 专题
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            LLM 专题
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    架构
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    训练
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="training.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    训练
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#预训练" class="md-nav__link">
+    <span class="md-ellipsis">
+      预训练
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="预训练">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#实现" class="md-nav__link">
+    <span class="md-ellipsis">
+      实现
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trick" class="md-nav__link">
+    <span class="md-ellipsis">
+      trick
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#微调" class="md-nav__link">
+    <span class="md-ellipsis">
+      微调
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="微调">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sft有监督微调" class="md-nav__link">
+    <span class="md-ellipsis">
+      SFT（有监督微调）
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SFT（有监督微调）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#实现_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      实现
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rlhf" class="md-nav__link">
+    <span class="md-ellipsis">
+      RLHF
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RLHF">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#流程" class="md-nav__link">
+    <span class="md-ellipsis">
+      流程
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#实现_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      实现
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#新的-rl-算法" class="md-nav__link">
+    <span class="md-ellipsis">
+      新的 RL 算法
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="新的 RL 算法">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#流程_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      流程
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#实现_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      实现
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rlaif" class="md-nav__link">
+    <span class="md-ellipsis">
+      RLAIF
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#peft" class="md-nav__link">
+    <span class="md-ellipsis">
+      PEFT
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PEFT">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#实现_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      实现
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="inference.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    推理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    评估
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="applications.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    应用
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="insights.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    洞见
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../lifestyle/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    生活方式
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            生活方式
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lifestyle/photography.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    摄影
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lifestyle/cooking.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    烹饪
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#预训练" class="md-nav__link">
+    <span class="md-ellipsis">
+      预训练
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="预训练">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#实现" class="md-nav__link">
+    <span class="md-ellipsis">
+      实现
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trick" class="md-nav__link">
+    <span class="md-ellipsis">
+      trick
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#微调" class="md-nav__link">
+    <span class="md-ellipsis">
+      微调
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="微调">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sft有监督微调" class="md-nav__link">
+    <span class="md-ellipsis">
+      SFT（有监督微调）
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SFT（有监督微调）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#实现_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      实现
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rlhf" class="md-nav__link">
+    <span class="md-ellipsis">
+      RLHF
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RLHF">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#流程" class="md-nav__link">
+    <span class="md-ellipsis">
+      流程
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#实现_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      实现
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#新的-rl-算法" class="md-nav__link">
+    <span class="md-ellipsis">
+      新的 RL 算法
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="新的 RL 算法">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#流程_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      流程
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#实现_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      实现
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rlaif" class="md-nav__link">
+    <span class="md-ellipsis">
+      RLAIF
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#peft" class="md-nav__link">
+    <span class="md-ellipsis">
+      PEFT
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PEFT">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#实现_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      实现
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="训练">训练<a class="headerlink" href="#训练" title="Permanent link">&para;</a></h1>
+<h2 id="预训练">预训练<a class="headerlink" href="#预训练" title="Permanent link">&para;</a></h2>
+<h3 id="实现">实现<a class="headerlink" href="#实现" title="Permanent link">&para;</a></h3>
+<p>这里以开源项目 <a href="https://github.com/allenai/OLMo">OLMo</a> 为例，介绍其预训练流程以及主要参数和指标。</p>
+<p>参数：</p>
+<ul>
+<li><code>seed</code>：随机种子，用于所有随机数模块（除打乱数据集）</li>
+<li><code>precision</code>：训练/评估的计算精度，取 <code>fp32</code>、<code>amp_fp16</code> 或 <code>amp_bf16</code></li>
+<li><code>eval_interval</code>：评估间隔步数</li>
+<li><code>save_interval</code>：保存间隔步数</li>
+<li><code>save_folder</code>：保存目录，在这里保存训练配置、模型检查点</li>
+<li>训练相关：<ul>
+<li><code>max_duration</code>：训练总 epoch 数、步数或 token 数</li>
+<li><code>global_train_batch_size</code>：等效全局 batch size</li>
+<li><code>device_train_batch_size</code>：等效设备 batch size，等于 <code>global_train_batch_size // world_size</code></li>
+<li><code>device_train_microbatch_size</code>：在一次前向反向计算中实际传给模型的 batch size，应根据可用显存将其设置得尽可能大</li>
+<li><code>device_train_grad_accum</code>：梯度累积次数，等于 <code>device_train_batch_size // device_train_microbatch_size</code></li>
+<li><code>max_grad_norm</code>：最大梯度（l2）范数。范数大于设定值的梯度会被裁剪</li>
+</ul>
+</li>
+<li><code>model</code>（模型相关）：<ul>
+<li><code>n_layers</code>：transformer 层数</li>
+<li><code>d_model</code>：隐状态维数</li>
+<li><code>mlp_hidden_size</code>：MLP 的隐状态维数</li>
+<li><code>n_heads</code>：自注意力头数</li>
+<li><code>n_kv_heads</code>：k、v 头数，若设为 <code>n_heads</code>，则为 MHA；若设为 1，则为 MQA；若设为 <code>n_heads</code> 的其他因数，则为 GQA</li>
+<li><code>include_bias</code>：所有线性层是否引入偏置</li>
+<li><code>layer_norm_with_affine</code>：层归一化是否引入权重和偏置参数</li>
+<li><code>rope</code>：是否应用 RoPE</li>
+<li><code>rope_full_precision</code>：是否在全精度下应用 RoPE</li>
+<li><code>attention_dropout</code>：对于缩放点积注意力的丢弃概率</li>
+<li><code>residual_dropout</code>：残差连接时对于 <span class="arithmatex">\(f(x)\)</span> 的丢弃概率</li>
+<li><code>vocab_size</code>：词汇表规模</li>
+<li><code>embedding_size</code>：嵌入表规模，设为大于 <code>vocab_size</code> 的 128 的倍数可以显著提升吞吐量（多余的 token 槽位被设为全 0 向量）</li>
+<li><code>embedding_dropout</code>：对于输入嵌入的丢弃概率</li>
+<li><code>max_sequence_length</code>：模型支持的最大输入长度</li>
+<li><code>activation_type</code>：激活函数类型</li>
+<li><code>weight_tying</code>：是否关联输入嵌入权重与输出线性层权重</li>
+<li><code>eos_token_id</code>：EOS token 的 ID</li>
+<li><code>pad_token_id</code>：填充 token 的 ID</li>
+<li><code>flash_attention</code>：是否使用 <code>FlashAttention</code> 加速注意力计算</li>
+<li><code>init_fn</code>：参数初始化策略，取 <code>normal</code>、<code>mitchell</code>、<code>kaiming_normal</code>、<code>fan_in</code> 或 <code>full_megatron</code></li>
+</ul>
+</li>
+<li><code>optimizer</code>（优化器相关）：<ul>
+<li><code>name</code>：优化器类型</li>
+<li><code>learning_rate</code>：学习率</li>
+<li><code>weight_decay</code>：权重衰减</li>
+<li><code>betas</code>：beta 值</li>
+<li><code>decay_norm_and_bias</code>：衰减所有偏置和层归一化权重</li>
+<li><code>decay_embedding</code>：衰减嵌入层权重</li>
+</ul>
+</li>
+<li><code>scheduler</code>（规划器相关）：<ul>
+<li><code>name</code>：规划器类型</li>
+<li><code>t_warmup</code>：热身步数</li>
+</ul>
+</li>
+<li><code>evaluators</code>（评估相关）：<ul>
+<li><code>label</code>：评估标签（名称）</li>
+<li><code>type</code>：评估类型，取 <code>lm</code> 或 <code>downstream</code></li>
+<li><code>data</code>：评估数据，详见 <code>data</code></li>
+</ul>
+</li>
+<li><code>data</code>（数据相关）：<ul>
+<li><code>paths</code>：数据文件路径列表</li>
+<li><code>pad_direction</code>：填充方向</li>
+<li><code>seed</code>：随机种子，用于打乱数据集</li>
+<li><code>[num_workers|pin_memory|drop_last|timeout|persistant_workers|prefetch_factor]</code>：请参阅 <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>torch.utils.data.DataLoader</code></a></li>
+</ul>
+</li>
+</ul>
+<p>指标：</p>
+<ul>
+<li><code>train/Perplexity</code>：困惑度。对交叉熵求 <code>exp()</code> 即为困惑度</li>
+<li><code>train/CrossEntropyLoss</code>：交叉熵</li>
+<li><code>optim/total_grad_norm</code>：若将所有参数的梯度拼接为一个向量，该向量的范数</li>
+<li><code>optim/clipping_rate</code>：</li>
+<li><code>throughput/device/tokens_per_second</code>：单个设备每秒处理的 token 数量</li>
+<li><code>throughput/device/batches_per_second</code>：单个设备每秒处理的 batch 数量</li>
+</ul>
+<p>流程：</p>
+<ol>
+<li>使用 torchrun 启动并行训练<ul>
+<li>运行命令 <code>torchrun --nproc_per_node=8 scripts/train.py configs/official/OLMo-1B.yaml</code></li>
+</ul>
+</li>
+<li>[scripts/train.py#L251] 初始化进程组<ul>
+<li>使用 NCCL 作为分布式后端</li>
+<li>默认根据环境变量 <code>MASTER_PORT</code>、<code>MASTER_ADDR</code>、<code>WORLD_SIZE</code>、<code>RANK</code>（由 torchrun 设置）进行初始化</li>
+</ul>
+</li>
+<li>[scripts/train.py#L106] 设置随机种子<ul>
+<li>[olmo/torch_util.py#L19-L24] 为所有随机数模块设置随机种子</li>
+</ul>
+</li>
+<li>[scripts/train.py#L109] 构建 data loader<ul>
+<li>数据集文件为多个 <code>.npy</code> 文件。<code>.npy</code> 是 NumPy 的一种二进制文件格式，用于存储 NumPy 数组数据，包括数组元素、维度和数据类型信息。</li>
+<li>[olmo/data/memmap_dataset.py#L18] <code>MemMapDataset</code> 继承了抽象类 <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>torch.utils.data.Dataset</code></a>，其映射一个索引到一个字典 <code>{'input_ids': input_ids, ...}</code>，其中 <code>input_ids</code> 是读取自一个块的 NumPy 数组转换成的 PyTorch 张量。一个块是 <code>max_sequence_length * dtype_size</code> 个字节，作为一个训练样本。每个数据集文件被顺序划分为若干个块，末尾不足一个块的部分被丢弃。[olmo/data/<strong>init</strong>.py#L87] 构建一个这样的数据集。</li>
+<li>[olmo/data/collator.py#L15] <code>DataCollator</code> 将训练样本（<code>{'input_ids': input_ids, ...}</code>）列表打包为批次，其先将每个训练样本的 <code>input_ids</code>（或其他张量）填充到所有训练样本的最大长度，再堆叠它们，最终仍然返回一个字典 <code>{'input_ids': batched_input_ids, ...}</code>。[olmo/data/<strong>init</strong>.py#L84] 构建一个这样的 data collator。</li>
+<li>[olmo/data/iterable_dataset.py#L19] <code>IterableDataset</code> 继承了抽象类 <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.IterableDataset"><code>torch.utils.data.IterableDataset</code></a>，其将 <code>MemMapDataset</code> 实例进一步包装为可迭代的数据集，并实现以下功能：<ul>
+<li>根据随机种子和当前 epoch 确定性地打乱全局索引（即 <code>MemMapDataset</code> 实例的所有样本的索引），并保存为 <code>.npy</code> 文件以便于当前 epoch 重启训练。</li>
+<li>根据当前 rank 取全局索引的子集，所有 rank 的子集是对全局索引的一个划分（partition）。相当于 <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.distributed.DistributedSampler"><code>torch.utils.data.distributed.DistributedSampler</code></a> 的作用。</li>
+<li>根据当前 data loader worker ID 取 rank 索引的子集，所有 data loader worker 的子集是对 rank 索引的一个划分。</li>
+<li>[olmo/data/<strong>init</strong>.py#L99] 进行包装。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>[scripts/train.py#L112] 构建 evaluator<ul>
+<li>[olmo/eval/evaluator.py#L15] <code>Evaluator</code> 维护和计算指标，有两种类型：lm 和 downstream</li>
+<li>[olmo/eval/<strong>init</strong>.py#L79] 对于 lm 类型，[olmo/data/<strong>init</strong>.py#L47] 构建 data loader 的步骤类似于 4.，但没有经过 <code>IterableDataset</code> 包装而是直接使用 <code>torch.utils.data.distributed.DistributedSampler</code>，因而更加简单；[olmo/eval/evaluator.py#L75] 指标为困惑度和交叉熵。</li>
+<li>[olmo/eval/<strong>init</strong>.py#L76] 对于 downstream 类型，[olmo/data/<strong>init</strong>.py#L24] 数据集和指标都是针对具体任务单独实现。例如对于基准测试 PIQA（常识问答，多项选择），数据集的实现使用 <code>datasets</code> 库加载原数据集，对每个样本的问题和答案选项进行分词，连同 target 作为新的样本；指标选用 acc。</li>
+</ul>
+</li>
+<li>[scripts/train.py#L117] 构建模型<ul>
+<li>包含以下层：<ul>
+<li>[olmo/model.py#L960] <code>wte</code>：嵌入层</li>
+<li>[olmo/model.py#L963] <code>emb_drop</code>：嵌入丢弃层</li>
+<li>[olmo/model.py#L968] transformer 块<ul>
+<li>[olmo/model.py#L460] <code>rotary_emb</code>：旋转嵌入层，请参阅<a href="architecture.html#位置嵌入">位置嵌入</a>。[olmo/model.py#L253] <code>RotaryEmbedding</code> 手动实现了 RoPE</li>
+<li>[olmo/model.py#L642] <code>attn_norm</code>：self-attention 之前的层归一化层</li>
+<li>[olmo/model.py#L652] <code>att_proj</code>：计算 q、k、v 的线性层</li>
+<li>[olmo/model.py#L445] <code>att_out</code>：对计算得到的注意力进行线性变换的线性层</li>
+<li>[olmo/model.py#L643] <code>ff_norm</code>：FFN 之前的层归一化层</li>
+<li>[olmo/model.py#L656] <code>ff_proj</code>：两层 FFN 的第一层</li>
+<li>[olmo/model.py#L441] <code>act</code>：激活函数层</li>
+<li>[olmo/model.py#L450] <code>ff_out</code>：两层 FFN 的第二层</li>
+<li>[olmo/model.py#L422] <code>dropout</code>：残差连接时的丢弃层</li>
+</ul>
+</li>
+<li>[olmo/model.py#L964] <code>ln_f</code>：计算 logits 之前的层归一化层</li>
+<li>[olmo/model.py#L985] <code>ff_out</code>（可选，可以共用 <code>wte</code>）：logits 输出层</li>
+</ul>
+</li>
+<li>前向计算步骤如下：
+    <div class="highlight"><pre><span></span><code><span class="c1"># 现有 input_ids, attention_mask, attention_bias</span>
+
+<span class="c1"># 嵌入</span>
+<span class="c1"># input_ids: (batch_size, seq_len)</span>
+<span class="c1"># x: (batch_size, seq_len, d_model)</span>
+<span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">input_ids</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emb_drop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wte</span><span class="p">(</span><span class="n">input_ids</span><span class="p">))</span>
+
+<span class="c1"># 构建 attention mask</span>
+<span class="c1"># 这里的 attention_mask 对应 transformers 库的 attention mask，参阅 https://huggingface.co/docs/transformers/en/glossary#attention-mask</span>
+<span class="c1">#       attention_bias 对应 `F.scaled_dot_product_attention` 的 attn_mask</span>
+<span class="c1"># attention_mask: (batch_size, seq_len) -&gt; (batch_size, 1, 1, seq_len)</span>
+<span class="c1"># attention_bias: (1, 1, seq_len, seq_len)</span>
+<span class="n">attention_mask</span> <span class="o">=</span> <span class="n">attention_mask</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+<span class="n">attention_mask</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">attention_mask</span><span class="p">)</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">attention_mask</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">min</span>  <span class="c1"># e.g. [0, 1, 1, 1] -&gt; [dtype.min, 0, 0, 0]</span>
+<span class="n">attention_bias</span> <span class="o">=</span> <span class="n">attention_bias</span> <span class="o">+</span> <span class="n">attention_mask</span>  <span class="c1"># e.g. [[0, dtype.min, dtype.min, dtype.min]    [[dtype.min, dtype.min, dtype.min, dtype.min]</span>
+                                                    <span class="c1">#       [0,         0, dtype.min, dtype.min] -&gt;  [dtype.min,         0, dtype.min, dtype.min]</span>
+                                                    <span class="c1">#       [0,         0,         0, dtype.min]     [dtype.min,         0,         0, dtype.min]</span>
+                                                    <span class="c1">#       [0,         0,         0,         0]]    [dtype.min,         0,         0,         0]]</span>
+<span class="c1"># `F.scaled_dot_product_attention()` 不能正确地处理 -inf，这里用 dtype.min 替代</span>
+
+<span class="c1"># for transformer blocks</span>
+<span class="c1"># 计算 q, k, v</span>
+<span class="c1"># x: (batch_size, seq_len, d_model)</span>
+<span class="c1"># qkv: (batch_size, seq_len, d_model + 2 * n_kv_heads * head_dim)</span>
+<span class="n">qkv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">att_proj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">attn_norm</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="c1"># self.attn_norm(x) 类似于 F.layer_norm(x, [d_model])</span>
+
+<span class="c1"># 拆分 q, k, v</span>
+<span class="c1"># q: (batch_size, seq_len, d_model), (B, T, C)</span>
+<span class="c1"># k, v: (batch_size, seq_len, n_kv_heads * head_dim), (B, T, n_kv_h * hd)</span>
+<span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">qkv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fused_dims</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># 拆分头数的维度，并移动到轴 1</span>
+<span class="c1"># q: (B, T, C) -&gt; (B, nh, T, hd)</span>
+<span class="c1"># k, v: (B, T, n_kv_h * hd) -&gt; (B, n_kv_h, T, hd)</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">n_heads</span><span class="p">,</span> <span class="n">C</span> <span class="o">//</span> <span class="n">n_heads</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">k</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">n_kv_heads</span><span class="p">,</span> <span class="n">C</span> <span class="o">//</span> <span class="n">n_heads</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">n_kv_heads</span><span class="p">,</span> <span class="n">C</span> <span class="o">//</span> <span class="n">n_heads</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># 对 q, k 应用 RoPE，详见 [olmo/model.py#L300]</span>
+<span class="n">q</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotary_emb</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+
+<span class="c1"># 计算缩放点积注意力 - 实现 1：flash attention 实现，无 attention mask</span>
+<span class="n">att</span> <span class="o">=</span> <span class="n">flash_attn_func</span><span class="p">(</span>
+        <span class="n">q</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">k</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">v</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dropout_p</span><span class="o">=</span><span class="n">attention_dropout</span><span class="p">,</span> <span class="n">causal</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="c1"># 计算缩放点积注意力 - 实现 2：torch 实现，有 attention mask</span>
+<span class="n">num_kv_heads</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">num_q_heads</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">num_q_heads</span> <span class="o">!=</span> <span class="n">num_kv_heads</span><span class="p">:</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">repeat_interleave</span><span class="p">(</span><span class="n">num_q_heads</span> <span class="o">//</span> <span class="n">num_kv_heads</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="n">num_q_heads</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">repeat_interleave</span><span class="p">(</span><span class="n">num_q_heads</span> <span class="o">//</span> <span class="n">num_kv_heads</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="n">num_q_heads</span><span class="p">)</span>
+<span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attn_mask</span><span class="o">=</span><span class="n">attention_bias</span><span class="p">,</span> <span class="n">dropout_p</span><span class="o">=</span><span class="n">attention_dropout</span><span class="p">,</span> <span class="n">is_causal</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1"># 计算缩放点积注意力的具体实现可以参阅 nanogpt: https://github.com/karpathy/nanoGPT/blob/master/model.py#L67-L71</span>
+<span class="c1"># att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))    # (B, nh, T, hd) @ (B, nh, hd, T) -&gt; (B, nh, T, T)</span>
+<span class="c1"># tril = torch.tril(torch.ones(max_sequence_length, max_sequence_length))</span>
+<span class="c1"># att = att.masked_fill(tril[:,:,:T,:T] == 0, float(&#39;-inf&#39;))</span>
+<span class="c1"># att = F.softmax(att, dim=-1)</span>
+<span class="c1"># att = att @ v    # (B, nh, T, T) @ (B, nh, T, hd) -&gt; (B, nh, T, hd)</span>
+
+<span class="c1"># 重新拼接所有头的注意力</span>
+<span class="n">att</span> <span class="o">=</span> <span class="n">att</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span>  
+
+<span class="c1"># 线性变换后输出</span>
+<span class="n">att</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attn_out</span><span class="p">(</span><span class="n">att</span><span class="p">)</span>
+
+<span class="c1"># 残差连接，可选地丢弃注意力</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">att</span><span class="p">)</span>
+
+<span class="c1"># 计算 FFN</span>
+<span class="c1"># x: (batch_size, seq_len, d_model)</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="n">x</span>
+<span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ff_out</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ff_proj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ff_norm</span><span class="p">(</span><span class="n">x</span><span class="p">))))</span>
+<span class="c1"># self.ff_norm(x) 类似于 F.layer_norm(x, [d_model])</span>
+<span class="c1"># self.ff_proj() 是两层 FFN 的第一层</span>
+<span class="c1"># self.act() 是两层 FFN 的中间的激活函数。若为 swiglu 类型，则 W_1 被视为 [W V]</span>
+<span class="c1"># self.ff_out() 是两层 FFN 的第二层</span>
+
+<span class="c1"># 残差连接</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="c1"># end for transformer blocks</span>
+
+<span class="c1"># 计算 logits</span>
+<span class="c1"># x: (batch_size, seq_len, d_model)</span>
+<span class="c1"># logits: (batch_size, seq_len, embedding_size)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ln_f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">logits</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">wte</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># 关联权重</span>
+<span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">ff_out</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># 不关联权重</span>
+
+<span class="c1"># 计算损失</span>
+<span class="c1"># logits_for_loss: (batch_size, seq_len - 1, embedding_size) -&gt; (batch_size * (seq_len - 1), embedding_size)</span>
+<span class="c1"># labels: (batch_size, seq_len - 1)</span>
+<span class="n">logits_for_loss</span> <span class="o">=</span> <span class="n">logits</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span>  <span class="c1"># 去掉序列末位的 logits，因为没有相应的 label</span>
+<span class="n">logits_for_loss</span> <span class="o">=</span> <span class="n">logits_for_loss</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">logits_for_loss</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">input_ids</span><span class="o">.</span><span class="n">clone</span><span class="p">()[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span>    <span class="c1"># 去掉序列首位的 token，因为没有相应的 logits</span>
+<span class="n">ce_loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">logits_for_loss</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=-</span><span class="mi">100</span><span class="p">)</span>
+</code></pre></div></li>
+<li>与 <a href="https://github.com/karpathy/nanoGPT">nanogpt</a>（<a href="https://bbycroft.net/llm">可视化</a>）的区别在于：<ul>
+<li>OLMo 采用 RoPE，而 nanogpt 采用绝对位置编码</li>
+<li>OLMo 考虑到因为 left padding attention mask 不为三角矩阵的情况（虽然在实际训练中这种情况并没有出现）</li>
+<li>nanogpt 没有丢弃层</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>[scripts/train.py#L136] 使用 FSDP（ZeRO-3）包装模型（这里不再展开）</li>
+<li>[scripts/train.py#L155-156] 构建优化器和 lr 规划器<ul>
+<li>[olmo/optim.py#L622] 所有线性层的 <code>weight</code> 进行权重衰减，其余参数不进行权重衰减</li>
+<li>lr 在热身阶段逐渐上升，在热身阶段之后逐渐下降直至收敛（热身以削弱首因效应，参阅 <a href="https://stackoverflow.com/questions/55933867/what-does-learning-rate-warm-up-mean">What does learning rate warm-up mean?</a>）</li>
+<li>最大梯度范数（max grad norm）在热身阶段取较大值，在热身阶段之后取较小值（热身阶段容许训练不稳定）</li>
+</ul>
+</li>
+<li>[scripts/train.py#L168,238] 构建 Trainer，开始训练<ul>
+<li>记录各指标</li>
+<li>定期评估（TODO）、保存检查点</li>
+<li>batch 分成 micro-batch，进行梯度累积</li>
+<li>裁剪梯度</li>
+<li>使用 PyTorch Profiler 进行 profiling</li>
+</ul>
+</li>
+</ol>
+<p>一些优化措施：</p>
+<ul>
+<li>保存当前 epoch 的数据索引文件</li>
+</ul>
+<h3 id="trick">trick<a class="headerlink" href="#trick" title="Permanent link">&para;</a></h3>
+<h2 id="微调">微调<a class="headerlink" href="#微调" title="Permanent link">&para;</a></h2>
+<p>对于微调的数据，质量比数量更重要，换言之，在精不在多。</p>
+<h3 id="sft有监督微调">SFT（有监督微调）<a class="headerlink" href="#sft有监督微调" title="Permanent link">&para;</a></h3>
+<p>数据来自：选取具有代表性的问题，人类编写答案。</p>
+<h4 id="实现_1">实现<a class="headerlink" href="#实现_1" title="Permanent link">&para;</a></h4>
+<h3 id="rlhf">RLHF<a class="headerlink" href="#rlhf" title="Permanent link">&para;</a></h3>
+<p><a href="https://arxiv.org/abs/2203.02155">2203.02155</a></p>
+<p>先训练反映人类偏好的奖励模型，再将其作为环境使用 PPO 算法训练 LLM。</p>
+<p><img alt="" src="../../assets/ml/llm/training/instruct-gpt.png" /></p>
+<p>数据来自：选取具有代表性的问题，LLM 生成两个（或多个）答案，人类对这些答案进行排序。</p>
+<p>比较 SFT 和 RLHF：</p>
+<ul>
+<li>从人类产生训练数据的角度看，人类写出高质量的答案并不容易（甚至写不出来），成本也高；但人类比较答案的相对好坏则容易得多，成本也低得多。</li>
+<li>从模型学习的角度来看，在 SFT 中，模型学习的是接下一个 token，对于答案整体没有考量；在 RLHF 中，模型学习的是对于答案整体的选择（强化学习的思路）。</li>
+</ul>
+<p>RLHF 的问题和局限性（<a href="https://arxiv.org/abs/2307.15217">2307.15217</a>）：</p>
+<ul>
+<li></li>
+</ul>
+<h4 id="流程">流程<a class="headerlink" href="#流程" title="Permanent link">&para;</a></h4>
+<p>TODO</p>
+<h4 id="实现_2">实现<a class="headerlink" href="#实现_2" title="Permanent link">&para;</a></h4>
+<p>TODO</p>
+<h3 id="新的-rl-算法">新的 RL 算法<a class="headerlink" href="#新的-rl-算法" title="Permanent link">&para;</a></h3>
+<ul>
+<li>DPO（）[<a href="https://arxiv.org/abs/2305.18290">2305.18290</a>]</li>
+<li>SPIN（）[<a href="https://arxiv.org/abs/2401.01335">2401.01335</a>]</li>
+</ul>
+<h4 id="流程_1">流程<a class="headerlink" href="#流程_1" title="Permanent link">&para;</a></h4>
+<h4 id="实现_3">实现<a class="headerlink" href="#实现_3" title="Permanent link">&para;</a></h4>
+<h3 id="rlaif">RLAIF<a class="headerlink" href="#rlaif" title="Permanent link">&para;</a></h3>
+<div class="admonition note">
+<p class="admonition-title">注意</p>
+<p>在这一部分的表述中，“指令”指 SFT 样本或 RL 样本中的 prompt 部分，“prompt”专指为了让 LLM 生成数据而构建的 prompt。</p>
+</div>
+<ul>
+<li>self-instruct（LLM SFT 自己）[<a href="https://arxiv.org/abs/2212.10560">2212.10560</a>]<ul>
+<li>SFT（注：原论文为“指令微调”）需要的人类编写的数据受限于数量（成本高）、多样性和创造性，self-instruct 方法使用 LLM 生成指令和回答以 SFT 这个 LLM 自身。</li>
+<li>生成指令和回答的 prompt 均采用 few-shot，需要准备一些任务示例。</li>
+<li>self-instruct 方法应用于 vanilla GPT-3 ，得到的模型表现接近 text-davinci-001。</li>
+<li>Alpaca（使用 GPT-3.5 生成的数据 SFT LLaMA）[<a href="https://github.com/tatsu-lab/stanford_alpaca">tatsu-lab/stanford_alpaca</a>]</li>
+<li>Vicuna（使用 ChatGPT 生成的数据 SFT LLaMA，对话来自用户分享）[<a href="https://github.com/lm-sys/FastChat">lm-sys/FastChat</a>]</li>
+<li>LLaMA-GPT4（使用 GPT-4 生成的数据 SFT LLaMA，指令来自 Alpaca；另外使用 GPT-4 生成的数据训练反映 GPT-4 偏好的奖励模型）[<a href="https://arxiv.org/abs/2304.03277">2304.03277</a>]</li>
+</ul>
+</li>
+<li>
+<p>Constitutional AI（CAI，宪法 AI）[<a href="https://arxiv.org/abs/2212.08073">2212.08073</a>]</p>
+<ul>
+<li>理念：<ul>
+<li>利用 AI 来更有效地监督 AI，人类只需要制定一些原则（宏大愿景）</li>
+<li>RLHF 需要大量人类标注的数据，这些数据的成本高，并且人类无法有效地理解或总结这些数据。将 RL 目标编码为自然语言表述的原则的列表，并让 LLM 根据原则解释为何拒绝有害请求，会是更好的方案。</li>
+<li>在无害程度相当的条件下，偏好更加积极、透明、解释性的回答，而不是回避性质的回答，例如”我不能回答这个问题“。因为出于安全方面的考虑，让 LLM 的思维过程保持透明十分重要；出于实践方面的考虑，正面回应的回答的有用性也更好。</li>
+</ul>
+</li>
+<li>方法：<ol>
+<li>向一个 helpful RLHF 模型（经过 RLHF 训练，且训练数据仅包括有用性比较）（称为模型 A）展示一个被设计引导有害行为的指令，采样一个回答。然后要求模型 A 批评并修改该回答，重复数次，其中每次要求批评和要求修改的 prompt 是一对，从预先编写好的若干对（称为原则）中随机抽取，这些原则可以分别强调不同面向的有害性，它们和 4. 中的原则共同构成了宪法。每次修改后的回答都和当前指令拼接为一个 SFT 样本，准备许多这样的指令以收集数据。</li>
+<li>准备一些 helpfulness 指令（用于评估回答有用性的指令），采样模型 A 的回答，与当前指令拼接为一个 SFT 样本。</li>
+<li>使用 1. 和 2. 收集的数据 SFT 一个预训练模型（称为模型 B），得到的模型称为 SL-CAI。</li>
+<li>向 SL-CAI 展示一个指令，采样一对回答。然后将该指令和回答对展示给一个 feedback 模型（称为模型 C），并附加一个原则，要求模型 C 选择更好的回答。同样地，原则也是从预先编写好的若干个中随机抽取。计算两个回答的概率，作为 soft label（相比 hard label，训练出来的模型产生的回答更加健壮）和当前指令以及回答对拼接为一个 RL 样本，准备许多这样的指令以收集数据。要求选择回答的 prompt 可以选用 CoT。</li>
+<li>准备一些人类标注的有用性比较样本。</li>
+<li>使用 5. 和 6. 收集的数据 RL 训练 SL-CAI，得到的模型称为 RL-CAI。</li>
+</ol>
+</li>
+<li>
+<p>结果：</p>
+<p><img alt="" src="../../assets/ml/llm/training/constitutional-ai.png" /></p>
+<p>以及，RL-CAI 几乎不会回避问题，而是给出透明并且无害的回答。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>RLAIF（完善 RLAIF 方法）[<a href="https://arxiv.org/abs/2309.00267">2309.00267</a>]</p>
+<ul>
+<li>LLM 标注偏好：向一个 labeler 模型（称为模型 A）展示一个指令和回答对，要求模型 A 选择更好的回答，计算两个回答的概率，作为 soft label 和当前指令以及回答对拼接为一个 RL 样本。<ul>
+<li>指令和回答对来自已有的数据集。</li>
+<li>要求选择回答的 prompt 可以选用 few-shot 和 CoT。</li>
+<li>交换两个回答的位置计算两次取平均，以消除位置偏差。</li>
+<li>模型 A 可以是一个预训练模型或 SFT 过的模型。</li>
+</ul>
+</li>
+<li>RLAIF：<ul>
+<li>distilled RLAIF：使用收集的数据训练一个奖励模型（称为模型 B）。具体地，将模型 B 生成的分数作 softmax，计算得到的概率分布与 soft label 的交叉熵。模型 B 学习的是模型 A 的偏好，这可以视作是一种模型蒸馏。</li>
+<li>direct RLAIF：向一个 LLM（称为模型 C）展示一个指令和一个回答，以及具体的评分标准，要求模型 C 进行评分，计算 10 个分数（从 1 到 10）的概率，计算加权分数，再归一化到 [0,1] 区间以作为奖励。<ul>
+<li>要求进行评分的 prompt 可以选用 few-shot 和 CoT。</li>
+<li>模型 C 可以是一个预训练模型或 SFT 过的模型。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>结果：<ul>
+<li>RLAIF 实现与 RLHF 相当或更好的模型表现。</li>
+<li>即使 labeler 模型的大小与 policy（在 RLAIF 之前是一个 SFT 过的模型）相同，RLAIF 依然可以提升 policy 的表现。</li>
+<li>direct RLAIF 实现比 distilled RLAIF 更好的模型表现。</li>
+<li>对于不同的任务，prompt 的最优配置也不同。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>self-rewarding（LLM 奖励自己）[<a href="https://arxiv.org/abs/2401.10020">2401.10020</a>]</p>
+<ul>
+<li>
+<p>方法：</p>
+<ol>
+<li>准备一些人类标注的指令遵循样本（称为 IFT 数据）和 LLM-as-a-Judge 指令遵循样本（prompt 包括指令、回答、评分标准，采用 CoT，要求 LLM 进行评分，称为 EFT 数据），SFT 一个预训练模型（称为 M0），得到的模型称为 M1。</li>
+<li>使用模型 M1 生成 RL 样本，重复下列步骤以收集数据：<ol>
+<li>生成一个新的指令，prompt 采用 few-shot（来自 IFT）。</li>
+<li>采样 N 个候选回答。</li>
+<li>使用 LLM-as-a-Judge prompt 评估候选回答，从 0 到 5 打分，取最高分和最低分回答组成回答对。若最高分和最低分相同，则跳过当前循环。回答对与指令拼接为一个 RL 样本。</li>
+</ol>
+</li>
+<li>使用 2. 收集的数据 RL（DPO）训练 M1，得到的模型称为 M2。</li>
+<li>重复 2. 和 3.，训练 M2，得到的模型称为 M3。</li>
+</ol>
+<p><img alt="" src="../../assets/ml/llm/training/self-rewarding.png" /></p>
+</li>
+<li>
+<p>结果：</p>
+<ul>
+<li>SFT 阶段 EFT 数据的加入提升 LLM 作为奖励模型的评估能力，而几乎不影响 LLM 的指令遵循能力。</li>
+<li>对于指令遵循能力，M1 &lt; M2 &lt; M3。M3 在 AlpacaEval 2.0（评估指令遵循能力）排行榜上超过了 Claude 2、Gemini Pro 和 GPT4 0613。</li>
+<li>对于作为奖励模型的评估能力，M1 &lt; M2 &lt; M3。</li>
+<li>对于在下游任务上的表现，对于大部分 NLP benchmark，M1 &gt; M2 &gt; M3，<a href="https://arxiv.org/abs/2203.02155">2203.02155</a> 将这种现象称为对齐税（alignment tax）。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="peft">PEFT<a class="headerlink" href="#peft" title="Permanent link">&para;</a></h3>
+<p>PEFT（Parameter-Efficient Fine-Tuning，参数高效微调）方法仅微调少量模型参数，显著降低计算和存储成本，却能够实现与全参数微调相当的模型表现。</p>
+<p>PEFT 方法可以粗略分为以下三大类：</p>
+<ul>
+<li>additive：原始参数保持冻结，增加新的模块/参数进行微调<ul>
+<li>adapters（引入 adapter 模块）</li>
+<li>soft prompts（引入虚拟 token）</li>
+</ul>
+</li>
+<li>selective：仅更新原始参数的一部分，其他参数保持冻结</li>
+<li>reparameterization：不直接更新原始参数（的一部分），而是用一个更小的参数矩阵来表示原始参数的变化</li>
+</ul>
+<p><img alt="" src="https://s2.loli.net/2024/12/26/ZV7T9eKfQ6kYSjs.png" /></p>
+<ul>
+<li>Adapter tuning（训练串联的 adapter 模块）[<a href="https://arxiv.org/abs/1902.00751">1902.00751</a>]</li>
+</ul>
+<p><img alt="" src="https://s2.loli.net/2024/12/25/qbWEhonlj5mPDkK.png" /></p>
+<ul>
+<li>Prefix-Tuning（训练虚拟 token 前缀）[<a href="https://arxiv.org/abs/2101.00190">2101.00190</a>]<ul>
+<li>前缀就是若干个连续的、可训练的嵌入向量，放在输入序列之前，为接下来的生成提供某种上下文。</li>
+<li>前缀长度最小可取 1；前缀越长，可训练参数越多，表达能力越强，与此同时需要的注意力计算量越大，从而降低训练和推理速度。</li>
+<li>每个注意力层有自己单独的前缀。</li>
+<li>每种任务可训练一套前缀。</li>
+</ul>
+</li>
+</ul>
+<p><img alt="architecture" src="https://s2.loli.net/2024/12/25/VYdtQxykNavSRjO.png" width="350" /></p>
+<ul>
+<li>
+<p>P-tuning（）[<a href=""></a>]</p>
+</li>
+<li>
+<p>LoRA（训练并联的秩分解矩阵）[<a href="https://arxiv.org/abs/2106.09685">2106.09685</a>]</p>
+<ul>
+<li>秩分解矩阵就是令权重更新矩阵 <span class="arithmatex">\(ΔW=BA\)</span>，其中 <span class="arithmatex">\(W\in\mathbb{R}^{m×n},B\in\mathbb{R}^{m×r},A\in\mathbb{R}^{r×n},r&lt;&lt;\min(m,n)\)</span>。</li>
+<li>原则上，可为任何权重矩阵应用 LoRA；实践中，通常为 <span class="arithmatex">\(W_q\)</span> 和 <span class="arithmatex">\(W_v\)</span> 应用 LoRA。</li>
+<li>LoRA 对于小数据量的微调也十分有效。</li>
+<li>（对于预训练模型）较为简单的下游任务对应较小的最优秩 <span class="arithmatex">\(r\)</span> ，这意味着相应的 <span class="arithmatex">\(ΔW\)</span> 有较小的本征秩（intrinsic rank）；反之亦然。</li>
+<li>秩分解矩阵潜在地放大对于特定下游任务重要的、在通用预训练模型中已学到但并未被强调的特征。</li>
+</ul>
+</li>
+</ul>
+<p><img alt="architecture" src="https://s2.loli.net/2024/12/25/obatldr4iWf5kIM.png" width="200" /></p>
+<ul>
+<li>
+<p>BitFit（仅更新偏置参数）[<a href="https://arxiv.org/abs/2106.10199">2106.10199</a>]</p>
+</li>
+<li>
+<p>QLoRA（）[<a href=""></a>]</p>
+</li>
+</ul>
+<h4 id="实现_4">实现<a class="headerlink" href="#实现_4" title="Permanent link">&para;</a></h4>
+<h5 id="adapter-tuning">Adapter tuning<a class="headerlink" href="#adapter-tuning" title="Permanent link">&para;</a></h5>
+<h5 id="prefix-tuning">Prefix-Tuning<a class="headerlink" href="#prefix-tuning" title="Permanent link">&para;</a></h5>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">input_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">attention_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">inputs_embeds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">output_attentions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">output_hidden_states</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">return_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">task_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">peft_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_peft_config</span>
+
+    <span class="c1"># 非 soft prompts 类型方法</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">peft_config</span><span class="o">.</span><span class="n">is_prompt_learning</span><span class="p">:</span>
+        <span class="o">...</span>
+
+    <span class="c1"># soft prompts 类型方法</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="n">_get_batch_size</span><span class="p">(</span><span class="n">input_ids</span><span class="p">,</span> <span class="n">inputs_embeds</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">attention_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># 拼接 prompt attention mask</span>
+        <span class="n">prefix_attention_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">peft_config</span><span class="o">.</span><span class="n">num_virtual_tokens</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">attention_mask</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">attention_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">prefix_attention_mask</span><span class="p">,</span> <span class="n">attention_mask</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="o">...</span>
+    <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;attention_mask&quot;</span><span class="p">:</span> <span class="n">attention_mask</span><span class="p">,</span>
+            <span class="s2">&quot;labels&quot;</span><span class="p">:</span> <span class="n">labels</span><span class="p">,</span>
+            <span class="s2">&quot;output_attentions&quot;</span><span class="p">:</span> <span class="n">output_attentions</span><span class="p">,</span>
+            <span class="s2">&quot;output_hidden_states&quot;</span><span class="p">:</span> <span class="n">output_hidden_states</span><span class="p">,</span>
+            <span class="s2">&quot;return_dict&quot;</span><span class="p">:</span> <span class="n">return_dict</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">peft_config</span><span class="o">.</span><span class="n">peft_type</span> <span class="o">==</span> <span class="n">PeftType</span><span class="o">.</span><span class="n">PREFIX_TUNING</span><span class="p">:</span>
+        <span class="c1"># 生成 past_key_values 格式的 prompt</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;past_key_values&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_prompt</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span>
+        <span class="c1"># 调用基础模型的前向计算</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_model</span><span class="p">(</span><span class="n">input_ids</span><span class="o">=</span><span class="n">input_ids</span><span class="p">,</span> <span class="n">inputs_embeds</span><span class="o">=</span><span class="n">inputs_embeds</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></div>
+<p>进一步查看如何生成 prompt：</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">task_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="n">peft_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_peft_config</span>
+    <span class="c1"># 获取 prefix encoder</span>
+    <span class="n">prompt_encoder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prompt_encoder</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">active_adapter</span><span class="p">]</span>
+    <span class="c1"># 获取虚拟 token 索引，e.g. [0, 1, 2, 3]</span>
+    <span class="n">prompt_tokens</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prompt_tokens</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">active_adapter</span><span class="p">]</span>
+        <span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">prompt_encoder</span><span class="o">.</span><span class="n">embedding</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">peft_config</span><span class="o">.</span><span class="n">peft_type</span> <span class="o">==</span> <span class="n">PeftType</span><span class="o">.</span><span class="n">PREFIX_TUNING</span><span class="p">:</span>
+        <span class="n">prompt_tokens</span> <span class="o">=</span> <span class="n">prompt_tokens</span><span class="p">[:,</span> <span class="p">:</span> <span class="n">peft_config</span><span class="o">.</span><span class="n">num_virtual_tokens</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">peft_config</span><span class="o">.</span><span class="n">inference_mode</span><span class="p">:</span>
+            <span class="c1"># 在推理模式下，直接重复虚拟 token 前缀</span>
+            <span class="n">past_key_values</span> <span class="o">=</span> <span class="n">prompt_encoder</span><span class="o">.</span><span class="n">embedding</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># 在训练模式下，使用 prefix encoder 生成虚拟 token 前缀</span>
+            <span class="n">past_key_values</span> <span class="o">=</span> <span class="n">prompt_encoder</span><span class="p">(</span><span class="n">prompt_tokens</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_model_torch_dtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">past_key_values</span> <span class="o">=</span> <span class="n">past_key_values</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_model_torch_dtype</span><span class="p">)</span>
+        <span class="n">past_key_values</span> <span class="o">=</span> <span class="n">past_key_values</span><span class="o">.</span><span class="n">view</span><span class="p">(</span>
+            <span class="n">batch_size</span><span class="p">,</span>
+            <span class="n">peft_config</span><span class="o">.</span><span class="n">num_virtual_tokens</span><span class="p">,</span>
+            <span class="n">peft_config</span><span class="o">.</span><span class="n">num_layers</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">peft_config</span><span class="o">.</span><span class="n">num_attention_heads</span><span class="p">,</span>
+            <span class="n">peft_config</span><span class="o">.</span><span class="n">token_dim</span> <span class="o">//</span> <span class="n">peft_config</span><span class="o">.</span><span class="n">num_attention_heads</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">peft_config</span><span class="o">.</span><span class="n">num_transformer_submodules</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">past_key_values</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">past_key_values</span><span class="p">,</span> <span class="n">past_key_values</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">past_key_values</span> <span class="o">=</span> <span class="n">past_key_values</span><span class="o">.</span><span class="n">permute</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
+            <span class="n">peft_config</span><span class="o">.</span><span class="n">num_transformer_submodules</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">TRANSFORMERS_MODELS_TO_PREFIX_TUNING_POSTPROCESS_MAPPING</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_type</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">post_process_fn</span> <span class="o">=</span> <span class="n">TRANSFORMERS_MODELS_TO_PREFIX_TUNING_POSTPROCESS_MAPPING</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_type</span><span class="p">]</span>
+            <span class="n">past_key_values</span> <span class="o">=</span> <span class="n">post_process_fn</span><span class="p">(</span><span class="n">past_key_values</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">past_key_values</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="o">...</span>
+</code></pre></div>
+<p>进一步查看 prefix encoder 的实现：</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PrefixEncoder</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># 是否启用投影</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefix_projection</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">prefix_projection</span>
+        <span class="c1"># 虚拟 token 嵌入维数</span>
+        <span class="n">token_dim</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">token_dim</span>
+        <span class="c1"># 层数</span>
+        <span class="n">num_layers</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">num_layers</span>
+        <span class="c1"># 编码器隐藏维数</span>
+        <span class="n">encoder_hidden_size</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">encoder_hidden_size</span>
+        <span class="c1"># 虚拟 token 数量</span>
+        <span class="n">num_virtual_tokens</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">num_virtual_tokens</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix_projection</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">inference_mode</span><span class="p">:</span>
+            <span class="c1"># 嵌入虚拟 token</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">num_virtual_tokens</span><span class="p">,</span> <span class="n">token_dim</span><span class="p">)</span>
+            <span class="c1"># 通过两层 MLP 变换</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">token_dim</span><span class="p">,</span> <span class="n">encoder_hidden_size</span><span class="p">),</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">(),</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">encoder_hidden_size</span><span class="p">,</span> <span class="n">num_layers</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">token_dim</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># 直接嵌入虚拟 token 到所有层</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">num_virtual_tokens</span><span class="p">,</span> <span class="n">num_layers</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">token_dim</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix_projection</span><span class="p">:</span>
+            <span class="c1"># 先嵌入后变换</span>
+            <span class="n">prefix_tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+            <span class="n">past_key_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">prefix_tokens</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># 直接嵌入</span>
+            <span class="n">past_key_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">past_key_values</span>
+</code></pre></div>
+<p><strong>P-tuning</strong></p>
+<p><strong>LoRA</strong></p>
+<p>以 peft 库为例，其 LoRA 微调的实现可以参阅<a href="https://zhuanlan.zhihu.com/p/650197598">代码实现</a>。</p>
+<p><strong>BitFit</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 加载预训练模型</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">low_cpu_mem_usage</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># 计算模型的总参数量</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">()))</span>
+
+<span class="c1"># BitFit微调 - 只训练bias参数</span>
+<span class="n">num_param</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+    <span class="k">if</span> <span class="s2">&quot;bias&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+        <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># 非bias参数冻结</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">num_param</span> <span class="o">+=</span> <span class="n">param</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span>  <span class="c1"># 统计bias参数数量</span>
+
+<span class="c1"># 打印bias参数数量</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">num_param</span><span class="p">)</span>
+<span class="c1"># 打印bias参数占总参数的比例</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">num_param</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">()))</span>
+</code></pre></div>
+<p><strong>QLoRA</strong></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    2025-04-27
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="../../javascripts/tex-mml-chtml.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.cs/net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

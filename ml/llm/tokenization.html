@@ -1,0 +1,1424 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="xyx">
+      
+      
+        <link rel="canonical" href="https://xyxxxxx.github.io/panoramic/ml/llm/tokenization.html">
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
+    
+    
+      
+        <title>分词 - Panoramic</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2afb09e1.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#分词" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Panoramic" class="md-header__button md-logo" aria-label="Panoramic" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Panoramic
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              分词
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../math/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  数学
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  机器学习
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../lifestyle/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  生活方式
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Panoramic" class="md-nav__button md-logo" aria-label="Panoramic" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Panoramic
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    首页
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../math/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    数学
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            数学
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../math/la.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    线性代数
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    机器学习
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            机器学习
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    深度学习
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            深度学习
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dl/hardware-platform.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    硬件平台
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dl/common-techniques.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    常用技术
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dl/parallel-strategy-computation-speedup-and-memory-optimization.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    并行策略、计算加速与内存优化技术
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../rl/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    强化学习专题
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            强化学习专题
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rl/algorithm.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    算法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    LLM 专题
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            LLM 专题
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    架构
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    训练
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="inference.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    推理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    评估
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="applications.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    应用
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="insights.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    洞见
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../lifestyle/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    生活方式
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            生活方式
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lifestyle/photography.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    摄影
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lifestyle/cooking.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    烹饪
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tokenizer-和-llm-的关系" class="md-nav__link">
+    <span class="md-ellipsis">
+      tokenizer 和 LLM 的关系
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tokenizer-的代码实现" class="md-nav__link">
+    <span class="md-ellipsis">
+      tokenizer 的代码实现
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#特殊-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      特殊 token
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#分词工具" class="md-nav__link">
+    <span class="md-ellipsis">
+      分词工具
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="分词工具">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tiktoken" class="md-nav__link">
+    <span class="md-ellipsis">
+      tiktoken
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sentencepiece" class="md-nav__link">
+    <span class="md-ellipsis">
+      sentencepiece
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#展望" class="md-nav__link">
+    <span class="md-ellipsis">
+      展望
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="分词">分词<a class="headerlink" href="#分词" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">参考</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=zduSFxRajkE">Youtube - Let's build the GPT Tokenizer</a></li>
+</ul>
+</div>
+<p>Karpathy：“分词是 LLM 最无趣的部分，并且其中有很多坑，但是我们绕不开它 :(”。</p>
+<h2 id="tokenizer-和-llm-的关系">tokenizer 和 LLM 的关系<a class="headerlink" href="#tokenizer-和-llm-的关系" title="Permanent link">&para;</a></h2>
+<p><img alt="" src="https://s2.loli.net/2024/02/29/7QLCunFrbpgsGMk.png" /></p>
+<p>tokenizer 负责编码 Unicode 码点序列（文本）为 token 序列，和解码 token 序列为 Unicode 码点序列（文本），这两种序列都可以被视为整数序列。LLM 只处理 token 序列，它不知道任何 token 序号所对应的 Unicode 码点（序列）或字节（序列）。</p>
+<p>训练时先训练 tokenizer，使用 BPE 算法和单独的训练数据集；再训练 LLM，嵌入表规模应与词汇表规模一致。</p>
+<h2 id="tokenizer-的代码实现">tokenizer 的代码实现<a class="headerlink" href="#tokenizer-的代码实现" title="Permanent link">&para;</a></h2>
+<p>下面的 Python 代码实现了 BPE 算法：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 训练数据</span>
+<span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;Long long text...&#39;</span>
+<span class="n">tokens</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>    <span class="c1"># 字节串</span>
+<span class="n">tokens</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>            <span class="c1"># 转换为范围在 0 到 255 之间的整数列表</span>
+
+<span class="c1"># 训练 tokenizer</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_stats</span><span class="p">(</span><span class="n">ids</span><span class="p">):</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">ids</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+        <span class="n">counts</span><span class="p">[</span><span class="n">pair</span><span class="p">]</span> <span class="o">=</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pair</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">counts</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">pair</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;替换 ids 中出现的所有相邻的 pair 为 idx&quot;&quot;&quot;</span>
+    <span class="n">new_ids</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">new_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="n">new_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">new_ids</span>
+
+<span class="n">VOCAB_SIZE</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">num_merges</span> <span class="o">=</span> <span class="n">VOCAB_SIZE</span> <span class="o">-</span> <span class="mi">256</span>
+<span class="n">ids</span> <span class="o">=</span> <span class="n">tokens</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">merges</span> <span class="o">=</span> <span class="p">{}</span>                                        <span class="c1"># 合并规则</span>
+<span class="n">vocab</span> <span class="o">=</span> <span class="p">{</span><span class="n">idx</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">([</span><span class="n">idx</span><span class="p">])</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">256</span><span class="p">)}</span>  <span class="c1"># 词汇表</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_merges</span><span class="p">):</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="n">get_stats</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
+    <span class="n">top_pair</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">stats</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>  <span class="c1"># `max(stats)` 返回最大的键</span>
+                                          <span class="c1"># `key=stats.get` 表示取相应键的值进行排序</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="mi">256</span> <span class="o">+</span> <span class="n">i</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="n">merge</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">top_pair</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
+    <span class="n">merges</span><span class="p">[</span><span class="n">top_pair</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span>
+    <span class="n">vocab</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">vocab</span><span class="p">[</span><span class="n">top_pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">vocab</span><span class="p">[</span><span class="n">top_pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+<span class="c1"># 编码</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+
+    <span class="c1"># 简明的实现</span>
+    <span class="c1"># for pair, idx in merges.items():</span>
+    <span class="c1">#     ids = merge(ids, pair, idx)</span>
+
+    <span class="c1"># fancy 的实现</span>
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">get_stats</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
+        <span class="n">pair</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">merges</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)))</span>  <span class="c1"># 获取最优先合并的 pair</span>
+        <span class="k">if</span> <span class="n">pair</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">merges</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">merges</span><span class="p">[</span><span class="n">pair</span><span class="p">]</span>
+        <span class="n">ids</span> <span class="o">=</span> <span class="n">merge</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">pair</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ids</span>
+
+<span class="c1"># 解码</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="n">ids</span><span class="p">):</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">vocab</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">])</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">tokens</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">text</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">信息</p>
+<p>训练 tokenizer 完成后，保存合并规则和词汇表即可进行后续编解码：前者用于编码，后者用于解码。</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">为什么使用 UTF-8 编码？</p>
+<p>从 UTF-8 到 UTF-16 再到 UTF-32，编码相同的 Unicode 码点/字符串得到的字节串长度增加，为了将相同的 token 添加到词汇表所需要的合并次数也增加。这意味着过渡 token（不能被解码）的数量增加，从而挤占非过渡 token 的空间；tokenizer 需要处理更长的字节串，进行更多的合并操作，从而损害性能。</p>
+</div>
+<p><a href="https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf">GPT-2 的论文</a>中写道：……然而，直接对字节序列应用 BPE 会由于 BPE 使用基于贪婪频率的启发式方法构建词汇表，导致不理想的合并。我们观察到 BPE 包含了许多常见词的不同版本，比如 <code>dog</code>，因为它们以多种变体出现，如 <code>dog</code>、<code>dog!</code>、<code>dog?</code> 等。这导致有限的词汇表空间和模型容量被次优地分配。为了避免这种情况，我们阻止 BPE 跨字符类别合并任何字节序列。我们将空格作为一个例外，这显著提高了压缩效率，同时只增加了最小的词的碎片化。（总结：空格前缀能够极大地提升英文文本的压缩效率，因而保留；标点符号后缀对于压缩效率的提升不大，因而移除。）</p>
+<p>在 <a href="https://github.com/openai/gpt-2/blob/master/src/encoder.py">tokenizer 的推理代码</a>中，文本按照以下正则表达式模式被拆分为多个子串，每个子串分别编码，最后再将结果拼接起来。这样保证了合并不会跨越模式的边界，从而达成了上述目标。训练数据也应该按照相同的模式被拆分，否则 tokenizer 学习了跨越模式边界的合并却使用不上，造成词汇表空间的浪费。然而 GPT-2 及其 tokenizer 的训练代码未被开源，具体细节尚不清楚。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">regex</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">re</span>
+
+<span class="n">gpt2pat</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;&quot;&quot;&#39;s|&#39;t|&#39;re|&#39;ve|&#39;m|&#39;ll|&#39;d| ?\p</span><span class="si">{L}</span><span class="s2">+| ?\p</span><span class="si">{N}</span><span class="s2">+| ?[^\s\p</span><span class="si">{L}</span><span class="s2">\p</span><span class="si">{N}</span><span class="s2">]+|\s+(?!\S)|\s+&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">gpt2pat</span><span class="p">,</span> <span class="s1">&#39;Long long text...&#39;</span><span class="p">)</span>
+</code></pre></div>
+<p>对于该模式解释如下：</p>
+<ul>
+<li><code>'s|'t|'re|'ve|'m|'ll|'d</code>：匹配英文缩写。（然而该模式并不完备，未考虑到使用另一种撇号 <code>’</code> 或字母大写的情况）</li>
+<li><code>?\p{L}+</code>：匹配一个或多个文字（可以来自任何语言），前面可能有一个空格。</li>
+<li><code>?\p{N}+</code>：匹配一个或多个数字，前面可能有一个空格。</li>
+<li><code>?[^\s\p{L}\p{N}]+</code>：匹配一个或多个非空白字符、非文字、非数字的字符（即标点符号或特殊符号），前面可能有一个空格。</li>
+<li><code>\s+(?!\S)</code>：匹配一个或多个空白字符，但后面不能有一个非空白字符（即不匹配最后一个空白字符）。</li>
+<li><code>\s+</code>：匹配末尾的一个或多个空白字符。</li>
+</ul>
+<p>GPT-3 及之后的模型都未被开源，但我们仍然可以在<a href="https://github.com/openai/tiktoken/blob/main/tiktoken_ext/openai_public.py">这里</a>窥见它们的正则表达式模式，例如 GPT-4 的模式如下：</p>
+<div class="highlight"><pre><span></span><code><span class="sa">r</span><span class="sd">&quot;&quot;&quot;&#39;(?i:[sdmt]|ll|ve|re)|[^\r\n\p{L}\p{N}]?+\p{L}+|\p{N}{1,3}| ?[^\s\p{L}\p{N}]++[\r\n]*|\s*[\r\n]|\s+(?!\S)|\s+&quot;&quot;&quot;</span>
+</code></pre></div>
+<p>对于该模式解释如下：</p>
+<ul>
+<li><code>'(?i:[sdmt]|ll|ve|re)</code>：匹配英文缩写，非捕获组 <code>(?i: ... )</code> 表示忽略大小写匹配。（仍未考虑到使用另一种撇号 <code>’</code> 的情况）</li>
+<li><code>[^\r\n\p{L}\p{N}]?+\p{L}+</code>：非贪婪地匹配一个或多个非文字、非数字、非回车符、非换行符的字符，再匹配一个或多个文字。</li>
+<li><code>\p{N}{1,3}</code>：匹配 1-3 个数字字符。</li>
+<li><code>?[^\s\p{L}\p{N}]++[\r\n]*</code>：匹配一个或多个非空白字符、非文字、非数字的字符（即标点符号或特殊符号），前面可能有一个空格，后面可能有任意个回车符或换行符。</li>
+<li><code>\s*[\r\n]</code>：匹配任意个空白字符，后面有一个回车符或换行符。</li>
+<li><code>\s+(?!\S)</code>：同上。</li>
+<li><code>\s+</code>：同上。</li>
+</ul>
+<h2 id="特殊-token">特殊 token<a class="headerlink" href="#特殊-token" title="Permanent link">&para;</a></h2>
+<p>一些特殊 token 可能会被手动添加（而不是通过 BPE 算法）到词汇表中，用于对输入和输出 token 序列进行控制。tokenizer 需要单独识别这些特殊 token。</p>
+<p>下面是一些常见的特殊 token：</p>
+<ul>
+<li>tiktoken：<ul>
+<li><code>&lt;|endoftext|&gt;</code>：文本结束标记，用于标识模型训练数据或生成文本的结束位置。</li>
+<li><code>&lt;|im_start|&gt;</code>：对话中输入消息（input message）的开始标记，通常后面会跟角色名称，例如 <code>&lt;|im_start|&gt;system</code>、<code>&lt;|im_start|&gt;user</code>、<code>&lt;|im_start|&gt;assistant</code>。</li>
+<li><code>&lt;|im_end|&gt;</code>：对话中输入消息的结束标记。</li>
+<li><code>&lt;|fim-prefix|&gt;</code>：FIM（Fill-in-the-Middle）任务中的前缀标记，用于标识需要填充的文本的上文起始位置。</li>
+<li><code>&lt;|fim-middle|&gt;</code>：FIM 任务中的中间部分标记，用于标识需要填充的文本的位置。</li>
+<li><code>&lt;|fim-suffix|&gt;</code>：FIM 任务中的后缀标记，用于标识需要填充的文本的下文结束位置。</li>
+<li><code>&lt;|fim-pad|&gt;</code>：FIM 任务中的填充标记，用于对齐或填充文本。</li>
+<li><code>&lt;|object_ref_start|&gt;</code> 和 <code>&lt;|object_ref_end|&gt;</code>：用于标识对象引用的开始和结束。</li>
+<li><code>&lt;|box_start|&gt;</code> 和 <code>&lt;|box_end|&gt;</code>：用于标识边界框（bounding box）的开始和结束。</li>
+<li><code>&lt;|quad_start|&gt;</code> 和 <code>&lt;|quad_end|&gt;</code>：用于标识四边形区域的开始和结束。</li>
+<li><code>&lt;|vision_start|&gt;</code> 和 <code>&lt;|vision_end|&gt;</code>：用于标识视觉数据的开始和结束。</li>
+<li><code>&lt;|vision_pad|&gt;</code>：视觉数据的填充标记。</li>
+<li><code>&lt;|image_pad|&gt;</code>：图像数据的填充标记。</li>
+<li><code>&lt;|video_pad|&gt;</code>：视频数据的填充标记。</li>
+<li><code>&lt;tool_call&gt;</code> 和 <code>&lt;/tool_call&gt;</code>：用于标记工具调用的开始和结束。</li>
+</ul>
+</li>
+<li>sentencepiece：<ul>
+<li><code>&lt;unk&gt;</code>：表示未知。</li>
+<li><code>&lt;s&gt;</code>：标识序列开始。</li>
+<li><code>&lt;/s&gt;</code>：标识序列结束。</li>
+<li><code>&lt;pad&gt;</code>：表示填充。</li>
+</ul>
+</li>
+</ul>
+<h2 id="分词工具">分词工具<a class="headerlink" href="#分词工具" title="Permanent link">&para;</a></h2>
+<h3 id="tiktoken">tiktoken<a class="headerlink" href="#tiktoken" title="Permanent link">&para;</a></h3>
+<div class="admonition abstract">
+<p class="admonition-title">参考</p>
+<ul>
+<li><a href="https://tiktokenizer.vercel.app/">在线 tiktoken 分词</a></li>
+</ul>
+</div>
+<p><a href="https://github.com/openai/tiktoken">tiktoken</a> 是一个快速的 BPE tokenizer，用于 OpenAI 的 LLM。</p>
+<p>不同文本模态的分词结果呈现以下特点：</p>
+<ul>
+<li>英文：分词效果最好，常见词可以被划分为单个 token，词缀可以被正确划分。但是同一个单词前方有无空格、（每个字母）大写或小写都会被识别为不同的 token。</li>
+<li>非英文：分词效果不如英文。因为 tokenizer 训练集中的英文语料最多，得到的词汇表中的英文 token 也最多（因而 dense token 较多），非英文的 token 则较少（因而 dense token 较少）。这导致对于表示相同语义的英文文本和非英文文本，非英文文本分词后的 token 数量更多，Transformer 的计算量更大，正确 attend 的难度更大；语义更零碎（一个语义可能被拆散到更多 token 中），Transformer 正确拼接的难度也更大；对于有限上下文长度的利用效率也更低。</li>
+<li>算术：除单个数字字符外，数字被划分为多少个 token 是相当随机的，Transformer 想要正确执行算术运算必须正确拼接这些数字。</li>
+<li>代码：</li>
+</ul>
+<p>tokenizer 的迭代呈现以下特点：</p>
+<ul>
+<li>新的 tokenizer 词汇表规模更大。编码相同的文本，新的 tokenizer 产生的 token 数量更少。</li>
+<li>针对代码有所改进，例如手动添加了 3/7/11/… 个空格的 token。</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">注意</p>
+<p>GPT-2 的词汇表规模约为 50k，GPT-4 约为 100k，当前实践普遍将词汇表规模定在 50-100k 区间。进一步扩大词汇表规模不一定能提升 LLM 的表现，因为：</p>
+<ul>
+<li>嵌入表的规模扩大，使得 LLM 的计算量增加。</li>
+<li>在 LLM 的训练数据中出现频率低（甚至从未出现过）的 token 对应的向量可能 undertrained。请参阅 <a href="https://www.lesswrong.com/posts/aPeJE8bSo6rAFoLqg/solidgoldmagikarp-plus-prompt-generation">SolidGoldMagikarp</a>。</li>
+<li>一些 token 过于 dense，LLM 正确处理的难度增加。</li>
+</ul>
+</div>
+<p>下列 LLM 采用 tiktoken：</p>
+<ul>
+<li>GPT 系列</li>
+<li>Pythia 系列</li>
+<li>Qwen 系列</li>
+</ul>
+<h3 id="sentencepiece">sentencepiece<a class="headerlink" href="#sentencepiece" title="Permanent link">&para;</a></h3>
+<p><a href="https://github.com/google/sentencepiece">sentencepiece</a> 能够高效地训练和推理 BPE tokenizer，用于 Llama 和 Mistral 系列模型。</p>
+<p>和 tiktoken 的主要区别在于，tiktoken 先对文本进行 UTF-8 编码，再对字节串进行 BPE 编码，而 sentencepiece 直接对文本（Unicode 码点序列）进行 BPE 编码。对于罕见的 Unicode 码点，可选择将其映射到特殊 token <code>&lt;|unk|&gt;</code>，或对其进行 UTF-8 编码，转换为字节 token（序列）。</p>
+<p>一个完整的示例请参阅<a href="https://colab.research.google.com/drive/1y0KnCFZvGVf_odSfcNAws6kcDD7HsI0L?usp=sharing#scrollTo=rSv1vfIVOhvr">这里</a>。</p>
+<p>Llama tokenizer 的分词结果呈现以下特点：</p>
+<ul>
+<li>算术：每个数字字符一个 token，Transformer 想要正确执行算术运算必须正确拼接这些数字字符。</li>
+</ul>
+<p>下列 LLM 采用 sentencepiece：</p>
+<ul>
+<li>Llama 系列</li>
+<li>Mistral 系列</li>
+<li>ChatGLM 系列</li>
+</ul>
+<h2 id="展望">展望<a class="headerlink" href="#展望" title="Permanent link">&para;</a></h2>
+<ul>
+<li>一种方案是使用 Unicode（目前 ~150k 个码点）作为初始词汇表，应用 BPE 进一步合并，最终的词汇表规模定在 200-250k 区间。（这一方案曾在 GPT-2 的论文中遭否决，但如今这一方案完全可行）</li>
+<li>一种研究方向是构建不需要分词的 byte-level LM 架构，例如 <a href="https://arxiv.org/abs/2305.07185">2305.07185</a>。</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    2025-04-27
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="../../javascripts/tex-mml-chtml.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.cs/net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

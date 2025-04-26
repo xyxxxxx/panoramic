@@ -1,0 +1,2003 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="xyx">
+      
+      
+        <link rel="canonical" href="https://xyxxxxx.github.io/panoramic/ml/llm/evaluation.html">
+      
+      
+        <link rel="prev" href="inference.html">
+      
+      
+        <link rel="next" href="applications.html">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
+    
+    
+      
+        <title>评估 - Panoramic</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2afb09e1.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#评估" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Panoramic" class="md-header__button md-logo" aria-label="Panoramic" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Panoramic
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              评估
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../math/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  数学
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  机器学习
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../lifestyle/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  生活方式
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Panoramic" class="md-nav__button md-logo" aria-label="Panoramic" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Panoramic
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    首页
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../math/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    数学
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            数学
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../math/la.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    线性代数
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    机器学习
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            机器学习
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    深度学习
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            深度学习
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dl/hardware-platform.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    硬件平台
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dl/common-techniques.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    常用技术
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dl/parallel-strategy-computation-speedup-and-memory-optimization.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    并行策略、计算加速与内存优化技术
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../rl/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    强化学习专题
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            强化学习专题
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rl/algorithm.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    算法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    LLM 专题
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            LLM 专题
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    架构
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    训练
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="inference.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    推理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    评估
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="evaluation.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    评估
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#评估维度" class="md-nav__link">
+    <span class="md-ellipsis">
+      评估维度
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#指标" class="md-nav__link">
+    <span class="md-ellipsis">
+      指标
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#基准测试" class="md-nav__link">
+    <span class="md-ellipsis">
+      基准测试
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#现有问题" class="md-nav__link">
+    <span class="md-ellipsis">
+      现有问题
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="现有问题">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#评估数据泄漏" class="md-nav__link">
+    <span class="md-ellipsis">
+      评估数据泄漏
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#人类和-gpt-4-评估引入偏差" class="md-nav__link">
+    <span class="md-ellipsis">
+      人类和 GPT-4 评估引入偏差
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#全面评估开销大" class="md-nav__link">
+    <span class="md-ellipsis">
+      全面评估开销大
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#一些维度缺少基准测试" class="md-nav__link">
+    <span class="md-ellipsis">
+      一些维度缺少基准测试
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llm-透明度降低" class="md-nav__link">
+    <span class="md-ellipsis">
+      LLM 透明度降低
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#讨论" class="md-nav__link">
+    <span class="md-ellipsis">
+      讨论
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="applications.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    应用
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="insights.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    洞见
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../lifestyle/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    生活方式
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            生活方式
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lifestyle/photography.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    摄影
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lifestyle/cooking.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    烹饪
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#评估维度" class="md-nav__link">
+    <span class="md-ellipsis">
+      评估维度
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#指标" class="md-nav__link">
+    <span class="md-ellipsis">
+      指标
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#基准测试" class="md-nav__link">
+    <span class="md-ellipsis">
+      基准测试
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#现有问题" class="md-nav__link">
+    <span class="md-ellipsis">
+      现有问题
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="现有问题">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#评估数据泄漏" class="md-nav__link">
+    <span class="md-ellipsis">
+      评估数据泄漏
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#人类和-gpt-4-评估引入偏差" class="md-nav__link">
+    <span class="md-ellipsis">
+      人类和 GPT-4 评估引入偏差
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#全面评估开销大" class="md-nav__link">
+    <span class="md-ellipsis">
+      全面评估开销大
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#一些维度缺少基准测试" class="md-nav__link">
+    <span class="md-ellipsis">
+      一些维度缺少基准测试
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llm-透明度降低" class="md-nav__link">
+    <span class="md-ellipsis">
+      LLM 透明度降低
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#讨论" class="md-nav__link">
+    <span class="md-ellipsis">
+      讨论
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="评估">评估<a class="headerlink" href="#评估" title="Permanent link">&para;</a></h1>
+<p>完整、全面、公正地评估 LLM 的能力对于我们正确理解、改进和应用 LLM 有着十分重要的意义，但在当下却是一项困难的任务。</p>
+<div class="admonition info">
+<p class="admonition-title">参考</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=Hk8Z0uhmWg4">淺談檢定大型語言模型能力的各種方式</a></li>
+</ul>
+</div>
+<h2 id="评估维度">评估维度<a class="headerlink" href="#评估维度" title="Permanent link">&para;</a></h2>
+<p>相比于过往的语言模型仅限制于单一特定任务，LLM 拥有能够解决多种任务的强大能力，对于每一种任务类型，或者说能力维度都有必要进行评估。不仅如此，人类对于 LLM 还有更高的要求，例如：对齐人类的价值观，遵循人类的指令和意图，以及安全可靠地运行。LLM 最终能在哪些应用场景落地，在特定应用场景可以为人类提供多大程度的帮助，也是所有人关心的问题。</p>
+<p>这里将当前 LLM 的所有评估维度总结如下。当然，不同的人会有不同的分类标准和关注点，并且 LLM 的能力和多样性仍在快速发展中，新的评估维度还会不断出现。</p>
+<p><strong>知识和能力（Knowledge and Capabilities）</strong></p>
+<table>
+  <tr>
+    <td rowspan="3">自然语言能力</td>
+    <td>自然语言理解</td>
+    <td>是否（或在多大程度上，下同）能够理解输入文本中的含义、情感等信息，任务包括情感分析、文本分类、命名实体检测、语义理解等。</td>
+  </tr>
+  <tr>
+    <td>自然语言生成</td>
+    <td>是否能够在理解输入文本的基础上，按照要求生成输出文本，任务包括总结、对话、问答、翻译、写作/创作/头脑风暴等。</td>
+  </tr>
+  <tr>
+    <td>多语言</td>
+    <td>在不同语言的相同任务上是否表现相当。</td>
+  </tr>
+  <tr>
+    <td rowspan="4">推理能力</td>
+    <td>常识推理</td>
+    <td>是否能够运用人类的常识进行推理。</td>
+  </tr>
+  <tr>
+    <td>逻辑推理</td>
+    <td>是否能够进行逻辑推理。</td>
+  </tr>
+  <tr>
+    <td>多跳推理</td>
+    <td>是否能够捕获并连接多个信息片段以进行推理。</td>
+  </tr>
+  <tr>
+    <td>数学推理</td>
+    <td>是否能够进行数学抽象、推理和计算并解决数学问题。</td>
+  </tr>
+  <tr>
+    <td rowspan="3">多模态能力</td>
+    <td>特殊文本</td>
+    <td>是否能够理解和生成（Markdown、PDF 等格式中的）列表、链接、表格、代码、数学公式等特殊文本。</td>
+  </tr>
+  <tr>
+    <td>视觉</td>
+    <td>是否能够阅读、理解和生成图像（和视频）。</td>
+  </tr>
+  <tr>
+    <td>语音</td>
+    <td>是否能够接收、理解和生成语音。（可以借助外部模型）</td>
+  </tr>
+  <tr>
+    <td rowspan="2">知识</td>
+    <td>世界/学科/领域知识</td>
+    <td>对于各个学科领域的专业知识有何种程度的掌握。</td>
+  </tr>
+  <tr>
+    <td>常识/社会知识</td>
+    <td>对于人类的日常生活、社交交往、文化传统等方面有何种程度的了解。</td>
+  </tr>
+</table>
+
+<p><strong>对齐（Alignment）</strong></p>
+<table>
+  <tr>
+    <td>指令遵循</td>
+    <td>是否准确遵循用户的指令，满足用户的需求。</td>
+  </tr>
+  <tr>
+    <td>道德和伦理</td>
+    <td>是否会生成违反人类道德和伦理的内容。</td>
+  </tr>
+  <tr>
+    <td>法律法规</td>
+    <td>是否会生成违反当地法律法规的内容。</td>
+  </tr>
+  <tr>
+    <td>立场、偏见和刻板印象</td>
+    <td>是否在政治、社会、文化等议题中采取客观中立的立场，是否对于特定人群存在偏见或刻板印象。</td>
+  </tr>
+  <tr>
+    <td>有害信息</td>
+    <td>是否会（主动或在人类要求下）产生冒犯、侮辱、仇恨、暴力、淫秽等有害信息。</td>
+  </tr>
+  <tr>
+    <td>隐私保护</td>
+    <td>是否会（主动或在人类要求下）泄漏其他人的隐私信息。</td>
+  </tr>
+  <tr>
+    <td>真实性</td>
+    <td>是否会编造虚假信息/产生幻觉（hallucination）。</td>
+  </tr>
+</table>
+
+<p><strong>安全和可靠性（Safety and Reliability）</strong></p>
+<table>
+  <tr>
+    <td>对抗提示词攻击</td>
+    <td>对抗提示词攻击（在字、词、句或语义级别对提示词施加一个扰动，诱导 LLM 产生不正确的回复）的健壮性。</td>
+  </tr>
+  <tr>
+    <td>对抗越狱攻击</td>
+    <td>对抗越狱攻击（使用特定的提示词诱导 LLM 突破对齐限制）的健壮性。</td>
+  </tr>
+</table>
+
+<p><strong>领域和应用</strong></p>
+<p>在教育、医疗、金融、法律、科学研究、程序开发、游戏开发、心理学等专业领域中 LLM 展现了广阔的应用前景，例如在教育领域 LLM 可以解答学生的问题、评估学生的能力，在医疗领域 LLM 可以回答医疗咨询、辅助医生诊断。LLM 在每个领域的评估维度与该领域的实际工作内容和特性有关，并且仍然在探索之中。目前的一些评估工作主要包含：构造一些不同形式的领域任务作为基准测试，或将标准化职业资格考试或作为基准测试。</p>
+<p>此外，LLM 利用工具的能力也是重要的评估维度。基于能够使用多种工具的 LLM，我们可以开发出的强大的智能体（agent）。</p>
+<h2 id="指标">指标<a class="headerlink" href="#指标" title="Permanent link">&para;</a></h2>
+<p><strong>正确率（accuracy）</strong></p>
+<p>客观题的正确率。</p>
+<p><strong>EM &amp; F1</strong></p>
+<p>精确匹配（Exact Match，EM）： 度量模型生成的答案是否与人工标注的答案完全匹配。如果生成的答案与人工标注的答案一字不差，那么精确匹配得分为 1，否则为 0。</p>
+<p>F1 分数： 计算生成的答案与人工标注答案之间的共享词汇的精确度和召回率，F1 分数是精确度和召回率的调和平均值。</p>
+<p><strong>BLEU &amp; ROUGE</strong></p>
+<p>参阅 https://clementbm.github.io/theory/2021/12/23/rouge-bleu-scores.html</p>
+<ul>
+<li>自动计算生成文本与参考文本之间的基于统计的文本相似度（而非语义相似度），1 代表完全相同，0 代表完全不同。</li>
+<li>与人类的判断高度一致，是可靠的指标。</li>
+<li>BLEU 为 precision 导向，ROUGE 为 recall 导向。</li>
+</ul>
+<p><strong>胜率</strong></p>
+<p>相对于 benchmark 模型的胜率。</p>
+<p><strong>通过率/成功率</strong></p>
+<p>评估是否能够在一些具体应用中完成任务，例如网购、生成代码、操纵机器人等。</p>
+<h2 id="基准测试">基准测试<a class="headerlink" href="#基准测试" title="Permanent link">&para;</a></h2>
+<p>迄今为止，已经有大量的基准测试（或数据集）被构造出来，分别用于评估 LLM 在某一个到多个维度的性能。这里将按照主题划分，介绍一些常见的基准测试。另外请注意，一个基准测试可以同时评估 LLM 多个维度的性能（例如阅读理解类的基准测试可以同时评估 LLM 的自然语言理解、自然语言生成和多跳推理能力），因此主题分类并不唯一。</p>
+<p><strong>自然语言理解/生成</strong></p>
+<p>在预训练语言模型流行之前，这些基准测试就已经被广泛应用于评估当时较为简单的语言模型在自然语言理解/生成方面的能力，涵盖了情感分析、文本分类、阅读理解等经典任务。当下的 LLM 在绝大多数这些基准测试中都能轻松取得非常出色的表现。</p>
+<table>
+<thead>
+<tr>
+<th>benchmark</th>
+<th>paper</th>
+<th>link</th>
+<th>任务</th>
+<th>指标</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IMDB</td>
+<td><a href="https://aclanthology.org/P11-1015/">acl</a></td>
+<td><a href="https://huggingface.co/datasets/imdb">hf</a></td>
+<td>情感分析</td>
+<td>acc</td>
+<td></td>
+</tr>
+<tr>
+<td>SST-2</td>
+<td><a href="https://aclanthology.org/D13-1170/">acl</a></td>
+<td><a href="https://huggingface.co/datasets/sst2">hf</a></td>
+<td>情感分析</td>
+<td>acc</td>
+<td></td>
+</tr>
+<tr>
+<td>SQuAD</td>
+<td><a href="https://arxiv.org/abs/1606.05250">1.0</a><br><a href="https://arxiv.org/abs/1806.03822">2.0</a></td>
+<td><a href="https://huggingface.co/datasets/squad">hf1.0</a><br><a href="https://huggingface.co/datasets/squad_v2">hf2.0</a></td>
+<td>阅读理解</td>
+<td>EM<br>F1</td>
+<td>• 语料来自维基百科<br>• 2.0 增加了基于上下文无法回答的问题，测试模型是否知道它不知道</td>
+</tr>
+<tr>
+<td>NarrativeQA</td>
+<td><a href="https://arxiv.org/abs/1712.07040">arxiv</a></td>
+<td><a href="https://huggingface.co/datasets/narrativeqa">hf</a></td>
+<td>阅读理解</td>
+<td>BLEU<br>ROUGE<br>Meteor<br>MRR</td>
+<td>• 语料为完整的小说或电影剧本，或是人类给出的概要<br>• 问题和答案皆为人类生成</td>
+</tr>
+<tr>
+<td>CoQA</td>
+<td><a href="https://arxiv.org/abs/1808.07042">arxiv</a></td>
+<td><a href="https://stanfordnlp.github.io/coqa/">official</a></td>
+<td>对话<br>阅读理解</td>
+<td>F1</td>
+<td>• 语料来自多种领域<br>• 问题、答案皆为人类聊天时产生，解释为人类框选原文得到</td>
+</tr>
+<tr>
+<td>RAFT</td>
+<td><a href="https://arxiv.org/abs/2109.14076">arxiv</a></td>
+<td><a href="https://raft.elicit.org/">official</a><br><a href="https://huggingface.co/datasets/ought/raft">hf</a></td>
+<td>文本分类</td>
+<td>acc</td>
+<td>• 11 个来自现实应用的较为复杂的分类任务<br>• LLM 通过 few-shot 的上下文学习或微调来进行分类</td>
+</tr>
+</tbody>
+</table>
+<p><strong>推理</strong></p>
+<p>人们逐渐认识到推理能力是 LLM 完成许多任务的关键能力，同时也是机器智能的重要方面。越来越多与推理相关的数据集被释出，从逻辑推理到常识推理、多跳推理和数学推理，难度也在逐渐升高。</p>
+<table>
+<thead>
+<tr>
+<th>benchmark</th>
+<th>paper</th>
+<th>link</th>
+<th>任务</th>
+<th>指标</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SNLI</td>
+<td><a href="https://arxiv.org/abs/1508.05326">arxiv</a></td>
+<td><a href="https://huggingface.co/datasets/snli">hf</a></td>
+<td>逻辑推理</td>
+<td>acc</td>
+<td>• 两句话（前提和假设）的关系是包含、中立或矛盾之一</td>
+</tr>
+<tr>
+<td>MultiNLI</td>
+<td><a href="https://arxiv.org/abs/1704.05426">arxiv</a></td>
+<td></td>
+<td>常识推理</td>
+<td>acc</td>
+<td>• 相比 SNLI，在多样性、难度上进行了升级</td>
+</tr>
+<tr>
+<td>HotpotQA</td>
+<td><a href="https://arxiv.org/abs/1809.09600">arxiv</a></td>
+<td><a href="https://hotpotqa.github.io/">official</a><br><a href="https://huggingface.co/datasets/hotpot_qa">hf</a></td>
+<td>多跳推理</td>
+<td>EM<br>F1<br>（对于回答和解释）</td>
+<td>• 语料来自维基百科<br>• 涵盖多种多跳推理类型</td>
+</tr>
+<tr>
+<td>CommonsenseQA</td>
+<td><a href="https://arxiv.org/abs/1811.00937">arxiv</a></td>
+<td><a href="https://huggingface.co/datasets/commonsense_qa">hf</a></td>
+<td>常识推理</td>
+<td>acc</td>
+<td></td>
+</tr>
+<tr>
+<td>PIQA</td>
+<td><a href="https://arxiv.org/pdf/1911.11641.pdf">arxiv</a></td>
+<td><a href="https://huggingface.co/datasets/piqa">hf</a></td>
+<td>常识推理</td>
+<td>acc</td>
+<td></td>
+</tr>
+<tr>
+<td>HybridQA</td>
+<td><a href="https://arxiv.org/abs/2004.07347">arxiv</a></td>
+<td><a href="https://huggingface.co/datasets/hybrid_qa">hf</a></td>
+<td>多跳推理</td>
+<td>EM<br>F1</td>
+<td></td>
+</tr>
+<tr>
+<td>HellaSwag</td>
+<td><a href="https://arxiv.org/abs/1905.07830">arxiv</a></td>
+<td><a href="https://rowanzellers.com/hellaswag/">official</a><br><a href="https://huggingface.co/datasets/Rowan/hellaswag">hf</a></td>
+<td>常识推理</td>
+<td>acc</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>为人类设计的测验题</strong></p>
+<p>这些基准测试搜集了原本为人类设计的标准化考试题目，其中数学科目主要考察 LLM 的数学推理能力，其他科目则主要考察 LLM 在各学科领域方面的知识量。</p>
+<table>
+<thead>
+<tr>
+<th>benchmark</th>
+<th>paper</th>
+<th>link</th>
+<th>任务</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ARC</td>
+<td><a href="https://arxiv.org/abs/1803.05457">arxiv</a></td>
+<td><a href="https://huggingface.co/datasets/ai2_arc">hf</a></td>
+<td>选择题</td>
+<td>• 三年级到九年级的自然/科学科目，~8k 道问题</td>
+</tr>
+<tr>
+<td>MMLU</td>
+<td><a href="https://arxiv.org/abs/2009.03300">arxiv</a></td>
+<td><a href="https://huggingface.co/datasets/cais/mmlu">hf</a></td>
+<td>选择题</td>
+<td>• 57 个学科<br>• 来源不明</td>
+</tr>
+<tr>
+<td>MATH</td>
+<td><a href="https://arxiv.org/abs/2103.03874">arxiv</a></td>
+<td><a href="https://huggingface.co/datasets/competition_math">hf</a></td>
+<td>解答题</td>
+<td>• 12.5k 道高中数学竞赛题，包含 7 个子科目和 5 级难度</td>
+</tr>
+<tr>
+<td>GSM8K</td>
+<td><a href="https://arxiv.org/abs/2110.14168">arxiv</a></td>
+<td><a href="https://huggingface.co/datasets/gsm8k">hf</a></td>
+<td>解答题</td>
+<td>• 8.5k 道小学数学应用题，表述的自然语言具有多样性</td>
+</tr>
+<tr>
+<td>AGIEval</td>
+<td><a href="https://arxiv.org/abs/2304.06364">arxiv</a></td>
+<td><a href="https://github.com/ruixiangcui/AGIEval">github</a></td>
+<td>选择题<br>填空题</td>
+<td>• 中英文标准化考试</td>
+</tr>
+<tr>
+<td>C-Eval</td>
+<td><a href="https://arxiv.org/abs/2305.08322">arxiv</a></td>
+<td><a href="https://cevalbenchmark.com/index.html#home">official</a><br><a href="https://www.notion.so/C-Eval-6b79edd91b454e3d8ea41c59ea2af873">blog</a></td>
+<td>选择题</td>
+<td>• 对标 MMLU<br>• 52 个学科，~14k 道问题<br>• 使用模拟题手工构建</td>
+</tr>
+<tr>
+<td>GAOKAO-bench</td>
+<td><a href="https://arxiv.org/abs/2305.12474">arxiv</a></td>
+<td><a href="https://github.com/OpenLMLab/GAOKAO-Bench">github</a></td>
+<td>选择题<br>填空题<br>解答题</td>
+<td>• 2010-2022 年高考题目</td>
+</tr>
+<tr>
+<td>CMMLU</td>
+<td><a href="https://arxiv.org/abs/2306.09212">arxiv</a></td>
+<td><a href="https://github.com/haonan-li/CMMLU">github</a><br><a href="https://huggingface.co/datasets/haonan-li/cmmlu">hf</a></td>
+<td>选择题</td>
+<td>• 对标 MMLU<br>• 67 个学科或主题（包含中国的本地化主题），~12k 道问题</td>
+</tr>
+</tbody>
+</table>
+<p><strong>对齐</strong></p>
+<p>测试 LLM 是否遵循人类的意图或符合人类的价值观，包括遵循指令，不违反道德和法律，不引入既有立场或偏见，不产生有害信息（淫秽、暴力、仇恨等）或虚假信息（幻觉），不泄露隐私等。</p>
+<table>
+<thead>
+<tr>
+<th>benchmark</th>
+<th>paper</th>
+<th>link</th>
+<th>能力</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TruthfulQA</td>
+<td><a href="https://arxiv.org/abs/2109.07958">arxiv</a></td>
+<td><a href="https://huggingface.co/datasets/truthful_qa">hf</a></td>
+<td>trustworthiness</td>
+<td>• 问题比较刁钻，包括许多人类具有的误解/错误观念/迷信/幻想/阴谋论等</td>
+</tr>
+<tr>
+<td>MT-Bench &amp; Chatbot Arena</td>
+<td><a href="https://arxiv.org/abs/2306.05685">arxiv</a></td>
+<td><a href="https://chat.lmsys.org/">Chatbot Arena</a></td>
+<td>对齐人类偏好/<br>指令遵循</td>
+<td>• 评估 chatbot<br>• MT-Bench 由 80 道高质量两回合问题构成，包含用户 prompt 中常见的 8 种类型：写作、角色扮演、信息提取、推理、数学、代码、知识一（STEM）、知识二（人文社科）<br>• 在 ChatBot Arena 中，由用户自由提出问题<br>• 分别收集人类比较和 GPT-4 比较的结果<br>• 实验表明 GPT-4 与人类对于比较的一致性比人类之间的一致性更高，证明这里 GPT-4 可以替代人类<br>• 指出 LLM 作为裁判的一些问题以及部分解决方案</td>
+</tr>
+<tr>
+<td>AlpacaEval</td>
+<td><a href="https://arxiv.org/pdf/2305.14387.pdf">arxiv</a></td>
+<td><a href="https://tatsu-lab.github.io/alpaca_eval/">official</a><br><a href="https://github.com/tatsu-lab/alpaca_eval">github</a></td>
+<td>指令遵循</td>
+<td>• 评估 LLM 遵循指令的能力• 回复与（Davinci003 模型的）参考回复进行比较，由 GPT-4/Claude/ChatGPT 自动评估• 与人类的偏好高度一致</td>
+</tr>
+<tr>
+<td>SelfAware</td>
+<td><a href="https://arxiv.org/abs/2305.18153">arxiv</a></td>
+<td><a href="https://github.com/yinzhangyue/SelfAware">github</a></td>
+<td>trustworthiness</td>
+<td></td>
+</tr>
+<tr>
+<td>TrustGPT</td>
+<td><a href="https://arxiv.org/abs/2306.11507">arxiv</a></td>
+<td></td>
+<td>有害信息<br>偏见<br>道德伦理</td>
+<td>• 使用 Social Chemistry 101 作为数据集</td>
+</tr>
+<tr>
+<td>DecodingTrust</td>
+<td><a href="https://arxiv.org/abs/2306.11698">arxiv</a></td>
+<td><a href="https://github.com/AI-secure/DecodingTrust">github</a></td>
+<td>trustworthiness</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>安全</strong></p>
+<p>测试 LLM 对抗提示词攻击和越狱攻击的能力。</p>
+<table>
+<thead>
+<tr>
+<th>benchmark</th>
+<th>paper</th>
+<th>link</th>
+<th>能力</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AdvGlue</td>
+<td><a href="https://arxiv.org/abs/2111.02840">arxiv</a></td>
+<td><a href="https://huggingface.co/datasets/adv_glue">hf</a></td>
+<td>task robustness</td>
+<td></td>
+</tr>
+<tr>
+<td>PromptBench</td>
+<td><a href="https://arxiv.org/abs/2306.04528">arxiv</a></td>
+<td><a href="https://github.com/microsoft/promptbench">github</a></td>
+<td>prompt robustness</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>使用工具</strong></p>
+<p>测试 LLM 使用多种外部工具的能力，以及进一步地，作为智能体或人类助手的能力。</p>
+<table>
+<thead>
+<tr>
+<th>benchmark</th>
+<th>paper</th>
+<th>link</th>
+<th>能力</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API-Bank</td>
+<td><a href="https://arxiv.org/abs/2304.08244">arxiv</a></td>
+<td></td>
+<td>使用工具/<br>作为 agent</td>
+<td></td>
+</tr>
+<tr>
+<td>ToolEval (Toolbench)</td>
+<td><a href="https://arxiv.org/abs/2307.16789">arxiv</a></td>
+<td><a href="https://github.com/OpenBMB/ToolBench/blob/master/README_ZH.md">github</a></td>
+<td>使用工具</td>
+<td>• 真实世界的 API 从 RapidAPI 收集<br>• 指令和解答均由 ChatGPT 生成</td>
+</tr>
+<tr>
+<td>GAIA</td>
+<td><a href="https://arxiv.org/abs/2311.12983">arxiv</a></td>
+<td><a href="https://huggingface.co/datasets/gaia-benchmark/GAIA">hf</a></td>
+<td>使用工具/<br>作为 AI 助手</td>
+<td>• 任务涉及推理、网页浏览、读图和其他工具使用<br>• 人类完成 92% vs GPT-4（带插件）15%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>综合基准测试</strong></p>
+<p>这些工作尝试多方位或全方位地评估 LLM，采用多场景、多数据集、多指标的方式衡量多个 LLM。它们提供的排行榜（leaderboard）是许多人在想要了解一个模型大致能力水平时首先参考的对象。</p>
+<p>BERT 时代：</p>
+<table>
+<thead>
+<tr>
+<th>benchmark</th>
+<th>paper</th>
+<th>link</th>
+<th>任务</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GLUE</td>
+<td><a href="https://openreview.net/pdf?id=rJ4km2R5t7">pdf</a></td>
+<td><a href="https://gluebenchmark.com/">official</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SuperGLUE</td>
+<td><a href="https://arxiv.org/abs/1905.00537">arxiv</a></td>
+<td><a href="https://super.gluebenchmark.com/">official</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>CLUE</td>
+<td><a href="https://aclanthology.org/2020.coling-main.419/">acl</a></td>
+<td><a href="https://www.cluebenchmarks.com/static/index.html">official</a></td>
+<td></td>
+<td>中文版 GLUE</td>
+</tr>
+</tbody>
+</table>
+<p>LLM 时代：</p>
+<table>
+<thead>
+<tr>
+<th>benchmark</th>
+<th>paper</th>
+<th>link</th>
+<th>任务</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BIG-bench</td>
+<td><a href="https://arxiv.org/abs/2206.04615">arxiv</a></td>
+<td><a href="https://github.com/google/BIG-bench">github</a></td>
+<td>全面评估</td>
+<td>• 204 个任务</td>
+</tr>
+<tr>
+<td>BBH</td>
+<td><a href="https://arxiv.org/abs/2210.09261">arxiv</a></td>
+<td><a href="https://github.com/suzgunmirac/BIG-Bench-Hard">github</a><br><a href="https://huggingface.co/datasets/lukaemon/bbh">hf</a></td>
+<td>BIG-bench 中 LLM 未能超过人类的任务</td>
+<td>• 23 个任务<br>• 应用 CoT prompting 取得显著性能提升</td>
+</tr>
+<tr>
+<td>HELM</td>
+<td><a href="https://arxiv.org/abs/2211.09110">arxiv</a></td>
+<td><a href="https://crfm.stanford.edu/helm/latest/">official</a></td>
+<td>全面评估</td>
+<td>• 42 个场景，59 个指标</td>
+</tr>
+<tr>
+<td>Open LLM Leaderboard</td>
+<td></td>
+<td><a href="https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard">hf</a></td>
+<td>ARC<br>HellaSwag<br>MMLU<br>TruthfulQA</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>其他基准测试</strong></p>
+<table>
+<thead>
+<tr>
+<th>benchmark</th>
+<th>paper</th>
+<th>link</th>
+<th>能力</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HumanEval</td>
+<td><a href="https://arxiv.org/abs/2107.03374">arxiv</a></td>
+<td><a href="https://github.com/openai/human-eval">github</a><br><a href="https://huggingface.co/datasets/openai_humaneval">hf</a></td>
+<td>编写代码</td>
+<td>• 使用 Python 语言根据 docstring 编写函数</td>
+</tr>
+<tr>
+<td>LongEval</td>
+<td>/</td>
+<td><a href="https://lmsys.org/blog/2023-06-29-longchat/">blog</a><br><a href="https://github.com/DachengLi1/LongChat">github</a></td>
+<td>上下文长度</td>
+<td>• 评估 LLM 处理长上下文的能力，包含两个任务<br>• 任务一是粗粒度的话题检索，需要取回第一个话题的主题，每个话题长 400~600 token<br>• 任务二是细粒度的行检索，需要精准地从某一行取回数字<br>• 容易将测试上下文扩展到任意长度</td>
+</tr>
+<tr>
+<td>SWE-bench</td>
+<td><a href="https://arxiv.org/abs/2310.06770">arxiv</a></td>
+<td><a href="https://github.com/princeton-nlp/SWE-bench">github</a><br><a href="https://huggingface.co/datasets/princeton-nlp/SWE-bench">hf</a></td>
+<td>编写代码/<br>修复问题</td>
+<td>• 从 GitHub 收集的真实 issue</td>
+</tr>
+</tbody>
+</table>
+<h2 id="现有问题">现有问题<a class="headerlink" href="#现有问题" title="Permanent link">&para;</a></h2>
+<h3 id="评估数据泄漏">评估数据泄漏<a class="headerlink" href="#评估数据泄漏" title="Permanent link">&para;</a></h3>
+<p>古德哈特定律（Goodhart’s Law）：一项指标一旦变成了目标，它就不再是个好指标。</p>
+<p>在预训练和微调 BERT 系列模型的时代，刷榜 GLUE/SuperGLUE 的现象就已经出现。很多人只为指标上的好看而过拟合数据集，短视近利，不顾泛化能力和用户体验，放弃追求实质的技术进步。现如今这一情况又重演，已有研究[<a href="https://arxiv.org/abs/2310.19341">2310.19341</a>]和<a href="https://huggingface.co/datasets/keirp/hungarian_national_hs_finals_exam">实验</a>质疑一些模型在基准测试 GSM8K 上训练过。另有研究[<a href="https://arxiv.org/abs/2311.01964">2311.01964</a>]证明使用基准测试的数据训练会使得这一测试的分数大幅提高，小模型甚至可以超过参数量是其几十倍的大模型，然而其泛化能力和微调性能都会受到损害。</p>
+<p>数据泄漏或许并非有意为之，而是模型的开发人员未能将测试数据从构成复杂的训练语料中清洗出去。但在训练语料不公开的情况下，作为用户我们也无从知晓。</p>
+<p>xAI 在发布 Grok 模型时引入了最新的匈牙利全国高中数学期末考试（2023 年 5 月）进行评估，为了防止评估数据泄漏，基准测试 C-Eval 不公开测试集的答案（但这样做又会降低透明度）。或许以后 LLM 也会像人类学生一样，定期地参加闭卷考试？</p>
+<p>C-Eval 的<a href="https://www.notion.so/C-Eval-6b79edd91b454e3d8ea41c59ea2af873">博客</a>中讨论了构建这一基准测试的初衷，以及基准测试的正确和错误使用方法，供读者参考。</p>
+<h3 id="人类和-gpt-4-评估引入偏差">人类和 GPT-4 评估引入偏差<a class="headerlink" href="#人类和-gpt-4-评估引入偏差" title="Permanent link">&para;</a></h3>
+<p>由于缺少基准测试、基准测试因数据泄漏而失效、基准测试问题的开放性，以及评估对齐人类价值的能力等原因，研究可能采取人类或 GPT-4[<a href="https://arxiv.org/abs/2310.05470">2310.05470</a>]进行评估。尽管人类和 GPT-4 评估可以更加全面、细致和专业，但也会引入一些偏差。在人类评估中，每个评估者的观点、偏好和文化视角的不同可能会影响评估结果；对于 GPT-4，也可能有产生幻觉或能力不足的问题。</p>
+<p>除此之外，人类评估还会花费更多的时间和成本（相对而言，GPT-4 评估花费的时间和成本要低一些）。</p>
+<h3 id="全面评估开销大">全面评估开销大<a class="headerlink" href="#全面评估开销大" title="Permanent link">&para;</a></h3>
+<p>每个 LLM 在发布时通常会公布其在某些基准测试上的成绩，但这远远不能构成全面评估。一些工作（例如 BIG-bench、HELM）对当时的模型进行了全面评估，但由于评估开销大、流程复杂、环境难以复制等原因，之后只有少数 LLM 进行了跟进。</p>
+<h3 id="一些维度缺少基准测试">一些维度缺少基准测试<a class="headerlink" href="#一些维度缺少基准测试" title="Permanent link">&para;</a></h3>
+<p>一些新兴的评估维度（例如幻觉、遵守法律法规、领域应用等）仍然缺少高质量、被广泛接受的基准测试，需要未来的研究工作进行补充。</p>
+<h3 id="llm-透明度降低">LLM 透明度降低<a class="headerlink" href="#llm-透明度降低" title="Permanent link">&para;</a></h3>
+<p>推出 LLM 的各家大小厂商在商业化的过程中越来越将相关技术视为商业机密，因而对其讳莫如深。OpenAI 的 GPT-2 尚且完全开源，而到了 GPT-3、GPT-4 就只剩对技术细节避而不谈的技术报告。在一份关于 LLM 透明度的报告[<a href="https://arxiv.org/abs/2310.12941">2310.12941</a>]中，即使排名第一的 LLaMA2 也未公布其训练数据源。</p>
+<p>我们呼吁基础模型的发布者公开更多训练相关信息，包括训练预料的构成、评估的环境和代码等。在缺少这些信息的情况下，我们无从分析评估过程中可能存在的问题。</p>
+<h2 id="讨论">讨论<a class="headerlink" href="#讨论" title="Permanent link">&para;</a></h2>
+<p>自 2022 年 11 月 ChatGPT 发布以来，不计其数的 LLM 在 2023 年中被发布或开源出来。在 LLM 相关技术与应用取得显著进展的同时，围绕着“最强”、“第一”、“SOTA”的争夺也产生了一些乱象，部分 LLM 声称可以达到的优秀指标无法得到复现，或被质疑是通过刷榜、作弊等手段达到。不透明、不公正、不可靠的评估与比较也使得用户在挑选 LLM 时无所适从。</p>
+<p>目前，LLM 难以得到完整、全面、公正的评估，这一研究领域仍在不断发展中。如果在选择 LLM 时感到迷茫，这里建议：</p>
+<ul>
+<li>根据自己的实际需求，重点关注相关的评估维度和基准测试结果。</li>
+<li>不要完全相信官方提供的数字，获取多方面的评价信息，多参与社区讨论。</li>
+<li>将 LLM 的透明度作为选择时的考虑因素之一。</li>
+<li>多亲自动手试用，还可以建立一个私有的评估数据集或基准测试。</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    2025-04-27
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="../../javascripts/tex-mml-chtml.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.cs/net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
